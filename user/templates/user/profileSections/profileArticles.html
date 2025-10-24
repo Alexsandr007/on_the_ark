@@ -1,0 +1,41 @@
+ {% load static %}
+<section class="profile__articles">
+        <div class="profile__articles--block">
+            <div class="profile__articles--text">
+                <h2>Публикации</h2>
+                <p>0 записей</p>
+            </div>
+            <div>
+                <img class="profile__articles--image" src="{% static 'images/profile/dots.png' %}">
+            </div>
+        </div>
+        <div class="profile__articles--container">
+            <div class="profile__articles--header">
+                <div class="profile__articles--btn">
+                    <button class="active">Все посты Валерия</button>
+                </div>
+                <div class="profile__articles--split">
+                    |
+                </div>
+                <div class="profile__articles--btn">
+                    <button>Видео</button>
+                </div>
+                <div class="profile__articles--split">
+                    |
+                </div>
+                <div class="profile__articles--btn">
+                    <button>Изображения</button>
+                </div>
+                <div class="profile__articles--btn">
+                    
+                </div>
+                <div class="profile__articles--btn create-btn">
+                    <button class="profile__plus"><img src="{% static 'images/profile/pen.png' %}"> Написать пост</button>
+                </div>
+            </div>
+            <div class="profile__articles--item">
+                <h2>У вас пока нет постов..(</h2>
+                <img src="{% static 'images/profile/sad_men.png' %}">
+            </div>
+        </div>
+    </section>

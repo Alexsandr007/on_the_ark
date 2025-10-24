@@ -1,0 +1,98 @@
+{% load static %}
+<div class="cover-title__img">     
+    <button id="changeBackgroundBtn" class="transparent-profile__plus">Изменить обложку</button>
+</div>
+
+
+<section class="profile__block">
+<div class="personal_account__fon" id="backgroundContainer" style="{% if user.background_photo %}background-image: url('{{ user.background_photo.url }}');{% endif %}"></div>    <div class="personal_account__mobile-ornament"></div>
+    <div class="personal_account__beads_mobile"></div>
+    <div class="profile__container">
+
+        <div class="profile__item profile__item--about left">
+            <img src="{% static 'images/profile/personal_account__fon.png' %}" class="personal_account__ornament">
+            <img class="personal_account__item--fon" src="{% static 'images/profile/fon2.png' %}">
+            <div class="profile__card">
+                <div class="profile__card--header">
+                    <h2>Об авторе:</h2>
+                </div>
+                <div class="profile__card--body">
+                    {% if user.about %}
+                        <!-- Если информация о себе есть, показываем её -->
+                        <p>{{ user.about }}</p>
+                        <button class="profile__plus" id="aboutBtn">Изменить историю <img src="{% static 'images/profile/pen.png' %}"></button>
+                    {% else %}
+                        <!-- Если нет, показываем дефолтный текст -->
+                        <p>Несколько фактов о вас помогут вашему профилю выделиться и привлечь нужную аудиторию</p>
+                        <button class="profile__plus" id="aboutBtn">Поделиться историей <img src="{% static 'images/profile/pen.png' %}"></button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="profile__item profile__item--block">
+            <div class="profile__content">
+                <div class="content">
+                    <div class="profile__content--image">
+                        <img id="profileImage" src="{% if user.photo %}{{ user.photo.url }}{% else %}{% static 'images/profile/girl-img.jpg' %}{% endif %}" alt="Фото профиля">
+                        <div id="imageOverlay" class="image-overlay">Изменить фото</div>
+                    </div>
+                    <div class="content-title">
+                        <h2>{{ user.email }}</h2>
+                        <input id="professionInput" placeholder="{% if user.profession %}{{ user.profession }}{% else %}чем вы занимаетесь?{% endif %}">
+                    </div>
+                </div>
+                
+                <div class="content">
+                    <div class="block-text"> 
+                        <p>Видимость аккаунта</p>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="isVisibleToggle" {% if user.is_visible %}checked{% endif %}>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="block-text"> 
+                        <p>Возможность связи</p>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="isAuthorToggle" {% if user.is_author %}checked{% endif %}>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <button class="profile__plus border-mobile__btn">Мои тарифы<img src="{% static 'images/profile/pen.png' %}"></button>
+            <button class="profile-white__btn aboutBtn border-mobile__btn" id="aboutBtnMobile">Об авторе<img src="{% static 'images/profile/pen-gray.svg' %}"></button>
+            <button class="profile-white__btn targetBtn border-mobile__btn" id="targetBtnMobile">Цель<img src="{% static 'images/profile/pen-gray.svg' %}"></button>
+        </div>
+
+        <div class="profile__item profile__item--destination right">
+            <img class="personal_account__item--fon" src="{% static 'images/profile/fon2.png' %}">
+            <div class="profile__card">
+                <div class="profile__card--header">
+                    {% if user.goal and user.goal.goal_title %}
+                        <h2>{{ user.goal.goal_title }}</h2>
+                    {% else %}
+                        <h2>Цель:</h2>
+                    {% endif %}
+                </div>
+                <div class="profile__card--body">
+                    {% if user.goal and user.goal.goal_title %}
+                        <!-- Если цель есть, показываем её данные -->
+                         <p>{{ user.goal.goal_description }}</p>
+                        <div class="profile__progress">
+                            <h3>0 из {{ user.goal.goal_amount }}</h3>
+                            <div class="profile__progress--block">
+                                <div class="profile__progress--bar"></div>
+                            </div>
+                        </div>
+                        <button class="profile__plus" id="targetBtn">Изменить цель <img src="{% static 'images/profile/pen.png' %}"></button>
+                    {% else %}
+                        <!-- Если нет, показываем дефолтный текст -->
+                        <p>Покажите, к чему мы идём вместе. Это вызывает доверие и желание помочь.</p>
+                        <button class="profile__plus" id="targetBtn">Задаться целью <img src="{% static 'images/profile/pen.png' %}"></button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

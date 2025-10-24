@@ -1,0 +1,74 @@
+<!-- Модальное окно регистрации -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <button class="modal-close" id="modalClose"></button>
+    <h2 class="modal-title">Присоединиться к экипажу</h2>
+    
+    <form id="registerForm" class="registerForm">
+      {% csrf_token %}
+      <div id="registerMessage" style="margin-top: 10px; color: red;"></div>  <!-- Место для ошибок -->
+      <input type="email" class="modal-input" name="email" placeholder="Почта" required>
+      <input type="password" class="modal-input" name="password" placeholder="Пароль" required>
+      <input type="password" class="modal-input" name="password_confirm" placeholder="Повторите пароль" required>
+      
+      <div class="modal-divider"></div>
+      <div class="contener-labels">
+        <label class="modal-checkbox">
+          <input type="checkbox" name="is_author">
+          <div class="checkbox-custom"></div>
+          <span>Стать автором</span>
+        </label>
+        <label class="modal-checkbox">
+          <input type="checkbox" name="newsletter">
+          <div class="checkbox-custom"></div>
+          <span>Я хочу получать письма от капитана о новых проектах и событиях «Ковчега»</span>
+        </label>
+      </div>
+      
+      <button type="submit" class="modal-button">Продолжить</button>
+    </form>
+  </div>
+</div>
+
+<!-- Модальное окно авторизации -->
+<div class="modal-overlay" id="modalOverlayAuth">
+  <div class="modal">
+    <button class="modal-close" id="modalCloseAuth"></button>
+    <h2 class="modal-title">С Возвращением на борт</h2>
+    
+    <form id="loginForm">
+      {% csrf_token %}
+      <div id="loginMessage" style="margin-top: 10px; color: red;"></div>  <!-- Место для ошибок -->
+      <input type="email" class="modal-input" name="username" placeholder="Почта" required>
+      <input type="password" class="modal-input" name="password" placeholder="Пароль" required>
+      <div class="contener-labels">
+        <label class="modal-checkbox">
+          <a href="#" id="recoveryBtn">Забыл пароль</a>
+        </label>
+      </div>
+      <button type="submit" class="modal-button">Взойти на Ковчег</button>
+    </form>
+  </div>
+</div>
+
+<!-- Модальное окно Восстановления -->
+<div class="modal-overlay" id="modalOverlayRecovery">
+  <div class="modal">
+    <button class="modal-close" id="modalCloseRecovery"></button>
+    <h2 class="modal-title">Шторм забрал ваш пароль?</h2>
+    <div class="contener-labels">
+      <p>Не беда! Укажите вашу почту, и мы вышлем вам инструкцию, как установить новый.</p>
+    </div>
+    <form id="resetForm" class="registerForm">
+      {% csrf_token %}
+      <div id="resetMessage" style="margin-top: 10px;"></div>  <!-- Место для сообщений -->
+      <input type="email" class="modal-input" name="email" placeholder="Ваша Почта" required>
+      <button type="submit" class="modal-button">Отправить спасательный круг</button>
+    </form>
+  </div>
+</div>
+
+<!-- Модальное окно ошибки (оставлено без изменений, если нужно) -->
+<div class="modal-overlay" id="modalOverlayError">
+  <!-- Ваш код ошибки -->
+</div>

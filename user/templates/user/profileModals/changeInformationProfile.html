@@ -1,0 +1,89 @@
+<!-- Модальное окно Добавления цели -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <button class="modal-close" id="modalClose"></button>
+    <form id="goalForm">
+      {% csrf_token %}
+      <h2 class="input-title">Цель</h2>
+      <input type="text" name="goal_title" class="modal-input" placeholder="Я хочу" required>
+      <label class="description-input">Покажите, к чему мы идём вместе. Это вызывает доверие и желание помочь.</label>
+      <h2 class="input-title">Сумма</h2>
+      <input type="number" name="goal_amount" class="modal-input-sum" placeholder="Сумма сбора" required>
+      <label class="description-input">Укажите итоговую сумму сбора в рублях. Она будет отображаться в прогрессе сбора</label>
+      <h2 class="input-title">Описание цели:</h2>
+      <textarea name="goal_description" class="modal-input-description" placeholder="Цель мотивирует людей помочь вам быстрее." maxlength="200"></textarea>
+      <label class="description-input">До 200 символов (<span id="charCountGoal">200</span> осталось)</label>
+      <div class="right">
+        <button type="submit" class="modal-button">Задаться целью</button>
+      </div>
+      <div id="goalMessage" style="margin-top: 10px; color: red;"></div>
+    </form>
+  </div>
+</div>
+
+<!-- Модальное окно Добавления информации о себе -->
+<div class="modal-overlay" id="modalOverlayAbout">
+  <div class="modal">
+    <button class="modal-close" id="modalCloseAbout"></button>
+    <form id="aboutForm" class="aboutForm">
+      {% csrf_token %}
+      <h2 class="input-title">Об Авторе</h2>
+      <textarea name="about" class="modal-input-description" placeholder="Напишите пару слов о себе" maxlength="200"></textarea>
+      <label class="description-input">До 200 символов (<span id="charCountAbout">200</span> осталось)</label>
+      <div class="right">
+        <button type="submit" class="modal-button">Сохранить</button>
+      </div>
+      <div id="aboutMessage" style="margin-top: 10px; color: red;"></div>
+    </form>
+  </div>
+</div>
+
+<!-- Модальное окно Добавления информации о себе на мобилку -->
+<div class="container">
+  <div class="overlay" id="overlay"></div>
+  <div class="bottom-sheet-error" id="bottom-sheet-description">
+    <div class="handle"></div>
+    <div class="content">
+      <div class="content-mobile">
+        <form id="aboutFormMobile">
+          {% csrf_token %}
+          <h2 class="input-title">Об Авторе</h2>
+          <textarea name="about" class="modal-input-description" placeholder="Напишите пару слов о себе" maxlength="200"></textarea>
+          <label class="description-input">До 200 символов (<span id="charCountAboutMobile">200</span> осталось)</label>
+          <div class="right center">
+            <button type="submit" class="modal-button">Сохранить</button>
+          </div>
+          <div id="aboutMessageMobile" style="margin-top: 10px; color: red;"></div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Модальное окно Добавления цели на мобилку -->
+<div class="container">
+  <div class="overlay" id="overlayTarget"></div>
+  <div class="bottom-sheet-error" id="bottom-sheet-target">
+    <div class="handle"></div>
+    <div class="content">
+      <div class="content-mobile">
+        <form id="goalFormMobile">
+          {% csrf_token %}
+          <h2 class="input-title">Цель</h2>
+          <input type="text" name="goal_title" class="modal-input" placeholder="Я хочу" required>
+          <label class="description-input">Покажите, к чему мы идём вместе. Это вызывает доверие и желание помочь.</label>
+          <h2 class="input-title">Сумма</h2>
+          <input type="number" name="goal_amount" class="modal-input-sum" placeholder="Сумма сбора" required>
+          <label class="description-input">Укажите итоговую сумму сбора в рублях. Она будет отображаться в прогрессе сбора</label>
+          <h2 class="input-title">Описание цели:</h2>
+          <textarea name="goal_description" class="modal-input-description" placeholder="Цель мотивирует людей помочь вам быстрее." maxlength="200"></textarea>
+          <label class="description-input">До 200 символов (<span id="charCountGoalMobile">200</span> осталось)</label>
+          <div class="right center">
+            <button type="submit" class="modal-button">Задаться целью</button>
+          </div>
+          <div id="goalMessageMobile" style="margin-top: 10px; color: red;"></div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

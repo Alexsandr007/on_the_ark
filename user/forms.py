@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 import random
 import string
+from .models import CustomUser, UserGoal
 
 User = get_user_model()
 
@@ -43,3 +44,22 @@ class PasswordResetForm(forms.Form):
         if not User.objects.filter(email=email).exists():
             raise ValidationError("Пользователь с таким email не найден")
         return email
+    
+
+class AboutForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ['about']
+        widgets = {
+            'about': forms.Textarea(attrs={'placeholder': 'Напишите пару слов о себе', 'maxlength': 200}),
+        }
+
+class GoalForm(forms.ModelForm):
+    class Meta:
+        model = UserGoal  
+        fields = ['goal_title', 'goal_amount', 'goal_description']
+        widgets = {
+            'goal_title': forms.TextInput(attrs={'placeholder': 'Я хочу'}),
+            'goal_amount': forms.NumberInput(attrs={'placeholder': 'Сумма сбора'}),
+            'goal_description': forms.Textarea(attrs={'placeholder': 'Цель мотивирует людей помочь вам быстрее.', 'maxlength': 200}),
+        }

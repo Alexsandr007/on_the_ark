@@ -1,0 +1,41 @@
+<!-- about.html -->
+{% extends "user/base.html" %}
+{% load static %}
+
+{% block title %}На ковчеге - Платформа для поддержки российской культуры{% endblock %}
+
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'css/home/style.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/home/styleModals.css' %}" />
+{% endblock %}
+
+
+{% block header %}
+   {% include "include/baseHeader.html" %}
+{% endblock %}
+
+
+{% block content %}
+    {% include "user/homeModals/AuthModals.html" %}
+    {% include "user/homeSections/first-section.html" %}
+    {% include "user/homeSections/section-divider.html" %}
+    {% include "user/homeSections/second-section.html" %}
+    {% include "user/homeSections/third-section.html" %}
+    {% include "user/homeSections/section-divider.html" %}
+    {% include "user/homeSections/fourth-section.html" %}
+    {% include "user/homeSections/five-section.html" %}
+    {% include "user/homeSections/six-section.html" %}
+{% endblock %}
+
+{% block footer %}
+   {% include "include/baseFooter.html" %}
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{% static 'js/header/header.js' %}"></script>
+<script src="{% static 'js/home/scriptModals.js' %}"></script>
+{% comment %} <script src="{% static 'js/home/scriptSlider.js' %}"></script> {% endcomment %}
+<script src="{% static 'js/home/script.js' %}"></script>
+{% endblock %}

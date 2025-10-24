@@ -1,0 +1,29 @@
+ {% load static %}
+<header class="header">
+        <div class="header__container">
+            <div class="header__content">
+
+                <div class="header__burger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+
+                <div class="header__links">
+                    <div class="header__links--item"><a href="#">О нас</a></div>
+                    <div class="header__links--item"><a href="#">Помощь</a></div>
+                    <div class="header__links--item"><a href="#">Наш блог</a></div>
+                    <div class="header__links--item"><a href="/logout/">Выйти</a></div>
+                </div>
+
+                <div class="header__logo">
+                    <img src="{% static 'images/home/logo.png' %}">
+                </div>
+
+                <div class="header__buttons">
+                    <div class="header__buttons--shop"><a href="#">Магазин</a></div>
+                    <div class="header__buttons--img"><img src="{% static 'images/profile/profile_icon.png' %}"></div>
+                </div>
+            </div>
+        </div>
+    </header>
