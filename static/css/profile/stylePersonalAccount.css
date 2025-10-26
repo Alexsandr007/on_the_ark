@@ -199,6 +199,7 @@ position: absolute;
     height: 16px;
     width: 100%;
     overflow: hidden;
+    margin-bottom: 20px;
 }
 
 .profile__progress--bar {

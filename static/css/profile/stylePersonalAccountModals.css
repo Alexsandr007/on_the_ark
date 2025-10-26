@@ -12,6 +12,27 @@ top: 100px;
         width: 100%;
     }
 
+
+.header__buttons--img{
+    width: 60px;
+    height: 60px;
+    position: relative;
+}
+
+.header__buttons--img .frame--logo{
+    position: absolute;
+    z-index: 2;
+}
+
+.header__buttons--img .photo--logo{
+        position: absolute;
+    width: 29px;
+    height: 29px;
+    border-radius: 50%;
+    left: 15px;
+    top: 14px;
+}
+
     .modal-input {
         max-width: none;
         text-align: start;

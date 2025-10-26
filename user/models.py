@@ -33,6 +33,7 @@ class CustomUser(AbstractUser):
 class UserGoal(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='goal')
     goal_title = models.CharField(max_length=255, blank=True, null=True, verbose_name="Название цели")
+    current_amount = models.PositiveIntegerField(default=0, verbose_name="Текущая сумма")
     goal_amount = models.PositiveIntegerField(blank=True, null=True, verbose_name="Сумма цели")
     goal_description = models.TextField(blank=True, null=True, max_length=200, verbose_name="Описание цели")
     

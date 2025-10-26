@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import CustomUser
+from .models import CustomUser, UserGoal
 
 @admin.register(CustomUser)
 class CustomUserAdmin(UserAdmin):
@@ -25,3 +25,12 @@ class CustomUserAdmin(UserAdmin):
             'fields': ('email', 'username', 'password1', 'password2', 'is_visible', 'is_staff', 'is_active'),
         }),
     )
+
+
+@admin.register(UserGoal)
+class UserGoalAdmin(admin.ModelAdmin):
+    list_display = ('user', 'goal_title', 'current_amount', 'goal_amount', 'goal_description')
+    search_fields = ('user__email', 'goal_title') 
+    list_filter = ('goal_amount','current_amount') 
+    fields = ('user', 'goal_title', 'current_amount','goal_amount', 'goal_description')
+    readonly_fields = ('user',)

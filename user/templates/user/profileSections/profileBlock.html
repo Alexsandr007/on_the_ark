@@ -80,7 +80,7 @@
                         <!-- Если цель есть, показываем её данные -->
                          <p>{{ user.goal.goal_description }}</p>
                         <div class="profile__progress">
-                            <h3>0 из {{ user.goal.goal_amount }}</h3>
+                            <h3 id="progress-text">{{ user.goal.current_amount }} из {{ user.goal.goal_amount }}</h3>
                             <div class="profile__progress--block">
                                 <div class="profile__progress--bar"></div>
                             </div>

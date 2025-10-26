@@ -22,7 +22,9 @@
 
                 <div class="header__buttons">
                     <div class="header__buttons--shop"><a href="#">Магазин</a></div>
-                    <div class="header__buttons--img"><img src="{% static 'images/profile/profile_icon.png' %}"></div>
+                    <div class="header__buttons--img">
+                        <img class="frame--logo" src="{% static 'images/profile/Union.png' %}">
+                        <img id="profileImageHeader" class="photo--logo" src="{% if user.photo %}{{ user.photo.url }}{% else %}{% static 'images/profile/profile_icon.png' %}{% endif %}"></div>
                 </div>
             </div>
         </div>
