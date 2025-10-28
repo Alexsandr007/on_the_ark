@@ -1,41 +1,86 @@
- {% load static %}
+{% load static %}
 <section class="profile__articles">
-        <div class="profile__articles--block">
-            <div class="profile__articles--text">
-                <h2>Публикации</h2>
-                <p>0 записей</p>
+    <div class="profile__articles--block">
+        <div class="profile__articles--text">
+            <h2>Публикации</h2>
+            <p>{{ posts_count }} записей</p>  <!-- Динамический счетчик -->
+        </div>
+        <div>
+            <img class="profile__articles--image" src="{% static 'images/profile/dots.png' %}">
+        </div>
+    </div>
+    <div class="profile__articles--container">
+        <div class="profile__articles--header">
+            <div class="profile__articles--btn">
+                <button class="active" data-filter="all">Все посты {{ user.username }}</button>
             </div>
-            <div>
-                <img class="profile__articles--image" src="{% static 'images/profile/dots.png' %}">
+            <div class="profile__articles--split">|</div>
+            <div class="profile__articles--btn">
+                <button data-filter="video">Видео</button>
+            </div>
+            <div class="profile__articles--split">|</div>
+            <div class="profile__articles--btn">
+                <button data-filter="image">Изображения</button>
+            </div>
+            <div class="profile__articles--btn create-btn">
+                <button class="profile__plus" onclick="window.location.href='{% url 'create_post' %}'">
+                    <img src="{% static 'images/profile/pen.png' %}"> Написать пост
+                </button>
             </div>
         </div>
-        <div class="profile__articles--container">
-            <div class="profile__articles--header">
-                <div class="profile__articles--btn">
-                    <button class="active">Все посты Валерия</button>
+        
+        {% if posts %}
+            {% for post in posts %}
+                 <div class="profile__articles--item" data-type="{% if post.media_list and post.media_list.0.media_type == 'photo' %}image{% elif post.media_list and post.media_list.0.media_type == 'video' %}video{% elif post.poll %}poll{% else %}text{% endif %}">
+                    <div class="profile__article-card">
+                        <div class="profile__article-card--body">
+                            <div class="profile__article-card--body-header">
+                                <div class="profile__articles--text">
+                                    <p>{{ post.published_at|date:"d M Y H:i" }}</p>  <!-- Дата публикации -->
+                                </div>
+                                <div>
+                                    <img class="profile__articles--image" src="{% static 'images/profile/dots.png' %}">
+                                </div>
+                            </div>
+                            
+                            {% if post.media_list %}
+                                {% for media in post.media_list %}
+                                    {% if media.media_type == 'photo' %}
+                                        <img class="profile__article--main" src="{{ media.file.url }}" alt="Фото">
+                                    {% elif media.media_type == 'video' %}
+                                        <video class="profile__article--main" controls>
+                                            <source src="{{ media.file.url }}" type="video/mp4">
+                                        </video>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                            
+                            <p>{{ post.content }}</p>  <!-- Текст поста -->
+                            
+                            <div class="profile__article--buttons">
+                                <div class="profile__article--btn">
+                                    <div class="profile__article--btn">
+                                        <img src="{% static 'images/post/comments.png' %}">
+                                        <p>0</p>  <!-- Замените на реальное количество комментариев -->
+                                    </div>
+                                    <div class="profile__article--btn">
+                                        <img src="{% static 'images/post/like.png' %}">
+                                        <p>0</p>  <!-- Замените на реальное количество лайков -->
+                                    </div>
+                                </div>
+                                {% if post.visibility == 'one_time_payment' %}
+                                    <button class="profile__article--warning">Задонатить</button>  <!-- Только для платных постов -->
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="profile__articles--split">
-                    |
-                </div>
-                <div class="profile__articles--btn">
-                    <button>Видео</button>
-                </div>
-                <div class="profile__articles--split">
-                    |
-                </div>
-                <div class="profile__articles--btn">
-                    <button>Изображения</button>
-                </div>
-                <div class="profile__articles--btn">
-                    
-                </div>
-                <div class="profile__articles--btn create-btn">
-                    <button class="profile__plus"><img src="{% static 'images/profile/pen.png' %}"> Написать пост</button>
-                </div>
-            </div>
+            {% endfor %}
+        {% else %}
             <div class="profile__articles--item">
                 <h2>У вас пока нет постов..(</h2>
                 <img src="{% static 'images/profile/sad_men.png' %}">
             </div>
-        </div>
-    </section>
+        {% endif %}
+    </div>
+</section>

@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
@@ -6,6 +6,8 @@ from django.core.mail import send_mail
 from django.conf import settings
 import random
 import string
+from user.models import CustomUser
+from post.models import Media, Post
 from .forms import RegisterForm, LoginForm, PasswordResetForm, AboutForm, GoalForm
 from .models import CustomUser, UserGoal
 from django.core.files.storage import default_storage
@@ -86,8 +88,19 @@ def password_reset_ajax(request):
 
 @login_required
 def profile(request):
-    return render(request, 'user/profile/profile.html')
-
+    user = request.user
+    posts = Post.objects.filter(author=user, published_at__isnull=False).order_by('-published_at')
+    
+    # Добавляем медиа к постам для удобства
+    for post in posts:
+        post.media_list = Media.objects.filter(post=post)
+    
+    context = {
+        'user': user,
+        'posts': posts,
+        'posts_count': posts.count(),
+    }
+    return render(request, 'user/profile/profile.html', context)
 
 def logout_view(request):
     logout(request)

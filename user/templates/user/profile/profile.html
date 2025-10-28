@@ -43,5 +43,29 @@
 <script src="{% static 'js/profile/scriptPersonalAccountBackgroundPhoto.js' %}"></script>
 <script src="{% static 'js/profile/scriptProgressBar.js' %}"></script>
 <script src="{% static 'js/profile/scriptPersonalAccountSideBar.js' %}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const filterButtons = document.querySelectorAll('.profile__articles--btn button[data-filter]');
+    const posts = document.querySelectorAll('.profile__articles--item');
+
+    filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Убираем active класс
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+
+            const filter = this.getAttribute('data-filter');
+
+            posts.forEach(post => {
+                if (filter === 'all' || post.getAttribute('data-type') === filter) {
+                    post.style.display = 'block';
+                } else {
+                    post.style.display = 'none';
+                }
+            });
+        });
+    });
+});
+</script>
 {% endblock %}
 

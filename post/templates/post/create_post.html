@@ -1,0 +1,359 @@
+<!-- create_post.html -->
+{% extends "user/base.html" %}
+{% load static %}
+
+{% block title %}На ковчеге - Платформа для поддержки российской культуры{% endblock %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'css/post/style.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/profile/stylePersonalAccountSideBar.css' %}" />
+{% endblock %}
+
+{% block header %}
+   {% include "include/profileHeader.html" %}
+{% endblock %}
+
+{% block content %}
+  <form method="post" enctype="multipart/form-data" id="post-form">  <!-- Добавлена форма для отправки данных -->
+    {% csrf_token %}
+    <section class="edit__block">
+      <div class="edit__fon"></div>
+      <img class="edit__header--image" src="{% static 'images/post/fon2.png' %}">
+      <div class="ribbons-container">
+        <svg class="ribbons" width="1073" height="290" viewBox="0 0 1073 290" fill="none"
+          xmlns="http://www.w3.org/2000/svg">
+          <!-- Ваш SVG-код остается без изменений -->
+          <path d="M9 0V245" stroke="#C43418" />
+          <path d="M84 28.5V273.5" stroke="#C43418" />
+          <path d="M235 44.5V289.5" stroke="#C43418" />
+          <path d="M386 44.5V289.5" stroke="#C43418" />
+          <path d="M537 44.5V289.5" stroke="#C43418" />
+          <path d="M688 44.5V289.5" stroke="#C43418" />
+          <path d="M839 44.5V289.5" stroke="#C43418" />
+          <path d="M990 44.5V289.5" stroke="#C43418" />
+          <path d="M160 44.5V289.5" stroke="#C43418" />
+          <path d="M311 44.5V289.5" stroke="#C43418" />
+          <path d="M462 44.5V289.5" stroke="#C43418" />
+          <path d="M613 44.5V289.5" stroke="#C43418" />
+          <path d="M764 44.5V289.5" stroke="#C43418" />
+          <path d="M915 44.5V289.5" stroke="#C43418" />
+          <path d="M1065 44.5V289.5" stroke="#C43418" />
+          <circle cx="234.5" cy="174" r="5.5" fill="#C43418" />
+          <circle cx="385.5" cy="174" r="5.5" fill="#C43418" />
+          <circle cx="536.5" cy="174" r="5.5" fill="#C43418" />
+          <circle cx="687.5" cy="174" r="5.5" fill="#C43418" />
+          <circle cx="838.5" cy="174" r="5.5" fill="#C43418" />
+          <circle cx="989.5" cy="174" r="5.5" fill="#C43418" />
+          <circle cx="159.5" cy="176" r="5.5" fill="#C43418" />
+          <circle cx="310.5" cy="176" r="5.5" fill="#C43418" />
+          <circle cx="461.5" cy="176" r="5.5" fill="#C43418" />
+          <circle cx="612.5" cy="176" r="5.5" fill="#C43418" />
+          <circle cx="763.5" cy="176" r="5.5" fill="#C43418" />
+          <circle cx="914.5" cy="176" r="5.5" fill="#C43418" />
+          <circle cx="1064.5" cy="176" r="5.5" fill="#C43418" />
+          <circle cx="83.5" cy="201" r="5.5" fill="#C43418" />
+          <circle cx="234.5" cy="217" r="5.5" fill="#C43418" />
+          <circle cx="385.5" cy="217" r="5.5" fill="#C43418" />
+          <circle cx="536.5" cy="217" r="5.5" fill="#C43418" />
+          <circle cx="687.5" cy="217" r="5.5" fill="#C43418" />
+          <circle cx="838.5" cy="217" r="5.5" fill="#C43418" />
+          <circle cx="989.5" cy="217" r="5.5" fill="#C43418" />
+          <circle cx="8.5" cy="207.5" r="5.5" fill="#C43418" />
+          <circle cx="159.5" cy="252" r="5.5" fill="#C43418" />
+          <circle cx="310.5" cy="252" r="5.5" fill="#C43418" />
+          <circle cx="461.5" cy="252" r="5.5" fill="#C43418" />
+          <circle cx="612.5" cy="252" r="5.5" fill="#C43418" />
+          <circle cx="763.5" cy="252" r="5.5" fill="#C43418" />
+          <circle cx="914.5" cy="252" r="5.5" fill="#C43418" />
+          <circle cx="1064.5" cy="252" r="5.5" fill="#C43418" />
+          <circle cx="83.5" cy="250" r="5.5" fill="#C43418" />
+          <circle cx="234.5" cy="266" r="5.5" fill="#C43418" />
+          <circle cx="385.5" cy="266" r="5.5" fill="#C43418" />
+          <circle cx="536.5" cy="266" r="5.5" fill="#C43418" />
+          <circle cx="687.5" cy="266" r="5.5" fill="#C43418" />
+          <circle cx="838.5" cy="266" r="5.5" fill="#C43418" />
+          <circle cx="989.5" cy="266" r="5.5" fill="#C43418" />
+          <circle cx="83.5" cy="179" r="8.5" fill="#C43418" />
+          <circle cx="234.5" cy="195" r="8.5" fill="#C43418" />
+          <circle cx="385.5" cy="195" r="8.5" fill="#C43418" />
+          <circle cx="536.5" cy="195" r="8.5" fill="#C43418" />
+          <circle cx="687.5" cy="195" r="8.5" fill="#C43418" />
+          <circle cx="838.5" cy="195" r="8.5" fill="#C43418" />
+          <circle cx="989.5" cy="195" r="8.5" fill="#C43418" />
+          <circle cx="8.5" cy="185.5" r="8.5" fill="#C43418" />
+          <circle cx="159.5" cy="231" r="8.5" fill="#C43418" />
+          <circle cx="310.5" cy="231" r="8.5" fill="#C43418" />
+          <circle cx="461.5" cy="231" r="8.5" fill="#C43418" />
+          <circle cx="612.5" cy="231" r="8.5" fill="#C43418" />
+          <circle cx="763.5" cy="231" r="8.5" fill="#C43418" />
+          <circle cx="914.5" cy="231" r="8.5" fill="#C43418" />
+          <circle cx="1064.5" cy="231" r="8.5" fill="#C43418" />
+        </svg>
+      </div>
+      <div class="article__container">
+        <a href="http://" class="back-link">
+          <svg width="8" height="13" viewBox="0 0 8 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M2.90905 6.50004L8 11.5556L6.54547 13L0 6.50004L6.54547 0L8 1.44445L2.90905 6.50004Z" fill="black" />
+          </svg>
+          Назад
+        </a>
+        <h2 class="main-title">Новый пост</h2>
+        <div class="article__body">
+          <div class="article__body--main">
+            <div class="article__header">
+              <div class="article__header--item" id="photo-upload">
+                <img src="{% static 'images/post/foto.png' %}">
+                Фото
+              </div>
+              <div class="article__header--item" id="video-upload">
+                <img src="{% static 'images/post/video.png' %}">
+                Видео
+              </div>
+              <div class="article__header--item" id="audio-upload">
+                <img src="{% static 'images/post/music.png' %}">
+                Аудио
+              </div>
+              <div class="article__header--item" id="poll-create">
+                <img src="{% static 'images/post/golos.png' %}">
+                Голосование
+              </div>
+              <div class="article__header--item article__header--item-setting">
+                <img src="{% static 'images/post/settings.png' %}">
+              </div>
+            </div>
+            <div class="article__form">
+              <input class="article__form--title" placeholder="Заголовок" name="title">  <!-- Добавлен name для title -->
+              <textarea placeholder="Текст поста" name="content"></textarea>  <!-- Добавлен name для content -->
+              <input class="article__form--tag" placeholder="Теги, не более 6" name="tags_input">  <!-- Добавлен name для tags_input -->
+              <div class="article__form--tags">
+                <!-- Здесь можно добавить отображение выбранных тегов через JS -->
+              </div>
+            </div>
+          </div>
+          <div class="article__body--card">
+            <div class="article__body--card-header">
+              <p>Кто может видеть пост</p>
+            </div>
+            <div class="article__body--card-body">
+              <label class="article__body--card-item">
+                <input type="radio" name="visibility" value="all_users">  <!-- Добавлен name для visibility -->
+                Все пользователи
+              </label>
+              <label class="article__body--card-item">
+                <input type="radio" name="visibility" value="subscribers_only">
+                Только подписчики
+              </label>
+              <label class="article__body--card-item">
+                <input type="radio" name="visibility" value="one_time_payment">
+                Разовая оплата
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="article__footer">
+          <div class="article__footer--container">
+            <div class="article__footer--item">
+              <label class="switch__text" for="adpost">Рекламный пост</label>
+              <label class="switch">
+                <input class="switch__input" type="checkbox" id="adpost" name="is_ad">  <!-- Добавлен name для is_ad -->
+                <span class="switch__track" aria-hidden="true"></span>
+              </label>
+              <!-- Поповер для ad_description добавляется через JS -->
+              <textarea name="ad_description" placeholder="О рекламодателе" style="display: none;"></textarea>  <!-- Скрытое поле для ad_description -->
+            </div>
+            <div class="article__footer--item">
+              <label class="switch__text" for="schedulepost">Запланировать постинг</label>
+              <label class="switch">
+                <input class="switch__input" type="checkbox" id="schedulepost">  <!-- Оставлено для JS -->
+                <span class="switch__track" aria-hidden="true"></span>
+              </label>
+              <input type="hidden" id="selectedDate" name="scheduled_at">  <!-- Добавлен name для scheduled_at -->
+            </div>
+            <div class="article__footer--item">
+              <label class="switch__text" for="disable_comments">Отключить комментарии</label>
+              <label class="switch">
+                <input class="switch__input" type="checkbox" id="disable_comments" name="comments_disabled">  <!-- Исправлен ID и добавлен name для comments_disabled -->
+                <span class="switch__track" aria-hidden="true"></span>
+              </label>
+            </div>
+          </div>
+          <button type="submit" class="article__footer--btn">Опубликовать пост</button>
+        </div>
+      </div>
+    </section>
+    <!-- Скрытые поля для медиа и голосования -->
+    <input type="hidden" name="media_type" id="media_type">  <!-- Для типа медиа (photo/video/audio) -->
+    <input type="file" name="file" id="file_input" style="display: none;">  <!-- Для файла медиа -->
+    <input type="text" name="question" id="poll_question" placeholder="Вопрос голосования" style="display: none;">  <!-- Для вопроса голосования -->
+    <textarea name="options" id="poll_options" placeholder="Варианты через запятую" style="display: none;"></textarea>  <!-- Для опций голосования -->
+  </form>
+{% endblock %}
+
+{% block footer %}
+   {% include "include/baseFooter.html" %}
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{% static 'js/header/header.js' %}"></script>
+<script src="{% static 'js/post/create_post.js' %}"></script>
+<script src="{% static 'js/post/edit.js' %}"></script>
+<script src="{% static 'js/post/tag.js' %}"></script>
+<script src="{% static 'js/post/media.js' %}"></script>
+<script src="{% static 'js/post/settings.js' %}"></script>
+<script src="{% static 'js/post/charCounter.js' %}"></script>
+<script src="{% static 'js/post/menu.js' %}"></script>
+<script src="{% static 'js/profile/scriptPersonalAccountSideBar.js' %}"></script>
+
+<!-- JS для поповера и календаря (без дублирования) -->
+<script>
+(() => {
+    const items = document.querySelectorAll('.article__footer--item');
+    if (items.length < 2) return;
+
+    const adItem = items[0];
+    const scheduleItem = items[1];
+    const adCheckbox = adItem.querySelector('.switch__input');
+    const scheduleCheckbox = scheduleItem.querySelector('.switch__input');
+    const selectedDateInput = document.getElementById('selectedDate');
+
+    // контейнеры делаем position:relative
+    [adItem, scheduleItem].forEach(el => {
+      if (getComputedStyle(el).position === 'static') el.style.position = 'relative';
+    });
+
+    // ===== util для поповера
+    function getOrCreatePopover(container, key) {
+      let pop = container.querySelector(`.af-popover[data-key="${key}"]`);
+      if (!pop) {
+        pop = document.createElement('div');
+        pop.className = 'af-popover';
+        pop.dataset.key = key;
+        container.appendChild(pop);
+      }
+      return pop;
+    }
+    function removePopover(container, key) {
+      const pop = container.querySelector(`.af-popover[data-key="${key}"]`);
+      if (pop) pop.remove();
+    }
+
+    // ===== Рекламный пост: простой блок
+    function handleAdToggle() {
+      if (adCheckbox.checked) {
+        const pop = getOrCreatePopover(adItem, 'ad');
+        pop.innerHTML = `
+        <div class="af-popover__wrapper">
+          <textarea name="" id="" placeholder="О рекламодателе" class="af-popover__textearea"></textarea>
+          <p class="af-popover__text">До 150 символов ( осталось 150 )</p>
+        </div>
+        `;
+        // ===== Синхронизация с скрытой textarea =====
+        const popoverTextarea = pop.querySelector('.af-popover__textearea');
+        const hiddenTextarea = document.querySelector('textarea[name="ad_description"]');
+        if (hiddenTextarea) {
+          popoverTextarea.value = hiddenTextarea.value;  // Загружаем существующее значение
+          popoverTextarea.addEventListener('input', function() {
+            hiddenTextarea.value = this.value;  // Обновляем скрытую textarea
+            console.log('ad_description updated:', hiddenTextarea.value);  // ===== ОТЛАДКА =====
+            // Обновляем счетчик символов
+            const remaining = 150 - this.value.length;
+            pop.querySelector('.af-popover__text').textContent = `До 150 символов ( осталось ${remaining} )`;
+          });
+        } else {
+          console.error('Hidden textarea not found');  // ===== ОТЛАДКА =====
+        }
+      } else {
+        removePopover(adItem, 'ad');
+        // Очищаем скрытую textarea при отключении
+        const hiddenTextarea = document.querySelector('textarea[name="ad_description"]');
+        if (hiddenTextarea) {
+          hiddenTextarea.value = '';
+          console.log('ad_description cleared');  // ===== ОТЛАДКА =====
+        }
+      }
+    }
+
+    // ===== Datetime picker (ваш оригинальный код остается без изменений)
+    function makeDatePicker({ initial, onApply }) {
+      // ... (ваш код для календаря, вставьте его сюда)
+    }
+
+    function handleScheduleToggle() {
+      // ... (ваш код для планирования, вставьте его сюда)
+    }
+
+    // подписки + init
+    adCheckbox.addEventListener('change', handleAdToggle);
+    scheduleCheckbox.addEventListener('change', handleScheduleToggle);
+    handleAdToggle();
+    handleScheduleToggle();
+
+    // закрытие поповеров при клике вне
+    document.addEventListener('click', (e) => {
+      const pop = scheduleItem.querySelector('.af-popover[data-key="schedule"]');
+      if (pop && !scheduleItem.contains(e.target)) {
+        removePopover(scheduleItem, 'schedule');
+        scheduleCheckbox.checked = true;
+      }
+
+      const adPop = adItem.querySelector('.af-popover[data-key="ad"]');
+      if (adPop && !adItem.contains(e.target)) removePopover(adItem, 'ad');
+    });
+  })();
+</script>
+
+<!-- Добавлен скрипт для интеграции медиа/голосования -->
+<script>
+ // Функция для проверки файла на клиенте
+  function validateFile(file, expectedType) {
+    const allowedTypes = {
+      photo: ['image/jpeg', 'image/png', 'image/gif', 'image/bmp', 'image/webp'],
+      video: ['video/mp4', 'video/avi', 'video/quicktime', 'video/x-ms-wmv', 'video/x-flv', 'video/webm'],
+      audio: ['audio/mpeg', 'audio/wav', 'audio/flac', 'audio/aac', 'audio/ogg']
+    };
+    if (!allowedTypes[expectedType].includes(file.type)) {
+      alert(`Неверный тип файла для ${expectedType}. Разрешены: ${allowedTypes[expectedType].join(', ')}`);
+      return false;
+    }
+    return true;
+  }
+
+  // Пример интеграции: При клике на "Фото" активировать загрузку файла и установить тип
+  document.getElementById('photo-upload').addEventListener('click', function() {
+    document.getElementById('media_type').value = 'photo';
+    const fileInput = document.getElementById('file_input');
+    fileInput.accept = 'image/*';  // Устанавливаем accept для фото
+    fileInput.click();
+  });
+  // Аналогично для видео и аудио
+  document.getElementById('video-upload').addEventListener('click', function() {
+    document.getElementById('media_type').value = 'video';
+    const fileInput = document.getElementById('file_input');
+    fileInput.accept = 'video/*';
+    fileInput.click();
+  });
+  document.getElementById('audio-upload').addEventListener('click', function() {
+    document.getElementById('media_type').value = 'audio';
+    const fileInput = document.getElementById('file_input');
+    fileInput.accept = 'audio/*';
+    fileInput.click();
+  });
+  // Для голосования: показать поля (без файлов)
+  document.getElementById('poll-create').addEventListener('click', function() {
+    document.getElementById('poll_question').style.display = 'block';
+    document.getElementById('poll_options').style.display = 'block';
+  });
+
+  // Валидация при выборе файла
+  document.getElementById('file_input').addEventListener('change', function() {
+    const file = this.files[0];
+    const mediaType = document.getElementById('media_type').value;
+    if (file && !validateFile(file, mediaType)) {
+      this.value = '';  // Очищаем выбор
+    }
+  });
+</script>
+{% endblock %}
+
+
