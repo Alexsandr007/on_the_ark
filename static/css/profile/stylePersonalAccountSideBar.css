@@ -1,0 +1,111 @@
+#header-nav-profile-picture {
+  cursor: pointer;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 310px;
+  position: fixed;
+  right: -310px;
+  top: 0;
+  opacity: 0;
+  visibility: hidden;
+  background-color: #fff;
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+  z-index: 10000;
+  transition: all 0.3s ease;
+}
+.sidebar__profile-preview {
+  position: relative;
+  width: 100%;
+  min-height: 120px;
+  max-height: 120px;
+  background-color: #C4321A;
+}
+.sidebar__profile-preview-pad {
+  width: 120px;
+  height: 120px;
+  padding: 20px;
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff;
+  position: absolute;
+  top: 40px;
+  left: 40px;
+}
+.sidebar__profile-preview-pattern {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: url("../../images/profile/sidebar-icons/profile-picture-ornament.svg") no-repeat center;
+}
+.sidebar__profile-preview-picture {
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+.sidebar__profile-preview-picture img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.sidebar._active {
+  right: 0;
+  opacity: 1;
+  visibility: visible;
+}
+.sidebar__overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  visibility: hidden;
+  opacity: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+  pointer-events: none;
+}
+.sidebar__overlay._active {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: all;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  margin-top: 100px;
+}
+.nav__link, .logout {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 40px 10px 40px;
+}
+.nav__link:hover, .logout:hover {
+  background-color: #f2f2f2;
+}
+.nav__text {
+  font-family: "Manmore";
+  font-weight: 500;
+  font-style: medium;
+  font-size: 14px;
+  line-height: 27px;
+  color: #000;
+}
+
+.logout {
+  width: 100%;
+  margin-top: auto;
+  margin-bottom: 40px;
+}

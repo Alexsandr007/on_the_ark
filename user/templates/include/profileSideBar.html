@@ -1,0 +1,30 @@
+{% load static %}
+<div class="sidebar__overlay" id="sidebar__overlay"></div>
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar__profile-preview">
+        <div class="sidebar__profile-preview-pad">
+            <div class="sidebar__profile-preview-picture">
+                <img src="{% if user.photo %}{{ user.photo.url }}{%else%}{% static 'images/profile/girl-img.jpg' %}{% endif %}" alt="Фото профиля">
+            </div>
+            <div class="sidebar__profile-preview-pattern"></div>
+        </div>
+    </div>
+
+
+    <nav class="nav">
+        <a href="/profile/" class="nav__link"><img src="{% static 'images/profile/sidebar-icons/icon-profile.svg' %}" class="nav__icon"><span
+                class="nav__text">Мой профиль</span></a>
+        <a href="#" class="nav__link"><img src="{% static 'images/profile/sidebar-icons/icon-wallet.svg' %}" class="nav__icon"><span
+                class="nav__text">Кошелёк</span></a>
+        <a href="#" class="nav__link"><img src="{% static 'images/profile/sidebar-icons/icon-paid-subs.svg' %}" class="nav__icon"><span
+                class="nav__text">Подписки</span></a>
+        <a href="#" class="nav__link"><img src="{% static 'images/profile/sidebar-icons/icon-notifications.svg' %}" class="nav__icon"><span
+                class="nav__text">Уведомления</span></a>
+        <a href="#" class="nav__link"><img src="{% static 'images/profile/sidebar-icons/icon-settings.svg' %}" class="nav__icon"><span
+                class="nav__text">Редактировать профиль</span></a>
+    </nav>
+
+    <a href="/logout/" class="logout"><img src="{% static 'images/profile/sidebar-icons/icon-logout.svg' %}" class="nav__icon"><span
+            class="nav__text">Выйти</span></a>
+
+</aside>
