@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             posts.forEach(post => {
                 if (filter === 'all' || post.getAttribute('data-type') === filter) {
-                    post.style.display = 'block';
+                    post.style.display = 'flex';
                 } else {
                     post.style.display = 'none';
                 }

@@ -12,7 +12,7 @@
     <div class="profile__articles--container">
         <div class="profile__articles--header">
             <div class="profile__articles--btn">
-                <button class="active" data-filter="all">Все посты {{ user.username }}</button>
+                <button class="active" data-filter="all">Все посты {% if user.username %}{{ user.username }}{% endif %}</button>
             </div>
             <div class="profile__articles--split">|</div>
             <div class="profile__articles--btn">

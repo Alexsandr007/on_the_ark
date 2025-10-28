@@ -1,17 +1,17 @@
 <!-- Модальное окно Добавления цели -->
 <div class="modal-overlay" id="modalOverlay">
-  <div class="modal">
+  <div class="modal" style="padding: 25px 40px;top:0px">
     <button class="modal-close" id="modalClose"></button>
     <form id="goalForm">
       {% csrf_token %}
       <h2 class="input-title">Цель</h2>
-      <input type="text" name="goal_title" class="modal-input" placeholder="{% if user.goal %}{{ user.goal.goal_title }}{%else%}Я хочу{% endif %}" required>
+      <input type="text" name="goal_title" class="modal-input" placeholder="Я хочу" value="{% if user.goal %}{{ user.goal.goal_title }}{% endif %}" required>
       <label class="description-input">Покажите, к чему мы идём вместе. Это вызывает доверие и желание помочь.</label>
       <h2 class="input-title">Сумма</h2>
-      <input type="number" name="goal_amount" class="modal-input-sum" placeholder="{% if user.goal %}{{ user.goal.goal_amount }}{%else%}Сумма сбора{% endif %}" required>
+      <input type="number" name="goal_amount" class="modal-input-sum" placeholder="Сумма сбора" value="{% if user.goal %}{{ user.goal.goal_amount }}{% endif %}" required>
       <label class="description-input">Укажите итоговую сумму сбора в рублях. Она будет отображаться в прогрессе сбора</label>
       <h2 class="input-title">Описание цели:</h2>
-      <textarea name="goal_description" class="modal-input-description" placeholder="{% if user.goal %}{{ user.goal.goal_description }}{%else%}Цель мотивирует людей помочь вам быстрее.{% endif %}" maxlength="200"></textarea>
+      <textarea name="goal_description" class="modal-input-description" placeholder="Цель мотивирует людей помочь вам быстрее." maxlength="200">{% if user.goal %}{{ user.goal.goal_description }}{% endif %}</textarea>
       <label class="description-input">До 200 символов (<span id="charCountGoal">200</span> осталось)</label>
       <div class="right">
         <button type="submit" class="modal-button">Задаться целью</button>
@@ -28,7 +28,7 @@
     <form id="aboutForm" class="aboutForm">
       {% csrf_token %}
       <h2 class="input-title">Об Авторе</h2>
-      <textarea name="about" class="modal-input-description" placeholder="{% if user.about %}{{ user.about }}{%else%}Напишите пару слов о себе{% endif %}" maxlength="200"></textarea>
+      <textarea name="about" class="modal-input-description" placeholder="Напишите пару слов о себе" maxlength="200">{% if user.about %}{{ user.about }}{% endif %}</textarea>
       <label class="description-input">До 200 символов (<span id="charCountAbout">200</span> осталось)</label>
       <div class="right">
         <button type="submit" class="modal-button">Сохранить</button>
