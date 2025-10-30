@@ -1,0 +1,146 @@
+{% extends "user/base.html" %}
+{% load static %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'css/profile/aboutUs/style.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/profile/aboutUs/styleModals.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/profile/aboutUs/styleSlider.css' %}" />
+{% endblock %}
+
+{% block header %}
+{% if user.is_authenticated %}
+{% include "include/profileHeader.html" %}
+{% else %}
+{% include "include/baseHeader.html" %}
+{% endif %}
+{% endblock %}
+
+{% block content %}
+{% include "user/homeModals/AuthModals.html" %}
+<section>
+    <section class="first-section">
+        <img src="{% static 'images/profile/about/about.png' %}" class="background-image">
+        <div class="content">
+            <div class="stats">
+                <div class="stats-block-text helvetica-text">
+                    <h2>О НАС</h2>
+                    <p class="left">Про что мы?</p>
+                </div>
+                <div class="stats-block-text helvetica-text">
+                    <h2>О НАС</h2>
+                    <p class="right">Кто мы?</p>
+                </div>
+            </div>
+        </div>
+        <img src="{% static 'images/profile/about/girl.png' %}" class="girl-image">
+    </section>
+
+    <div class="section-divider">
+        <div class="color-div">
+            <marquee behavior="scroll" direction="left" width="100%">
+                Платформа №1 для поддержки и развития российской культуры. Вместе сохраним наследие!
+            </marquee>
+
+        </div>
+        <img src="{% static 'images/profile/about/Group_11.png' %}" class="divider-image">
+    </div>
+
+    <section class="second-section">
+        <div class="pdf-content">
+            <h2>Зачем этому потоку нужно наше внимание?</h2>
+            <div>
+                <p>Потому что <span>культура — это язык,</span> на котором мы говорим с миром и с самими собой. Она
+                    отвечает
+                    на самые
+                    важные вопросы: <span>«Кто мы?», «Откуда мы?»</span> и, что самое главное, <span>«Какими мы хотим
+                        быть?»</span>.
+                    <br><br>
+                    Развивая культуру, мы не просто сохраняем прошлое — <span>мы строим свое будущее, создаем
+                        среду</span>, в
+                    которой нашим
+                    детям будет чем гордиться, а душа найдет, где укрыться от суеты современного мира.
+                    <br><br>
+                    Именно для этой цели и был создан наш проект — «На Ковчеге»!
+                </p>
+            </div>
+        </div>
+    </section>
+    <div class="section-divider">
+        <div class="color-div">
+            <marquee behavior="scroll" direction="left" width="100%">
+                Платформа №1 для поддержки и развития российской культуры. Вместе сохраним наследие!
+            </marquee>
+
+        </div>
+        <img src="{% static 'images/profile/about/Group_11.png' %}" class="divider-image">
+    </div>
+
+    <section class="third-section">
+        <img src="{% static 'images/profile/about/Group_12.png' %}" class="divider-image">
+        <div class="content">
+
+            <div class="offers">
+                <div class="offers-text">
+                    <h2>Наши ценности</h2>
+                    <p>Мы верим, что в сегодняшнем быстро меняющемся мире <span>культура — тот самый ковчег</span>,
+                        который
+                        помогает нам
+                        сохранить свою идентичность, человечность и связь с корнями.</p>
+                </div>
+                <div class="offers-text">
+                    <h2>Наша задача</h2>
+                    <p><span>Наша задача</span> — быть для этого ковчега и <span>надежным причалом, и попутным
+                            ветром</span>.
+                        <br><br>
+                        <span>«На Ковчеге»</span> — это практическая площадка для всех, кто готов вложить свои силы и
+                        талант в это
+                        большое
+                        дело. Мы помогаем организаторам, художникам, музыкантам, ремесленникам и всем неравнодушным
+                        людям
+                        воплощать в жизнь их проекты, будь то фестиваль, выставка, мастер-класс или издание книги. Мы
+                        объединяем
+                        тех, кто видит в русской культуре и культуре народов России неиссякаемый источник вдохновения и
+                        сил.
+                    </p>
+                </div>
+                <div class="block-image">
+                    <p class="block-image-text">как-то так</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider section-divider-last">
+        <div class="color-div">
+            <marquee behavior="scroll" direction="left" width="100%">
+                Платформа №1 для поддержки и развития российской культуры. Вместе сохраним наследие!
+            </marquee>
+        </div>
+        <img src="{% static 'images/profile/about/about2.png' %}" class="divider-image">
+    </div>
+    <section class="six-section">
+        <img src="{% static 'images/profile/about/about12.png' %}" class="background-image">
+        <div class="content">
+            <h2 class="text helvetica-text">Поэтому, если вам есть что сказать этому миру на языке культуры<br> — добро
+                пожаловать на борт. <br><br>
+                Давайте плыть вместе!</h2>
+            <div class="bottom-button">
+                <a href="#" class="transparent-button active">Стать автором</a>
+            </div>
+        </div>
+    </section>
+    {% endblock %}
+
+
+    {% block footer %}
+    {% include "include/profileFooter.html" %}
+    {% endblock %}
+
+
+    {% block extra_scripts %}
+    <script src="{% static 'js/header/header.js' %}"></script>
+    <script src="{% static 'js/home/scriptModals.js' %}"></script>
+    <script src="{% static 'js/profile/aboutUs/scriptSlider.js.js' %}"></script>
+    <script src="{% static 'js/profile/aboutUs/script.js.js' %}"></script>
+    <script src="{% static 'js/profile/scriptPersonalAccountSideBar.js' %}"></script>
+    {% endblock %}

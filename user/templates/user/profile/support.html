@@ -1,0 +1,261 @@
+{% extends "user/base.html" %}
+{% load static %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'css/profile/support/style.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/profile/support/styleModalsPayment.css' %}" />
+{% endblock %}
+
+{% block header %}
+{% if user.is_authenticated %}
+{% include "include/profileHeader.html" %}
+{% else %}
+{% include "include/baseHeader.html" %}
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<section class="profile__block">
+    <img class="profile__fon" src="{% static 'images/profile/bgMain.png' %}">
+    <div class="profile__container">
+    </div>
+</section>
+
+<section class="main-block">
+    <div class="main-block__devider"></div>
+    <div class="main-block__fon">
+        <img class="" src="{% static 'images/profile/beads.png' %}" alt="">
+    </div>
+</section>
+
+<section>
+    <div class="main-block__info">
+        <div class="main-block__inner">
+            <div class="main-block__header">
+                Ключевые вопросы
+            </div>
+
+            <div class="main-block__items">
+                <div class="main-block__item">
+                    <div class="main-block__item_focus">
+                        <div class="main-block__information">
+                            <div class="main-block__number">
+                                1
+                            </div>
+                            <div class="main-block__title">
+                                Что такое «На ковчеге»?
+                            </div>
+                        </div>
+                        <div>
+                            >
+                        </div>
+                    </div>
+                    <div class="main-block__text">
+                        <span class="span">«На ковчеге»</span> – это платформа, где ваши творческие начинания
+                        превращаются в источник дохода. Здесь блогеры, стримеры, художники, музыканты и другие
+                        талантливые личности могут зарабатывать на своих увлечениях и устанавливать крепкую связь с
+                        поклонниками. 
+                        <br><br>
+                        Основной принцип работы заключается в том, что подписчики платят за доступ к эксклюзивным
+                        материалам, созданным автором. Это шанс не только поделиться своим искусством, но и получить за
+                        это достойное вознаграждение.
+                        <br><br>
+                        Ключевая особенность платформы <span class="span">«На ковчеге»</span> – ее тема. Здесь мы
+                        объединили всех, кто искренне ценит свою страну, ее богатую культуру и историческое наследие, и
+                        стремится популяризировать это среди широкой аудитории. 
+
+                    </div>
+                </div>
+
+                <div class="main-block__item">
+                    <div class="main-block__item_focus">
+                        <div class="main-block__information">
+                            <div class="main-block__number">
+                                2
+                            </div>
+                            <div class="main-block__title">
+                                Как это работает?
+                            </div>
+                        </div>
+                        <div>
+                            >
+                        </div>
+                    </div>
+                    <div class="main-block__text">
+                        <span><b>Все просто</b></span>
+                         <br>
+                        <br>
+                        <span class="span">1. Создайте аккаунт</span> на платформе, выберите имя пользователя и
+                        заполните профайл. <br>
+                        <span class="span">2. Определите</span> тип контента (статьи, видео, музыка и т.д.) и его
+                        уникальность.  <br>
+                        <span class="span">3. Установите</span> уровни донатов и бонусы для подписчиков (эксклюзивные
+                        материалы, личные сообщения и т.д.).  <br>
+                        <span class="span">4. Продвигайте</span> страницы в соцсетях, рассказывайте о проектах и
+                        делитесь ссылками.  <br>
+                        <span class="span">5. Обновляйте</span> контент регулярно.  <br>
+                        <span class="span">6. Взаимодействуйте</span> с аудиторией через комментарии и личные
+                        сообщения.  <br>
+                        <span class="span">7. Следите</span> за статистикой и корректируйте стратегию на основе данных.
+                    </div>
+                </div>
+
+                <div class="main-block__item">
+                    <div class="main-block__item_focus">
+                        <div class="main-block__information">
+                            <div class="main-block__number">
+                                3
+                            </div>
+                            <div class="main-block__title">
+                                Как начать зарабатывать?
+                            </div>
+                        </div>
+                        <div>
+                            >
+                        </div>
+                    </div>
+                    <div class="main-block__text">
+                        Для успешного заработка на нашей платформе создайте платную подписку и начните продавать разовые
+                        посты. Добавляйте интересный и эксклюзивный контент, чтобы привлекать внимание аудитории.
+                        Делитесь ссылками на свой блог в социальных сетях — именно оттуда приходят первые подписчики.
+                        Активно продвигайте свою деятельность на других платформах, чтобы расширить аудиторию.
+
+                    </div>
+                </div>
+
+
+                <div class="main-block__item">
+                    <div class="main-block__item_focus">
+                        <div class="main-block__information">
+                            <div class="main-block__number">
+                                4
+                            </div>
+                            <div class="main-block__title">
+                                Нужно ли платить за пользование платформой?
+                            </div>
+                        </div>
+                        <div>
+                            >
+                        </div>
+                    </div>
+                    <div class="main-block__text">
+                        Нет, регистрация и работа на платформе бесплатные, удерживается лишь небольшая комиссия (5%) при
+                        выводе средств.
+                    </div>
+                </div>
+
+
+                <div class="main-block__item">
+                    <div class="main-block__item_focus">
+                        <div class="main-block__information">
+                            <div class="main-block__number">
+                                5
+                            </div>
+                            <div class="main-block__title">
+                                Когда и как можно вывести средства?
+                            </div>
+                        </div>
+                        <div>
+                            >
+                        </div>
+                    </div>
+                    <div class="main-block__text">
+                        Вывод средств возможен ежедневно, минимальная сумма — 50 рублей на российские карты. Комиссия
+                        сервиса составляет 5%.
+                    </div>
+                </div>
+
+
+                <div class="main-block__item">
+                    <div class="main-block__item_focus">
+                        <div class="main-block__information">
+                            <div class="main-block__number">
+                                6
+                            </div>
+                            <div class="main-block__title">
+                                Как я могу поддержать понравившегося автора?
+                            </div>
+                        </div>
+                        <div>
+                            >
+                        </div>
+                    </div>
+                    <div class="main-block__text">
+                        Если вы хотите выразить свою поддержку автору, но не можете делать это регулярно, разовый донат
+                        будет отличным вариантом. Даже небольшая сумма вдохновит автора и покажет, что его труд
+                        действительно важен для вас.
+                        <br><br>
+                        Если же вы хотите поддерживать автора на постоянной основе, можно оформить ежемесячную подписку
+                        — это как если бы вы каждый месяц покупали ему «кофе за идеи».  
+                        <br><br>
+                        Кроме того, если вам интересно что-то более материальное, у автора иногда есть мерч или
+                        эксклюзивные материалы, которые можно купить отдельно. Это всё отличные способы показать свою
+                        поддержку и признательность за его труд.
+
+
+                    </div>
+                </div>
+
+                <div class="main-block__item">
+                    <div class="main-block__item_focus">
+                        <div class="main-block__information">
+                            <div class="main-block__number">
+                                7
+                            </div>
+                            <div class="main-block__title">
+                                Есть ли минимальная сумма для доната и/или подписки?
+                            </div>
+                        </div>
+                        <div>
+                            >
+                        </div>
+                    </div>
+                    <div class="main-block__text">
+                        Мы верим, что любая помощь важна, поэтому не установили жестких ограничений по сумме. Даже если
+                        решите пожертвовать всего 50 рублей, это станет для автора знаком поддержки и будет ценным.
+                        Однако, если хотите получить дополнительные бонусы, такие как доступ к эксклюзивному контенту
+                        или упоминание, обратите внимание на условия разных уровней поддержки. Автор указал
+                        рекомендуемые суммы, позволяющие получить эти привилегии.
+
+                    </div>
+                </div>
+                <div class="main-block__item">
+                    <div class="main-block__item_focus">
+                        <div class="main-block__information">
+                            <div class="main-block__number">
+                                8
+                            </div>
+                            <div class="main-block__title">
+                                Я могу отменить подписку? Как это сделать?
+                            </div>
+                        </div>
+                        <div>
+                            >
+                        </div>
+                    </div>
+                    <div class="main-block__text">
+                        Да, вы можете отменить подписку в любой момент. Чтобы сделать это, перейдите в пункт «Мои
+                        подписки», выберете автора, чью подписку хотите аннулировать, и нажмите на кнопку «Отписаться».
+                        Со следующего расчетного месяца оплата сниматься не будет.
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+{% endblock %}
+
+
+{% block footer %}
+{% include "include/profileFooter.html" %}
+{% endblock %}
+
+
+{% block extra_scripts %}
+    <script src="{% static 'js/header/header.js' %}"></script>
+<script src="{% static 'js/profile/support/faqAccordion.js' %}"></script>
+<script src="{% static 'js/profile/support/scriptModalsPayment.js.js' %}"></script>
+<script src="{% static 'js/profile/scriptPersonalAccountSideBar.js' %}"></script>
+{% endblock %}

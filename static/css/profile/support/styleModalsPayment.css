@@ -1,0 +1,784 @@
+.content{
+    padding: 0px 101px;
+}
+
+.arrows{
+    width: 96%;
+    padding: 23px;
+    z-index: 10;
+}
+
+.block-course{
+    width: 480px;
+    height: 765px;
+    border-radius: 20px;
+    opacity: 1;
+    border-width: 1px;
+    border: 1px solid #C43418;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.block-course:hover{
+  box-shadow: 0px 0px 25px 0px rgba(196, 52, 24, 1);
+}
+
+.slides-wrapper{
+    margin: 60px 0px;
+}
+
+.modal-overlay{
+    position: absolute;
+}
+
+.modal{
+    max-width: none;
+    padding: 30px 0px;
+    border-radius: 20px;
+    height: auto;
+    top: 87px;
+    margin: 0% 5%;
+}
+
+.modal h3{
+font-family: "Manrope";
+    font-weight: 500;
+    font-size: 23px;
+    line-height: 26px;
+    margin: 20px;
+    color: #000000;
+}
+
+.modal .slide{
+    flex-direction: row;
+    gap:20px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.modal .slide h2{
+    font-family: "Roboto";
+    font-weight: 700;
+    font-style: Bold;
+    font-size: 43px;
+    line-height: 90%;
+    letter-spacing: 0%;
+    color: #FF8C76;
+}
+
+.modal .content {
+    padding: 0px 64px;
+    justify-content: start;
+    height: 100%;
+
+
+}
+
+
+
+.red-dots-list {
+  list-style: none;
+  padding-left: 0;
+  min-height: 180px;
+}
+
+.red-dots-list li {
+position: relative;
+    padding-left: 23px;
+    margin-bottom: 10px;
+    line-height: 1.5;
+    font-family: "Manrope";
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 140%;
+    letter-spacing: 0%;
+    color: #000000;
+    text-align: left;
+
+}
+
+.red-dots-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 10px;
+    transform: translateY(-50%);
+    width: 10px;
+    height: 10px;
+    background-color: #FF8C76;
+    border-radius: 50%;
+}
+
+.block-course .content img{
+    padding: 50px 0px 30px 0px;
+}
+
+.modal .cost-before{
+    font-family: "Manrope";
+    font-weight: 500;
+    font-size: 23px;
+    line-height: 26px;
+    text-decoration: line-through;
+    color: #DADADA;
+    width: 250px;
+    text-align: end;
+    margin: 0px 0px 18px 0px;
+}
+
+.cost-after span{
+    font-family: "Manrope";
+    font-weight: 700;
+    font-style: Bold;
+    font-size: 49px;
+    line-height: 26px;
+    letter-spacing: 0%;
+    color: rgba(196, 50, 26, 1);
+    margin: 0px 0px 20px 0px;
+
+}
+
+.content .cost-after{
+    font-family: "Manrope";
+    font-weight: 700;
+    font-style: Bold;
+    font-size: 14px;
+    line-height: 26px;
+    letter-spacing: 0%;
+    color: rgba(196, 50, 26, 1);
+
+}
+
+.modal .profile__btn{
+    font-family: "Manrope";
+    font-weight: 500;
+    font-size: 23px;
+    line-height: 26px;
+    letter-spacing: 0%;
+    padding: 10px 20px;
+
+}
+
+.modal .content .footer-text{
+    font-family: "Manrope";
+    font-weight: 300;
+    font-size: 12px;
+    line-height: 140%;
+    letter-spacing: 0%;
+    margin-top: 30px;
+}
+
+
+@media (max-width: 768px) {
+    .arrows{
+        display: none;
+    }
+}
+
+/* Планшеты */
+@media (min-width: 768px) {
+  .modal {
+    padding: 30px 0;
+    margin: 0 5%;
+  }
+    .modal .content{
+    width: 100%;
+  }
+  
+  .modal-content {
+    padding: 0 64px;
+  }
+  
+  .slide {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .block-course {
+    width: calc(50% - 10px);
+    height: auto;
+    min-height: 765px;
+  }
+
+  /* .block-course-one{
+      width: calc(50% - 10px);
+    height: auto;
+    min-height: 449px;
+  } */
+  
+  .block-course h2 {
+    font-size: 43px;
+  }
+  
+  .red-dots-list {
+    min-height: 180px;
+  }
+  
+  .red-dots-list li {
+    padding-left: 23px;
+    font-size: 14px;
+  }
+  
+  .red-dots-list li::before {
+    width: 10px;
+    height: 10px;
+    top: 10px;
+  }
+  
+  .block-course .course-content img {
+    padding: 50px 0 30px 0;
+  }
+  
+  .cost-before {
+    font-size: 23px;
+  }
+  
+  .cost-after {
+    font-size: 49px;
+  }
+  
+  
+  .footer-text {
+    font-size: 12px;
+    margin-top: 30px;
+  }
+}
+
+/* Десктоп */
+@media (min-width: 1024px) {
+  
+  .block-course {
+    width: 480px;
+  }
+  
+  .arrows {
+    padding: 0 23px;
+  }
+
+
+}
+
+/* Маленькие мобильные (320px - 374px) */
+@media (max-width: 374px) {
+
+
+
+.modal {
+    width: 95%;
+}
+
+.error-payment{
+  width: 80%;
+}
+
+.modal .content {
+    width: 95%;
+}
+  
+  .modal {
+    padding: 15px 0;
+  }
+  
+  .modal-content {
+    padding: 0 10px;
+  }
+  
+  .modal h3 {
+    font-size: 18px;
+    margin: 15px 0;
+  }
+  
+  .block-course {
+    padding: 15px;
+  }
+  
+  .block-course h2 {
+    font-size: 28px;
+    margin-bottom: 15px;
+  }
+  
+  .red-dots-list li {
+    font-size: 13px;
+    padding-left: 18px;
+    margin-bottom: 10px;
+  }
+  
+  .red-dots-list li::before {
+    width: 6px;
+    height: 6px;
+    top: 7px;
+  }
+  
+  .block-course .course-content img {
+    max-width: 150px;
+    padding: 20px 0;
+  }
+  
+  .cost-before {
+    font-size: 16px;
+  }
+  
+  .cost-after {
+    font-size: 32px;
+  }
+  
+  
+  .footer-text {
+    font-size: 10px;
+    margin-top: 15px;
+  }
+}
+
+/* Скрытие стрелок на мобильных */
+@media (max-width: 767px) {
+  .arrows {
+    display: none;
+  }
+
+  .modal .content {
+    padding: 0px 0px;
+
+}
+}
+
+@media (max-width: 1365px) {
+    .modal {
+        padding: 30px 0;
+        margin: 0 5%;
+        max-width: 660px;
+    }
+}
+
+
+.modal-black{
+  position: absolute;
+    background: rgba(17, 4, 1, 1);
+    border-radius: 12px;
+    padding: 30px;
+    width: 90%;
+    max-width: 964px;
+    min-height: 860px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    padding: 64px 0px;
+    border-radius: 20px;
+    height: auto;
+    top: 87px;
+    margin: 0% 5%;
+    box-shadow: 0px 0px 40px 0px rgba(255, 255, 255, 1);
+
+}
+
+.modal-black .content{
+  min-height: 860px;
+  justify-content: space-between;
+}
+
+.modal-black .modal-close{
+    color: #ffffff;
+    background-color: #000000;
+}
+
+.modal-black .modal-close::before, .modal-black  .modal-close::after {
+    background: #ffffff;
+}
+
+/* При наведении меняем цвет крестика на красный */
+.modal-black .modal-close:hover::before,
+.modal-black .modal-close:hover::after {
+    background: #C4321A; /* Красный цвет при наведении */
+}
+
+.modal-black h3{
+  font-family: "Manrope";
+  font-weight: 500;
+  font-size: 23px;
+  line-height: 26px;
+  letter-spacing: 0%;
+  margin-bottom: 0px;
+
+}
+
+.modal-black .block-text{
+  width: 100%;
+  text-align: left;
+}
+
+.modal-black h2{
+  font-family: "Roboto";
+  font-weight: 700;
+  font-style: Bold;
+  font-size: 43px;
+  line-height: 90%;
+  letter-spacing: 0%;
+  margin: 60px 0px 30px 0px;
+
+}
+
+.modal-black .block-cost{
+  display: flex;
+  justify-content: space-between;
+}
+
+.modal-black hr{
+  border: solid 1px rgba(68, 68, 68, 1);
+  margin: 5px 0px 20px 0px;
+}
+
+.modal-black .modal-checkbox span{
+  font-family: "Manrope";
+  font-weight: 300;
+  font-size: 12px;
+  line-height: 140%;
+  letter-spacing: 0%;
+  vertical-align: middle; 
+  color: rgba(255, 255, 255, 1);
+  padding-top: 4px;
+}
+
+.modal-black .checkbox-custom {
+    border: 1px solid #ffffff;
+    background: #000000;
+}
+
+.modal-black .modal-checkbox input:checked + .checkbox-custom {
+    border-color: #ffffff;
+}
+
+.checkbox-custom::after {
+    content: '';
+    position: absolute;
+    left: 2px;
+    top: 0px;
+    width: 6px;
+    height: 8px;
+    border: solid rgba(229, 179, 26, 1);
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+    opacity: 0;
+    transition: opacity 0.3s 
+ease;
+}
+
+.modal-black .block-text p{
+      text-align: start;
+    max-width: 484px;
+    font-family: "Manrope";
+    font-weight: 300;
+    font-style: Light;
+    font-size: 14px;
+    line-height: 140%;
+    letter-spacing: 0%;
+    margin: 0px 0px 20px 0px;
+}
+
+
+.modal-black .block-text a{
+    color: rgba(229, 179, 26, 1);
+}
+
+.buttons-block{
+    justify-content: flex-start;
+    display: flex;
+    gap: 35px;
+}
+
+.modal .profile__btn{
+    border-radius: 10px;
+}
+
+.modal-black .profile__btn{
+    padding: 10px 20px;
+    font-family: "Manrope";
+    font-weight: 500;
+    font-style: Medium;
+    font-size: 14px;
+    line-height: 27px;
+    letter-spacing: 0%;
+    width: auto;
+    border-radius: 10px;
+}
+
+.modal .profile__btn:hover{
+    background: #E5B31A;
+    border-color: #E5B31A;
+
+}
+
+.modal-black .profile__btn:hover{
+    background: #E5B31A;
+    border-color: #E5B31A;
+
+}
+
+.modal-black .profile__btn:active {
+    background: #000000;
+    border-color: #000000;
+
+}
+
+.modal .profile__btn:active {
+    background: #000000;
+    border-color: #000000;
+
+}
+
+.profile__btn-gray{
+    background: rgba(150, 150, 150, 1);
+    border: none;
+    padding: 10px 20px;
+    font-family: "Manrope";
+    font-weight: 500;
+    font-style: Medium;
+    font-size: 14px;
+    line-height: 27px;
+    letter-spacing: 0%;
+    width: auto;
+    border-radius: 10px;
+}
+
+.profile__btn-gray:hover{
+    background: rgba(210, 210, 210, 1);
+    border-color: rgba(210, 210, 210, 1);
+
+}
+
+.profile__btn-gray:active {
+    background: rgba(92, 92, 92, 1);
+    border-color: rgba(92, 92, 92, 1);
+}
+
+.modal-black .text-block-top{
+  width: 100%;
+}
+
+
+@media (max-width: 468px) {
+  .modal-black .block-cost {
+    flex-direction: column;
+  }
+
+  .buttons-block {
+    flex-direction: column;
+  }
+
+  .modal-black h2 {
+    line-height: 120%;
+  }
+}
+
+
+.block-month{
+  width: 100%;
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.container-text{
+    background: rgba(92, 92, 92, 1);
+    border: 1px solid rgba(255, 255, 255, 1);
+    max-height: 111px;
+    width: 176px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 15px;
+    gap: 20px;
+    border-width: 1px;
+    padding-top: 15px;
+    padding-right: 23px;
+    padding-bottom: 30px;
+    padding-left: 15px;
+    color: rgba(255, 255, 255, 1);
+}
+
+.modal-black .container-text p{
+  font-family: "Manrope";
+  font-weight: 300;
+  font-size: 14px;
+  line-height: 140%;
+  margin: 0px 0px 0px 0px;
+}
+
+.modal-black .container-text span{
+  font-family: "Manrope";
+  font-weight: 500;
+  font-size: 23px;
+  line-height: 26px;
+  letter-spacing: 0%;
+}
+
+
+.container-text:hover{
+  box-shadow: 0px 0px 25px 0px rgba(229, 179, 26, 1);
+}
+
+.container-text:active{
+  background: rgba(229, 179, 26, 1);
+}
+
+
+.block-course-one{
+    position: absolute;
+    background: #ffffff;
+    flex-direction: column;
+    width: 808px;
+    min-height: 449px;
+    top: 200px;
+}
+
+.block-course-one h2{
+    font-family: "Roboto";
+    font-weight: 700;
+    font-style: Bold;
+    font-size: 43px;
+    line-height: 90%;
+    letter-spacing: 0%;
+    color: #FF8C76;
+}
+
+.block-course-one .cost-before{
+      font-family: "Manrope";
+    font-weight: 500;
+    font-size: 23px;
+    line-height: 26px;
+    text-decoration: line-through;
+    color: #DADADA;
+    width: 250px;
+    text-align: end;
+    margin: 0px 0px 18px 0px;
+}
+
+.block-flex-one{
+  display: flex;
+  gap: 100px;
+}
+
+.information-cost{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.payment-method-btn{
+    padding: 10px 20px;
+    font-family: "Manrope";
+    width: auto;
+    border-radius: 10px;
+    font-weight: 500;
+    font-size: 23px;
+    line-height: 26px;
+    margin-top: 30px;
+    margin-bottom: 40px;
+
+}
+
+.payment-method-btn:hover{
+      background: #E5B31A;
+    border-color: #E5B31A;
+}
+
+.payment-method-btn:active{
+    background: #000000;
+    border-color: #000000;
+}
+
+
+.block-course .content .information-cost img {
+    padding: 20px 0px 30px 0px;
+}
+
+@media (max-width: 1100px) {
+  .block-course-one{
+      width: 80%;
+  }
+
+  .block-flex-one {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+}
+
+.error-payment {
+  position: fixed;
+    min-height: 400px;
+    max-width: 579px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal .bear-img{
+    position: absolute;
+    bottom: 0;
+    display: flex;
+    z-index: 2;
+    align-items: center;
+    width: 579px;
+    justify-content: center;
+}
+
+.content-error{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 400px;
+    z-index: 8;
+}
+
+.content-error h2{
+  font-family: "Manrope";
+  font-weight: 500;
+  font-size: 23px;
+  line-height: 26px;
+  letter-spacing: 0%;
+  margin: 0px;
+      margin: 15px 0px 0px 0px;
+    text-align: center;
+
+}
+
+.modal .payment-error-btn {
+    padding: 10px 20px;
+    font-family: "Manrope";
+    width: auto;
+    border-radius: 10px;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 27px;
+    letter-spacing: 0%;
+    margin-bottom: 50px;
+}
+
+.modal .women-img {
+    position: absolute;
+    bottom: 0;
+    display: flex;
+    z-index: 2;
+    align-items: center;
+    width: 435px;
+    justify-content: center;
+}
+
+@media (max-width: 374px) {
+
+
+.error-payment{
+  width: 80%;
+}
+
+.block-course {
+
+    height: 815px;
+}
+
+}

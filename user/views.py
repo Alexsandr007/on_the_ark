@@ -203,3 +203,12 @@ def update_background_ajax(request):
         return JsonResponse({'success': True, 'background_url': user.background_photo.url})
     
     return JsonResponse({'success': False})
+
+def support(request):
+    return render(request, 'user/profile/support.html')
+
+def about_us(request):
+    return render(request, 'user/profile/aboutUs.html')
+
+def blog(request):
+    return render(request, 'user/profile/blog.html')

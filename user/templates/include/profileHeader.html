@@ -1,34 +1,36 @@
  {% load static %}
-<header class="header">
-        <div class="header__container">
-            <div class="header__content">
 
-                <div class="header__burger">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
+ <div class="header__container">
+     <div class="header__content">
 
-                <div class="header__links">
-                    <div class="header__links--item"><a href="#">О нас</a></div>
-                    <div class="header__links--item"><a href="#">Помощь</a></div>
-                    <div class="header__links--item"><a href="#">Наш блог</a></div>
-                    <div class="header__links--item"><a href="/logout/">Выйти</a></div>
-                </div>
+         <div class="header__burger">
+             <span></span>
+             <span></span>
+             <span></span>
+         </div>
 
-                <div class="header__logo">
-                    <img src="{% static 'images/home/logo.png' %}">
-                </div>
+         <div class="header__links">
+             <div class="header__links--item"><a href="{% url 'about_us' %}">О нас</a></div>
+             <div class="header__links--item"><a href="{% url 'support' %}">Помощь</a></div>
+             <div class="header__links--item"><a href="{% url 'blog' %}">Наш блог</a></div>
+             <div class="header__links--item"><a href="{% url 'logout' %}">Выйти</a></div>
+         </div>
 
-                <div class="header__buttons">
-                    <div class="header__buttons--shop"><a href="#">Магазин</a></div>
-                    <div class="header__buttons--img" id="header-nav-profile-picture"> 
-                        <img class="frame--logo" src="{% static 'images/profile/Union.png' %}">
-                        <img id="profileImageHeader" class="photo--logo" src="{% if user.photo %}{{ user.photo.url }}{% else %}{% static 'images/profile/profile_icon.png' %}{% endif %}"></div>
-                </div>
-            </div>
-        </div>
-    </header>
+         <div class="header__logo">
+             <img src="{% static 'images/home/logo.png' %}">
+         </div>
+
+         <div class="header__buttons">
+             <div class="header__buttons--shop"><a href="#">Магазин</a></div>
+             <div class="header__buttons--img" id="header-nav-profile-picture">
+                 <img class="frame--logo" src="{% static 'images/profile/Union.png' %}">
+                 <img id="profileImageHeader" class="photo--logo"
+                     src="{% if user.photo %}{{ user.photo.url }}{% else %}{% static 'images/profile/profile_icon.png' %}{% endif %}">
+             </div>
+         </div>
+     </div>
+ </div>
 
 
-    {% include "include/profileSideBar.html" %}
+
+ {% include "include/profileSideBar.html" %}

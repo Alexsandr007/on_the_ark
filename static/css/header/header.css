@@ -22,20 +22,49 @@
     align-items: center;
 }
 
+.header__buttons--reg button {
+    opacity: 1;
+    border-radius: 8px;
+    padding: 5px 15px 10px 15px;
+    gap: 10px;
+    border-width: 1px;
+    border: 1px solid rgba(0, 0, 0, 1);
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 100%;
+    background: none;
+    letter-spacing: -3%;
+    color: rgba(17, 4, 1, 1);
+}
 
-.header__buttons--img{
+.header__buttons--login button {
+    opacity: 1;
+    border-radius: 8px;
+    padding: 5px 15px 10px 15px;
+    gap: 10px;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 100%;
+    letter-spacing: -3%;
+    color: rgba(255, 255, 255, 1);
+    background: rgba(196, 50, 26, 1);
+    border: none;
+}
+
+
+.header__buttons--img {
     width: 60px;
     height: 60px;
     position: relative;
 }
 
-.header__buttons--img .frame--logo{
+.header__buttons--img .frame--logo {
     position: absolute;
     z-index: 2;
 }
 
-.header__buttons--img .photo--logo{
-        position: absolute;
+.header__buttons--img .photo--logo {
+    position: absolute;
     width: 29px;
     height: 29px;
     border-radius: 50%;
@@ -128,7 +157,8 @@
     .header__buttons {
         margin-left: 0px;
     }
-    .header__logo{
+
+    .header__logo {
         margin-left: 30px;
 
     }
@@ -140,12 +170,12 @@
 
     }
 
-    .header__logo img{
+    .header__logo img {
         max-width: 150px;
     }
 
 
-    .header__buttons .header__buttons--shop{
+    .header__buttons .header__buttons--shop {
         display: none;
     }
 

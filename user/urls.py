@@ -8,6 +8,9 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name='home'),
+    path('about_us/', views.about_us, name='about_us'),
+    path('blog/', views.blog, name='blog'),
+    path('support/', views.support, name='support'),
     path('register-ajax/', views.register_ajax, name='register_ajax'),
     path('login-ajax/', views.login_ajax, name='login_ajax'),
     path('password-reset-ajax/', views.password_reset_ajax, name='password_reset_ajax'),
