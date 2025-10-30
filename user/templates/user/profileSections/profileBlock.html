@@ -34,7 +34,7 @@
             <div class="profile__content">
                 <div class="content">
                     <div class="profile__content--image">
-                        <img id="profileImage" src="{% if user.photo %}{{ user.photo.url }}{% else %}{% static 'images/profile/girl-img.jpg' %}{% endif %}" alt="Фото профиля">
+                        <img id="profileImage" src="{% if user.photo %}{{ user.photo.url }}{% else %}{% static 'images/profile/profile_default.png' %}{% endif %}" alt="Фото профиля">
                         <div id="imageOverlay" class="image-overlay">Изменить фото</div>
                     </div>
                     <div class="content-title">

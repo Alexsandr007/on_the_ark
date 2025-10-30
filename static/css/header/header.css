@@ -65,11 +65,11 @@
 
 .header__buttons--img .photo--logo {
     position: absolute;
-    width: 29px;
-    height: 29px;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
     left: 15px;
-    top: 14px;
+    top: 15px;
 }
 
 

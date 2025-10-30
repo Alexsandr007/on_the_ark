@@ -5,6 +5,7 @@ from django.contrib.auth.models import AbstractUser
 class CustomUser(AbstractUser):
     username = models.CharField(max_length=100, blank=True, null=True)
     email = models.EmailField(unique=True, max_length=255, verbose_name='email address')
+    phone = models.CharField(max_length=20, blank=True, null=True, verbose_name='Номер телефона')  # 
     about = models.TextField(null=True, blank=True, max_length=200)  
     profession = models.CharField(max_length=100, blank=True, null=True)
     is_visible = models.BooleanField(default=True)
@@ -17,11 +18,8 @@ class CustomUser(AbstractUser):
     balance = models.IntegerField(default=0)
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
-    vk_link = models.URLField(max_length=100, blank=True, null=True)
-    instagram_link = models.URLField(max_length=100, blank=True, null=True)
-    twitter_link = models.URLField(max_length=100, blank=True, null=True)
-    youtube_link = models.URLField(max_length=100, blank=True, null=True)
     talk_link = models.URLField(max_length=100, blank=True, null=True)
+    privacy_policy_agreed = models.BooleanField(default=False, verbose_name="Согласие с политикой конфиденциальности")
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
@@ -39,3 +37,19 @@ class UserGoal(models.Model):
     
     def __str__(self):
         return f"Цель для {self.user.email}"
+
+
+class UserSocialLinks(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='social_links')
+    twitter = models.URLField(max_length=100, blank=True, null=True, verbose_name="Twitter")
+    tiktok = models.URLField(max_length=100, blank=True, null=True, verbose_name="TikTok")
+    youtube = models.URLField(max_length=100, blank=True, null=True, verbose_name="YouTube")
+    vk = models.URLField(max_length=100, blank=True, null=True, verbose_name="VK")
+    x = models.URLField(max_length=100, blank=True, null=True, verbose_name="X")
+    b = models.URLField(max_length=100, blank=True, null=True, verbose_name="B")
+    instagram = models.URLField(max_length=100, blank=True, null=True, verbose_name="Instagram")
+    behance = models.URLField(max_length=100, blank=True, null=True, verbose_name="Behance")
+    website = models.URLField(max_length=100, blank=True, null=True, verbose_name="Website")
+
+    def __str__(self):
+        return f"Соцсети пользователя {self.user.email}"

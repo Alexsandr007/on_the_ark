@@ -8,9 +8,10 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name='home'),
-    path('about_us/', views.about_us, name='about_us'),
+    path('about-us/', views.about_us, name='about_us'),
     path('blog/', views.blog, name='blog'),
     path('support/', views.support, name='support'),
+    path('change-profile/', views.change_profile, name='change_profile'),
     path('register-ajax/', views.register_ajax, name='register_ajax'),
     path('login-ajax/', views.login_ajax, name='login_ajax'),
     path('password-reset-ajax/', views.password_reset_ajax, name='password_reset_ajax'),
@@ -22,6 +23,8 @@ urlpatterns = [
     path('update-profession-ajax/', views.update_profession_ajax, name='update_profession_ajax'),
     path('update-photo-ajax/', views.update_photo_ajax, name='update_photo_ajax'),
     path('update-background-ajax/', views.update_background_ajax, name='update_background_ajax'),
+    path('profile/agree-privacy-policy/', views.agree_privacy_policy, name='agree_privacy_policy'),
+    path('profile/update-social-links/', views.update_social_links, name='update_social_links'),
 ]
 
 
