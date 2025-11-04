@@ -1,10 +1,12 @@
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
+from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
 from django.contrib import messages
 from .forms import MediaForm
-from .models import Post, Media, Poll, PollOption, Tag
+from .models import Like, Post, Media, Poll, PollOption, Tag
 from django.views.decorators.http import require_http_methods
 from utils.profanity_filter import profanity_filter 
 from django.core.files.storage import FileSystemStorage
@@ -502,3 +504,44 @@ def clear_temp_media(request):
             del request.session['temp_media_filename']
             del request.session['temp_media_type']
     return JsonResponse({'status': 'ok'})
+
+
+@login_required
+@require_POST
+@csrf_exempt
+def like_post(request, post_id):
+    try:
+        post = Post.objects.get(id=post_id)
+        user = request.user
+        
+        # Проверяем, есть ли уже лайк от этого пользователя
+        like_exists = Like.objects.filter(user=user, post=post).exists()
+        
+        if like_exists:
+            # Удаляем лайк (анлайк)
+            Like.objects.filter(user=user, post=post).delete()
+            liked = False
+        else:
+            # Создаем лайк
+            Like.objects.create(user=user, post=post)
+            liked = True
+        
+        # Получаем обновленное количество лайков
+        likes_count = post.likes.count()
+        
+        return JsonResponse({
+            'success': True,
+            'liked': liked,
+            'likes_count': likes_count
+        })
+        
+    except Post.DoesNotExist:
+        return JsonResponse({
+            'success': False,
+            'error': 'Пост не найден'
+        }, status=404)
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'error': str(e)
+        }, status=500)

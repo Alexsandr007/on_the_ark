@@ -9,7 +9,7 @@ from django.conf import settings
 import random
 import string
 from user.models import CustomUser
-from post.models import Media, Post
+from post.models import Like, Media, Post
 from .forms import RegisterForm, LoginForm, PasswordResetForm, AboutForm, GoalForm
 from .models import CustomUser, UserGoal, UserSocialLinks, UserSession
 from django.core.files.storage import default_storage
@@ -213,10 +213,22 @@ def password_reset_ajax(request):
 @login_required
 def profile(request):
     user = request.user
-    posts = Post.objects.filter(author=user, published_at__isnull=False).order_by('-published_at')
+    posts = Post.objects.filter(author=user, published_at__isnull=False).prefetch_related(
+        'likes'
+    ).order_by('-published_at')
     
-    # Добавляем медиа к постам для удобства
+    # Получаем ID всех постов, которые лайкнул текущий пользователь
+    liked_post_ids = Like.objects.filter(
+        user=request.user, 
+        post__in=posts
+    ).values_list('post_id', flat=True)
+    
+    liked_post_ids_set = set(liked_post_ids)
+    
+    # Добавляем флаг is_liked_by_current_user к каждому посту
     for post in posts:
+        post.is_liked_by_current_user = post.id in liked_post_ids_set
+        # Просто загружаем медиа для каждого поста
         post.media_list = Media.objects.filter(post=post)
     
     context = {
@@ -224,7 +236,6 @@ def profile(request):
         'posts': posts,
         'posts_count': posts.count(),
     }
-    print(context)
     return render(request, 'user/profile/profile.html', context)
 
 def logout_view(request):

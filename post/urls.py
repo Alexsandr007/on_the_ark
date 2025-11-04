@@ -7,5 +7,6 @@ urlpatterns = [
     path('', views.post_list, name='post_list'),
     path('<int:pk>/', views.post_detail, name='post_detail'),
     path('delete/<int:post_id>/', views.delete_post, name='delete_post'),
-    path('clear_temp_media/', views.clear_temp_media, name='clear_temp_media')
+    path('clear_temp_media/', views.clear_temp_media, name='clear_temp_media'),
+    path('like/<int:post_id>/', views.like_post, name='like_post'),
 ]

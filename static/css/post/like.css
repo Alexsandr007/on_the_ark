@@ -1,0 +1,21 @@
+.like-btn {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.like-btn img:hover {
+    filter: invert(70%) sepia(90%) saturate(500%) hue-rotate(360deg) brightness(100%) contrast(90%) !important;
+}
+
+.like-btn.active img {
+    filter: invert(70%) sepia(90%) saturate(500%) hue-rotate(360deg) brightness(100%) contrast(90%) !important;
+}
+
+/* Альтернативный вариант через SVG fill (если используете SVG) */
+.like-btn.active .like-icon path {
+    fill: #E5B31A !important;
+    stroke: #E5B31A !important;
+}
