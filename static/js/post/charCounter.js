@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const counterElement = document.querySelector('.af-popover__text');
 
         if (textarea && counterElement) {
-            // Удаляем предыдущие обработчики, чтобы избежать дублирования
             textarea.removeEventListener('input', updateCounter);
 
             function updateCounter() {
@@ -20,13 +19,12 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Наблюдаем за изменениями в DOM, но только в нужном контейнере
     const adItem = document.querySelector('.article__footer--item');
     if (adItem) {
         const observer = new MutationObserver(function(mutations) {
             if (document.querySelector('.af-popover__textearea')) {
                 setupCounter();
-                observer.disconnect(); // Отключаем наблюдатель после первого срабатывания
+                observer.disconnect(); 
             }
         });
 

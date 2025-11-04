@@ -2,7 +2,6 @@ from django.db import models
 from user.models import CustomUser
 from django.utils import timezone
 
-# Ваши существующие модели (CustomUser и UserGoal) остаются без изменений
 
 class Tag(models.Model):
     name = models.CharField(max_length=50, unique=True, verbose_name="Название тега")
@@ -76,7 +75,7 @@ class Like(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
 
     class Meta:
-        unique_together = ('user', 'post')  # Один пользователь может лайкнуть пост только один раз
+        unique_together = ('user', 'post')  
         verbose_name = "Лайк"
         verbose_name_plural = "Лайки"
 

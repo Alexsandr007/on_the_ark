@@ -62,7 +62,6 @@ def change_profile(request):
     user=request.user
     ).order_by('-last_activity')
     
-    # Помечаем текущую сессию
     current_session_key = request.session.session_key
     for session in user_sessions:
         session.is_current = (session.session_key == current_session_key)
@@ -116,10 +115,8 @@ def update_social_links(request):
         try:
             data = json.loads(request.body)
             
-            # Получаем или создаем объект социальных ссылок для пользователя
             social_links, created = UserSocialLinks.objects.get_or_create(user=request.user)
             
-            # Обновляем поля
             social_links.tiktok = data.get('tiktok', '')
             social_links.youtube = data.get('youtube', '')
             social_links.vk = data.get('vk', '')
@@ -217,7 +214,6 @@ def profile(request):
         'likes', 'comments'
     ).order_by('-published_at')
     
-    # Получаем ID всех постов, которые лайкнул текущий пользователь
     liked_post_ids = Like.objects.filter(
         user=request.user, 
         post__in=posts
@@ -225,7 +221,6 @@ def profile(request):
     
     liked_post_ids_set = set(liked_post_ids)
     
-    # Загружаем все медиа для этих постов одним запросом
     post_ids = [post.id for post in posts]
     media_dict = {}
     if post_ids:
@@ -235,11 +230,10 @@ def profile(request):
                 media_dict[media.post_id] = []
             media_dict[media.post_id].append(media)
     
-    # Добавляем флаги и медиа к постам
     for post in posts:
         post.is_liked_by_current_user = post.id in liked_post_ids_set
         post.media_list = media_dict.get(post.id, [])
-        post.comments_count = post.comments.count()  # Добавляем счетчик комментариев
+        post.comments_count = post.comments.count()  
     
     context = {
         'user': user,
@@ -355,7 +349,6 @@ def update_background_ajax(request):
 @require_http_methods(["POST"])
 def terminate_sessions(request):
     try:
-        # Проверяем, что это AJAX запрос
         if not request.headers.get('X-Requested-With') == 'XMLHttpRequest':
             return JsonResponse({
                 'status': 'error',
@@ -364,7 +357,6 @@ def terminate_sessions(request):
         
         current_session_key = request.session.session_key
         
-        # Получаем данные из AJAX запроса
         try:
             data = json.loads(request.body)
             selected_session_keys = data.get('selected_sessions', [])
@@ -374,7 +366,6 @@ def terminate_sessions(request):
                 'message': 'Неверный формат JSON'
             }, status=400)
         
-        # Проверяем, что не пытаемся удалить текущую сессию
         if current_session_key in selected_session_keys:
             selected_session_keys.remove(current_session_key)
         
@@ -384,7 +375,6 @@ def terminate_sessions(request):
                 'message': 'Не выбраны сессии для завершения'
             }, status=400)
         
-        # Удаляем только выбранные сессии
         sessions_to_delete = UserSession.objects.filter(
             user=request.user,
             session_key__in=selected_session_keys
@@ -392,17 +382,14 @@ def terminate_sessions(request):
         
         deleted_sessions_count = sessions_to_delete.count()
         
-        # Удаляем сессии из базы данных Django
         for user_session in sessions_to_delete:
             try:
                 Session.objects.get(session_key=user_session.session_key).delete()
             except Session.DoesNotExist:
                 pass
         
-        # Удаляем записи из нашей модели
         sessions_to_delete.delete()
         
-        # Получаем обновленный список сессий
         user_sessions = UserSession.objects.filter(user=request.user).order_by('-last_activity')
         sessions_data = []
         

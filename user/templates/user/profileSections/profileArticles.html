@@ -3,7 +3,7 @@
     <div class="profile__articles--block">
         <div class="profile__articles--text">
             <h2>Публикации</h2>
-            <p>{{ posts_count }} записей</p> <!-- Динамический счетчик -->
+            <p>{{ posts_count }} записей</p> 
         </div>
     </div>
     <div class="profile__articles--container">
@@ -84,7 +84,7 @@
                         {% endif %}
                     </div>
 
-                    <!-- Секция комментариев (изначально скрыта) -->
+              
                     <div class="comments-section" id="comments-section-{{ post.id }}" style="display: none;">
                         <div class="comments-list">
                             {% for comment in post.comments.all|slice:":5" %}
@@ -104,7 +104,6 @@
                             {% endfor %}
                         </div>
                         
-                        <!-- Форма добавления комментария -->
                         <form class="comment-form" data-post-id="{{ post.id }}">
                             {% csrf_token %}
                             <div class="comment-input-wrapper">

@@ -1,10 +1,8 @@
-// Функция для обработки лайков
 function handleLike(postId) {
     const likeBtn = document.querySelector(`.like-btn[data-post-id="${postId}"]`);
     const likeIcon = likeBtn.querySelector('.like-icon');
     const likesCount = likeBtn.querySelector('.likes-count');
     
-    // Отправляем AJAX запрос
     fetch(`/post/like/${postId}/`, {
         method: 'POST',
         headers: {
@@ -15,10 +13,8 @@ function handleLike(postId) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            // Обновляем счетчик лайков
             likesCount.textContent = data.likes_count;
             
-            // Управляем CSS классом вместо прямого изменения стилей
             if (data.liked) {
                 likeBtn.classList.add('active');
             } else {
@@ -33,7 +29,6 @@ function handleLike(postId) {
     });
 }
 
-// Функция для получения CSRF токена
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -49,7 +44,6 @@ function getCookie(name) {
     return cookieValue;
 }
 
-// Добавляем обработчики событий для всех кнопок лайков
 document.addEventListener('DOMContentLoaded', function() {
     const likeButtons = document.querySelectorAll('.like-btn');
     

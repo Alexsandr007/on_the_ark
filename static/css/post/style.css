@@ -3,15 +3,6 @@
     --padding-prof-block: 160px 132px;
 }
 
-/* @font-face {
-    font-family: "Manmore";
-    src: url("../fonts/Manrope.ttf");
-}
-
-@font-face {
-    font-family: "Roboto";
-    src: url("../fonts/Roboto.ttf");
-} */
 
 @font-face {
     font-family: "Manrope";
@@ -50,7 +41,6 @@ body {
 }
 
 
-/* edit */
 
 .edit__fon {
     background-color: rgba(196, 52, 24, 1);
@@ -171,7 +161,6 @@ body {
     align-items: center;
 }
 
-/* == Switch base == */
 .switch {
     display: inline-flex;
     align-items: center;
@@ -179,7 +168,6 @@ body {
 }
 
 .switch__input {
-    /* убираем стандартный чекбокс */
     -webkit-appearance: none;
     appearance: none;
     display: none;
@@ -222,20 +210,17 @@ body {
 }
 
 .switch__track {
-    /* сам трек рисуем не на input, а отдельным span — кроссбраузернее */
     position: relative;
     display: inline-block;
     width: 42px;
     height: 24px;
     border-radius: 999px;
     background: rgba(210, 210, 210, 1);
-    /* gray-300 */
     box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .06);
     transition: background .2s ease-in-out;
     border: 1.23px solid rgba(92, 92, 92, 1)
 }
 
-/* "ползунок" */
 .switch__track::before {
     content: "";
     position: absolute;
@@ -259,12 +244,10 @@ body {
     background: rgba(255, 255, 255, 1);
 }
 
-/* доступность */
 .switch__input:focus-visible+.switch__track {
     box-shadow:
         0 0 0 2px #fff,
         0 0 0 4px rgba(34, 197, 94, .6);
-    /* зелёный фокус-рин */
 }
 
 .switch__input:disabled+.switch__track {
@@ -294,7 +277,6 @@ body {
     display: none;
 }
 
-/* Остальные стили остаются без изменений */
 .preview-item {
     position: relative;
     max-width: 100%;
@@ -642,7 +624,6 @@ body {
 
 
 
-/* === Поповеры над .article__footer--item === */
 .af-popover {
     position: absolute;
     bottom: 50px;
@@ -686,7 +667,6 @@ body {
     color: #929090;
 }
 
-/* === Карточка datetimepicker === */
 .dp {
     min-width: 270px;
     background: #fff;
@@ -821,7 +801,6 @@ body {
 
 }
 
-/* стрелка назад */
 
 .back-link {
     display: flex;
@@ -844,16 +823,13 @@ body {
     line-height: 90%;
 }
 
-/* ленты */
 
 .ribbons-container {
     position: absolute;
     width: 100%;
     overflow: hidden;
     margin-top: -5px;
-    /* обрезает всё, что выходит за границы */
     height: 125px;
-    /* высота вашего SVG */
     z-index: -1;
 }
 
@@ -863,7 +839,6 @@ body {
     right: 40px;
     max-width: 1073px;
     height: 290px;
-    /* height: auto; */
 }
 
 @media (max-width: 1220px) {
@@ -874,15 +849,7 @@ body {
 
 
 
-/* dev mode */
 
-/* * {
-    outline: 1px solid red;
-} */
-
-/* close dev mode */
-
-/* Стили для радиокнопок в виде чекбоксов */
 input[type="radio"][name="visibility"] {
     -webkit-appearance: none;
     -moz-appearance: none;

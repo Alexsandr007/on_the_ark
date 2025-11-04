@@ -24,7 +24,6 @@ def create_post(request):
     temp_media_type = None
 
     if request.method == 'POST':
-        # Получаем данные из формы
         title = request.POST.get('title', '').strip()
         content = request.POST.get('content', '').strip()
         tags_input = request.POST.get('tags_input', '').strip()
@@ -51,7 +50,6 @@ def create_post(request):
             'options_str': options_str,
         }
 
-        # Функция для сохранения файла в сессии
         def save_temp_file():
             file = request.FILES.get('file')
             if file and media_type:
@@ -59,12 +57,10 @@ def create_post(request):
                 request.session['temp_media_filename'] = temp_filename
                 request.session['temp_media_type'] = media_type
                 return temp_storage.url(temp_filename), media_type
-            # Если файл уже в сессии, используем его
             elif 'temp_media_filename' in request.session:
                 return temp_storage.url(request.session['temp_media_filename']), request.session.get('temp_media_type')
             return None, None
 
-        # БАЗОВАЯ ВАЛИДАЦИЯ
         if not content:
             messages.error(request, 'Текст поста обязателен.')
             temp_media_url, temp_media_type = save_temp_file()
@@ -74,7 +70,6 @@ def create_post(request):
                 'temp_media_type': temp_media_type
             })
 
-        # ПРОВЕРКА НА НЕЦЕНЗУРНУЮ ЛЕКСИКУ
         fields_to_check = {
             'заголовок': title,
             'текст поста': content,
@@ -82,7 +77,6 @@ def create_post(request):
             'теги': tags_input
         }
         
-        # Проверяем все поля
         for field_name, field_value in fields_to_check.items():
             if field_value and profanity_filter.contains_profanity(str(field_value)):
                 messages.error(
@@ -96,7 +90,6 @@ def create_post(request):
                     'temp_media_type': temp_media_type
                 })
 
-        # Обработка scheduled_at
         scheduled_at = None
         if scheduled_at_str:
             try:
@@ -110,7 +103,6 @@ def create_post(request):
                     'temp_media_type': temp_media_type
                 })
 
-        # Создание поста
         post = Post(
             author=request.user,
             title=title if title else None,
@@ -124,7 +116,6 @@ def create_post(request):
         )
         post.save()
 
-        # Обработка тегов (не более 6)
         if tags_input:
             tag_names = [name.strip() for name in tags_input.split(',') if name.strip()][:6]
             for name in tag_names:
@@ -141,10 +132,8 @@ def create_post(request):
                 tag, created = Tag.objects.get_or_create(name=name)
                 post.tags.add(tag)
 
-        # Обработка медиа
         file = request.FILES.get('file')
         if not file and media_type and 'temp_media_filename' in request.session:
-            # Восстанавливаем файл из временного хранилища
             temp_filename = request.session['temp_media_filename']
             try:
                 with open(temp_storage.path(temp_filename), 'rb') as temp_file:
@@ -166,7 +155,6 @@ def create_post(request):
                 messages.error(request, 'Ошибка восстановления файла.')
                 file = None
 
-        # Сохраняем медиа в пост
         if file and media_type:
             media = Media(
                 post=post,
@@ -175,7 +163,6 @@ def create_post(request):
             )
             media.save()
 
-        # Обработка голосования
         if question and options_str:
             if (profanity_filter.contains_profanity(question) or 
                 profanity_filter.contains_profanity(options_str)):
@@ -194,7 +181,6 @@ def create_post(request):
                 if option_text:
                     PollOption.objects.create(poll=poll, option_text=option_text)
 
-        # Успех: удалить временный файл из сессии и хранилища
         if 'temp_media_filename' in request.session:
             try:
                 temp_storage.delete(request.session['temp_media_filename'])
@@ -206,14 +192,12 @@ def create_post(request):
 
         return redirect('profile')
 
-    # GET запрос - проверяем есть ли временный файл в сессии
     if 'temp_media_filename' in request.session:
         try:
             temp_media_url = temp_storage.url(request.session['temp_media_filename'])
             temp_media_type = request.session.get('temp_media_type')
         except Exception as e:
             print(f"Ошибка получения временного файла: {e}")
-            # Очищаем сессию если файл не найден
             if 'temp_media_filename' in request.session:
                 del request.session['temp_media_filename']
             if 'temp_media_type' in request.session:
@@ -238,7 +222,6 @@ def edit_post(request, post_id):
     temp_media_type = None
 
     if request.method == 'POST':
-        # Получаем данные из формы
         title = request.POST.get('title', '').strip()
         content = request.POST.get('content', '').strip()
         tags_input = request.POST.get('tags_input', '').strip()
@@ -265,10 +248,8 @@ def edit_post(request, post_id):
             'options_str': options_str,
         }
 
-        # БАЗОВАЯ ВАЛИДАЦИЯ
         if not title:
             messages.error(request, 'Текст заголовка обязателен.')
-            # Сохранить файл временно, если он был загружен
             file = request.FILES.get('file')
             if file and media_type:
                 temp_filename = temp_storage.save(file.name, file)
@@ -280,7 +261,6 @@ def edit_post(request, post_id):
 
         if not content:
             messages.error(request, 'Текст поста обязателен.')
-            # Сохранить файл временно, если он был загружен
             file = request.FILES.get('file')
             if file and media_type:
                 temp_filename = temp_storage.save(file.name, file)
@@ -290,7 +270,6 @@ def edit_post(request, post_id):
                 temp_media_type = media_type
             return render(request, 'post/create_post.html', {'form_data': form_data, 'temp_media_url': temp_media_url, 'temp_media_type': temp_media_type, 'post': post, 'existing_tags': ', '.join([tag.name for tag in post.tags.all()]), 'is_edit': True})
 
-        # ПРОВЕРКА НА НЕЦЕНЗУРНУЮ ЛЕКСИКУ
         fields_to_check = {
             'заголовок': title,
             'текст поста': content,
@@ -298,14 +277,12 @@ def edit_post(request, post_id):
             'теги': tags_input
         }
         
-        # Проверяем все поля
         for field_name, field_value in fields_to_check.items():
             if field_value and profanity_filter.contains_profanity(str(field_value)):
                 messages.error(
                     request, 
                     f'Поле "{field_name}" содержит нецензурную лексику. Пожалуйста, отредактируйте текст.'
                 )
-                # Сохранить файл временно
                 file = request.FILES.get('file')
                 if file and media_type:
                     temp_filename = temp_storage.save(file.name, file)
@@ -315,14 +292,12 @@ def edit_post(request, post_id):
                     temp_media_type = media_type
                 return render(request, 'post/create_post.html', {'form_data': form_data, 'temp_media_url': temp_media_url, 'temp_media_type': temp_media_type, 'post': post, 'existing_tags': ', '.join([tag.name for tag in post.tags.all()]), 'is_edit': True})
 
-        # Обработка scheduled_at
         scheduled_at = None
         if scheduled_at_str:
             try:
                 scheduled_at = timezone.datetime.fromisoformat(scheduled_at_str.replace('Z', '+00:00'))
             except ValueError:
                 messages.error(request, 'Неверный формат даты.')
-                # Сохранить файл временно
                 file = request.FILES.get('file')
                 if file and media_type:
                     temp_filename = temp_storage.save(file.name, file)
@@ -332,7 +307,6 @@ def edit_post(request, post_id):
                     temp_media_type = media_type
                 return render(request, 'post/create_post.html', {'form_data': form_data, 'temp_media_url': temp_media_url, 'temp_media_type': temp_media_type, 'post': post, 'existing_tags': ', '.join([tag.name for tag in post.tags.all()]), 'is_edit': True})
 
-        # Обработка удаления медиа
         delete_media_id = request.POST.get('delete_media')
         if delete_media_id:
             try:
@@ -341,12 +315,10 @@ def edit_post(request, post_id):
             except Media.DoesNotExist:
                 pass
         
-        # Обработка удаления голосования
         delete_poll_id = request.POST.get('delete_poll')
         if delete_poll_id and hasattr(post, 'poll'):
             post.poll.delete()
 
-        # Обновление поста
         post.title = title if title else None
         post.content = content
         post.visibility = visibility
@@ -355,21 +327,17 @@ def edit_post(request, post_id):
         post.scheduled_at = scheduled_at
         post.comments_disabled = comments_disabled
         
-        # Если отменяем планирование, публикуем сразу
         if not scheduled_at and not post.published_at:
             post.published_at = timezone.now()
             
         post.save()
 
-        # Обновление тегов
         post.tags.clear()
         if tags_input:
             tag_names = [name.strip() for name in tags_input.split(',') if name.strip()][:6]
             for name in tag_names:
-                # Проверяем каждый тег отдельно
                 if profanity_filter.contains_profanity(name):
                     messages.error(request, f'Тег "{name}" содержит нецензурную лексику.')
-                    # Сохранить файл временно
                     file = request.FILES.get('file')
                     if file and media_type:
                         temp_filename = temp_storage.save(file.name, file)
@@ -382,13 +350,10 @@ def edit_post(request, post_id):
                 tag, created = Tag.objects.get_or_create(name=name)
                 post.tags.add(tag)
 
-        # Обработка нового медиа
         file = request.FILES.get('file')
         if media_type and file:
-            # Удаляем старое медиа (если нужно)
             post.media.all().delete()
             
-            # Создаем новое медиа
             media_form = MediaForm(data={'media_type': media_type}, files={'file': file})
             if media_form.is_valid():
                 media = media_form.save(commit=False)
@@ -396,7 +361,6 @@ def edit_post(request, post_id):
                 media.save()
             else:
                 messages.error(request, f"Ошибка загрузки {media_type}: {media_form.errors}")
-                # Сохранить файл временно
                 temp_filename = temp_storage.save(file.name, file)
                 request.session['temp_media_filename'] = temp_filename
                 request.session['temp_media_type'] = media_type
@@ -404,18 +368,13 @@ def edit_post(request, post_id):
                 temp_media_type = media_type
                 return render(request, 'post/create_post.html', {'form_data': form_data, 'temp_media_url': temp_media_url, 'temp_media_type': temp_media_type, 'post': post, 'existing_tags': ', '.join([tag.name for tag in post.tags.all()]), 'is_edit': True})
 
-        # Обновление голосования
-        # Удаляем старое голосование если есть
         if hasattr(post, 'poll'):
             post.poll.delete()
             
-        # Создаем новое голосование если указано
         if question and options_str:
-            # Проверяем вопрос и варианты на нецензурную лексику
             if (profanity_filter.contains_profanity(question) or 
                 profanity_filter.contains_profanity(options_str)):
                 messages.error(request, 'Вопрос или варианты ответа содержат нецензурную лексику.')
-                # Сохранить файл временно
                 file = request.FILES.get('file')
                 if file and media_type:
                     temp_filename = temp_storage.save(file.name, file)
@@ -430,7 +389,6 @@ def edit_post(request, post_id):
                 if option.strip():
                     PollOption.objects.create(poll=poll, option_text=option.strip())
 
-        # Успех: удалить временный файл из сессии и хранилища
         if 'temp_media_filename' in request.session:
             temp_storage.delete(request.session['temp_media_filename'])
             del request.session['temp_media_filename']
@@ -438,8 +396,6 @@ def edit_post(request, post_id):
 
         return redirect('profile')
 
-    # GET-запрос: заполняем форму текущими данными
-    # Восстановить временный файл из сессии, если он есть
     if 'temp_media_filename' in request.session:
         temp_media_url = temp_storage.url(request.session['temp_media_filename'])
         temp_media_type = request.session.get('temp_media_type')
@@ -447,12 +403,11 @@ def edit_post(request, post_id):
     context = {
         'post': post,
         'existing_tags': ', '.join([tag.name for tag in post.tags.all()]),
-        'is_edit': True,  # Флаг для шаблона
+        'is_edit': True,  
         'temp_media_url': temp_media_url,
         'temp_media_type': temp_media_type,
     }
     
-    # Добавляем данные о голосовании если есть
     if hasattr(post, 'poll'):
         context['poll_question'] = post.poll.question
         context['poll_options'] = ', '.join([option.option_text for option in post.poll.options.all()])
@@ -487,12 +442,11 @@ def delete_post(request, post_id):
 
 
 def post_list(request):
-    posts = Post.objects.filter(published_at__isnull=False).order_by('-published_at')  # Только опубликованные
+    posts = Post.objects.filter(published_at__isnull=False).order_by('-published_at')  
     return render(request, 'post_list.html', {'posts': posts})
 
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk, published_at__isnull=False)
-    # Логика видимости: проверьте подписчиков или оплату (добавьте свою логику)
     return render(request, 'post_detail.html', {'post': post})
 
 
@@ -515,19 +469,15 @@ def like_post(request, post_id):
         post = Post.objects.get(id=post_id)
         user = request.user
         
-        # Проверяем, есть ли уже лайк от этого пользователя
         like_exists = Like.objects.filter(user=user, post=post).exists()
         
         if like_exists:
-            # Удаляем лайк (анлайк)
             Like.objects.filter(user=user, post=post).delete()
             liked = False
         else:
-            # Создаем лайк
             Like.objects.create(user=user, post=post)
             liked = True
         
-        # Получаем обновленное количество лайков
         likes_count = post.likes.count()
         
         return JsonResponse({

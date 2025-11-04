@@ -1,4 +1,3 @@
-<!-- about.html -->
 {% extends "user/base.html" %}
 {% load static %}
 
@@ -55,7 +54,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     filterButtons.forEach(button => {
         button.addEventListener('click', function() {
-            // Убираем active класс
             filterButtons.forEach(btn => btn.classList.remove('active'));
             this.classList.add('active');
 

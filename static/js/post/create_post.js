@@ -8,12 +8,10 @@
     const scheduleCheckbox = scheduleItem.querySelector('.switch__input');
     const selectedDateInput = document.getElementById('selectedDate');
 
-    // контейнеры делаем position:relative
     [adItem, scheduleItem].forEach(el => {
       if (getComputedStyle(el).position === 'static') el.style.position = 'relative';
     });
 
-    // ===== util для поповера
     function getOrCreatePopover(container, key) {
       let pop = container.querySelector(`.af-popover[data-key="${key}"]`);
       if (!pop) {
@@ -29,7 +27,6 @@
       if (pop) pop.remove();
     }
 
-    // ===== Рекламный пост: простой блок
     function handleAdToggle() {
       if (adCheckbox.checked) {
         const pop = getOrCreatePopover(adItem, 'ad');
@@ -38,13 +35,12 @@
           <textarea name="" id="" placeholder="О рекламодателе" class="af-popover__textearea"></textarea>
           <p class="af-popover__text">До 150 символов ( осталось 150 )</p>
         </div>
-        `; // замени на свой HTML/текст
+        `; 
       } else {
         removePopover(adItem, 'ad');
       }
     }
 
-    // ===== Datetime picker
     function makeDatePicker({ initial, onApply }) {
       const months = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
       const dows = ['ПН', 'ВТ', 'СР', 'ЧТ', 'ПТ', 'СБ', 'ВС'];
@@ -55,7 +51,6 @@
       const wrap = document.createElement('div');
       wrap.className = 'dp';
 
-      // Добавляем стили для полоски под dp__head
       const style = document.createElement('style');
       style.textContent = `
         .dp__head {
@@ -74,7 +69,6 @@
       `;
       document.head.appendChild(style);
 
-      // head
       const head = document.createElement('div');
       head.className = 'dp__head';
       const title = document.createElement('div');
@@ -84,32 +78,26 @@
       nav.append(prev, next);
       head.append(title, nav);
 
-      // grid
       const grid = document.createElement('div'); grid.className = 'dp__grid';
       dows.forEach(dw => { const el = document.createElement('div'); el.className = 'dp__dow'; el.textContent = dw; grid.appendChild(el); });
 
       function render() {
         title.textContent = `${months[current.getMonth()]} ${current.getFullYear()}`;
-        // очистить старые дни
         grid.querySelectorAll('.dp__day').forEach(n => n.remove());
 
         const start = new Date(current.getFullYear(), current.getMonth(), 1);
         const end = new Date(current.getFullYear(), current.getMonth() + 1, 0);
-        // в JS неделя начинается с воскресенья; нам нужна ПН=0..ВС=6
         const startOffset = (start.getDay() + 6) % 7;
         const daysInMonth = end.getDate();
 
-        // предшествующие «мутные» дни
         for (let i = 0; i < startOffset; i++) {
           const d = new Date(start); d.setDate(start.getDate() - (startOffset - i));
           grid.appendChild(dayCell(d, true));
         }
-        // текущий месяц
         for (let i = 1; i <= daysInMonth; i++) {
           const d = new Date(current.getFullYear(), current.getMonth(), i);
           grid.appendChild(dayCell(d, false));
         }
-        // добить до кратности 7
         const rest = (grid.children.length % 7);
         if (rest) {
           const need = 7 - rest;
@@ -144,7 +132,6 @@
       prev.addEventListener('click', (e) => { e.stopPropagation(); current.setMonth(current.getMonth() - 1); render(); });
       next.addEventListener('click', (e) => { e.stopPropagation(); current.setMonth(current.getMonth() + 1); render(); });
 
-      // footer (часы/минуты + применить)
       const footer = document.createElement('div'); footer.className = 'dp__footer';
       footer.style.position = 'relative';
       const hh = document.createElement('select'); hh.className = 'dp__select';
@@ -185,11 +172,8 @@
     function handleScheduleToggle() {
       if (scheduleCheckbox.checked) {
         const pop = getOrCreatePopover(scheduleItem, 'schedule');
-        // Проверяем ширину экрана
         if (window.innerWidth <= 1140) {
-          // Добавляем стили для контейнера календаря
           pop.style.cssText = 'position: absolute; left: 100%;';
-          // Используем стандартный input type="datetime-local" для мобильных устройств
           const dateInput = document.createElement('input');
           dateInput.type = 'datetime-local';
           dateInput.className = 'standard-datetime-picker';
@@ -201,7 +185,6 @@
           });
           pop.appendChild(dateInput);
         } else {
-          // Используем кастомный календарь для десктопов
           if (!pop.firstChild) {
             const now = new Date();
             const dp = makeDatePicker({
@@ -219,7 +202,6 @@
       }
     }
 
-    // подписки + init
     adCheckbox.addEventListener('change', handleAdToggle);
     scheduleCheckbox.addEventListener('change', handleScheduleToggle);
     handleAdToggle();
@@ -241,7 +223,6 @@
             }
         }
 
-        // Функция для создания превью изображения
         function createImagePreview(file) {
             const reader = new FileReader();
             reader.onload = function(e) {
@@ -254,7 +235,7 @@
                 mediaPreview.innerHTML = '';
                 mediaPreview.appendChild(previewItem);
                 setupRemoveButton(previewItem);
-                toggleMediaPreview(); // Показываем блок
+                toggleMediaPreview(); 
             };
             reader.readAsDataURL(file);
         }
@@ -273,7 +254,7 @@
             mediaPreview.innerHTML = '';
             mediaPreview.appendChild(previewItem);
             setupRemoveButton(previewItem);
-            toggleMediaPreview(); // Показываем блок
+            toggleMediaPreview(); 
         }
 
         function createAudioPreview(file) {
@@ -290,7 +271,7 @@
             mediaPreview.innerHTML = '';
             mediaPreview.appendChild(previewItem);
             setupRemoveButton(previewItem);
-            toggleMediaPreview(); // Показываем блок
+            toggleMediaPreview(); 
         }
 
         function createPollPreview() {
@@ -315,16 +296,15 @@
                 mediaPreview.innerHTML = '';
                 mediaPreview.appendChild(previewItem);
                 setupRemoveButton(previewItem);
-                toggleMediaPreview(); // Показываем блок
+                toggleMediaPreview(); 
             }
         }
 
-        // Функция для настройки кнопки удаления
         function setupRemoveButton(previewItem) {
             const removeBtn = previewItem.querySelector('.preview-remove');
             removeBtn.addEventListener('click', function() {
                 previewItem.remove();
-                toggleMediaPreview(); // Проверяем нужно ли скрыть блок
+                toggleMediaPreview(); 
                 
                 fileInput.value = '';
                 mediaTypeInput.value = '';
@@ -337,7 +317,6 @@
 
 
 
-        // Обработчики для кнопок загрузки медиа
         document.getElementById('photo-upload').addEventListener('click', function() {
             mediaTypeInput.value = 'photo';
             fileInput.accept = 'image/*';
@@ -360,17 +339,14 @@
             pollQuestionInput.style.display = 'block';
             pollOptionsInput.style.display = 'block';
             
-            // Показываем превью голосования при вводе
             pollQuestionInput.addEventListener('input', createPollPreview);
             pollOptionsInput.addEventListener('input', createPollPreview);
             
-            // Сразу создаем превью если есть данные
             if (pollQuestionInput.value || pollOptionsInput.value) {
                 createPollPreview();
             }
         });
 
-        // Обработчик выбора файла
         fileInput.addEventListener('change', function() {
             const file = this.files[0];
             const mediaType = mediaTypeInput.value;
@@ -390,15 +366,13 @@
             }
         });
 
-        // Обработчики для удаления существующих медиа при редактировании
         document.querySelectorAll('.preview-remove[data-media-id]').forEach(btn => {
             btn.addEventListener('click', function() {
                 const mediaId = this.getAttribute('data-media-id');
                 if (confirm('Удалить медиафайл?')) {
                     this.closest('.preview-item').remove();
-                    toggleMediaPreview(); // Проверяем нужно ли скрыть блок
+                    toggleMediaPreview();
                     
-                    // Добавьте скрытое поле для отметки об удалении
                     const deleteInput = document.createElement('input');
                     deleteInput.type = 'hidden';
                     deleteInput.name = 'delete_media';
@@ -408,15 +382,13 @@
             });
         });
 
-        // Обработчики для удаления существующего голосования при редактировании
         document.querySelectorAll('.preview-remove[data-poll-id]').forEach(btn => {
             btn.addEventListener('click', function() {
                 const pollId = this.getAttribute('data-poll-id');
                 if (confirm('Удалить голосование?')) {
                     this.closest('.preview-item').remove();
-                    toggleMediaPreview(); // Проверяем нужно ли скрыть блок
+                    toggleMediaPreview(); 
                     
-                    // Добавьте скрытое поле для отметки об удалении
                     const deleteInput = document.createElement('input');
                     deleteInput.type = 'hidden';
                     deleteInput.name = 'delete_poll';
@@ -427,12 +399,10 @@
         });
     }
 
-    // Инициализируем медиа превью после загрузки DOM
     if (document.getElementById('media-preview')) {
         initMediaPreview();
     }
 
-    // закрытие поповеров при клике вне
     document.addEventListener('click', (e) => {
         const pop = scheduleItem.querySelector('.af-popover[data-key="schedule"]');
         if (pop && !scheduleItem.contains(e.target)) {
