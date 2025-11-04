@@ -36,7 +36,7 @@
                 <div class="profile__article-card--body">
                     <div class="profile__article-card--body-header">
                         <div class="profile__articles--text">
-                            <p>{{ post.published_at|date:"d M Y H:i" }}</p> <!-- Дата публикации -->
+                            <p>{{ post.published_at|date:"d M Y H:i" }}</p>
                         </div>
                         <div class="dropdown">
                             <div class="dropdown__trigger">
@@ -65,13 +65,13 @@
                     {% endfor %}
                     {% endif %}
 
-                    <p>{{ post.content }}</p> <!-- Текст поста -->
+                    <p>{{ post.content }}</p>
 
                     <div class="profile__article--buttons">
                         <div class="profile__article--btn">
-                            <div class="profile__article--btn">
-                                <img src="{% static 'images/post/comment.svg' %}">
-                                <p>0</p> <!-- Замените на реальное количество комментариев -->
+                            <div class="profile__article--btn comment-btn" data-post-id="{{ post.id }}">
+                                <img src="{% static 'images/post/comment.svg' %}" class="comment-icon">
+                                <span class="comments-count">{{ post.comments_count }}</span>
                             </div>
                             <div class="profile__article--btn like-btn {% if post.is_liked_by_current_user %}active{% endif %}" 
                                 data-post-id="{{ post.id }}">
@@ -82,6 +82,42 @@
                         {% if post.visibility == 'one_time_payment' %}
                         <button class="profile__article--warning">Задонатить</button>
                         {% endif %}
+                    </div>
+
+                    <!-- Секция комментариев (изначально скрыта) -->
+                    <div class="comments-section" id="comments-section-{{ post.id }}" style="display: none;">
+                        <div class="comments-list">
+                            {% for comment in post.comments.all|slice:":5" %}
+                            <div class="comment-item">
+                                <div class="comment-author">
+                                    <strong>{{ comment.author.username }}</strong>
+                                </div>
+                                <div class="comment-content">
+                                    {{ comment.content }}
+                                </div>
+                                <div class="comment-date">
+                                    {{ comment.created_at|date:"d M Y H:i" }}
+                                </div>
+                            </div>
+                            {% empty %}
+                            <div class="no-comments">Пока нет комментариев</div>
+                            {% endfor %}
+                        </div>
+                        
+                        <!-- Форма добавления комментария -->
+                        <form class="comment-form" data-post-id="{{ post.id }}">
+                            {% csrf_token %}
+                            <div class="comment-input-wrapper">
+                                <textarea 
+                                    class="comment-input" 
+                                    placeholder="Напишите комментарий..." 
+                                    rows="2"
+                                    required></textarea>
+                                <button type="submit" class="comment-submit-btn">
+                                    <img src="{% static 'images/post/send.svg' %}" alt="Отправить">
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>

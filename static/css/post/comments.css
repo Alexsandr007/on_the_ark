@@ -1,0 +1,118 @@
+/* Стили для кнопки комментариев */
+.comment-btn {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    background: transparent;
+    border: none;
+}
+
+.comment-btn:hover .comment-icon {
+    filter: invert(70%) sepia(90%) saturate(500%) hue-rotate(360deg) brightness(100%) contrast(90%);
+}
+
+.comment-btn.active .comment-icon {
+    filter: invert(70%) sepia(90%) saturate(500%) hue-rotate(360deg) brightness(100%) contrast(90%) !important;
+}
+
+.comment-btn.active .comments-count {
+    color: #E5B31A;
+    font-weight: 600;
+}
+
+.comment-btn.active {
+    background-color: rgba(229, 179, 26, 0.1);
+}
+
+/* Стили для секции комментариев */
+.comments-section {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+}
+
+.comments-list {
+    max-height: 300px;
+    overflow-y: auto;
+    margin-bottom: 15px;
+}
+
+.comment-item {
+    padding: 10px;
+    margin-bottom: 10px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border-left: 3px solid #E5B31A;
+}
+
+.comment-author {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.comment-content {
+    margin-bottom: 5px;
+    line-height: 1.4;
+}
+
+.comment-date {
+    font-size: 12px;
+    color: #666;
+}
+
+.no-comments {
+    text-align: center;
+    color: #666;
+    font-style: italic;
+    padding: 20px;
+}
+
+/* Стили для формы комментария */
+.comment-form {
+    margin-top: 15px;
+}
+
+.comment-input-wrapper {
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+}
+
+.comment-input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    resize: vertical;
+    font-family: inherit;
+    font-size: 14px;
+}
+
+.comment-input:focus {
+    outline: none;
+    border-color: #E5B31A;
+}
+
+.comment-submit-btn {
+    background: #E5B31A;
+    border: none;
+    border-radius: 8px;
+    padding: 10px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.comment-submit-btn:hover {
+    background: #d4a217;
+}
+
+.comment-submit-btn img {
+    width: 20px;
+    height: 20px;
+    filter: brightness(0) invert(1);
+}

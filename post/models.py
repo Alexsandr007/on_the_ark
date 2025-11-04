@@ -82,3 +82,20 @@ class Like(models.Model):
 
     def __str__(self):
         return f"{self.user.email} лайкнул пост {self.post.id}"
+
+
+class Comment(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments', verbose_name="Пост")
+    author = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='comments', verbose_name="Автор")
+    content = models.TextField(verbose_name="Текст комментария")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
+    updated_at = models.DateTimeField(auto_now=True, verbose_name="Дата обновления")
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='replies', verbose_name="Родительский комментарий")
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = "Комментарий"
+        verbose_name_plural = "Комментарии"
+
+    def __str__(self):
+        return f"Комментарий от {self.author.email} к посту {self.post.id}"

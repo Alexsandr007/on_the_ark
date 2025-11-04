@@ -214,7 +214,7 @@ def password_reset_ajax(request):
 def profile(request):
     user = request.user
     posts = Post.objects.filter(author=user, published_at__isnull=False).prefetch_related(
-        'likes'
+        'likes', 'comments'
     ).order_by('-published_at')
     
     # Получаем ID всех постов, которые лайкнул текущий пользователь
@@ -225,11 +225,21 @@ def profile(request):
     
     liked_post_ids_set = set(liked_post_ids)
     
-    # Добавляем флаг is_liked_by_current_user к каждому посту
+    # Загружаем все медиа для этих постов одним запросом
+    post_ids = [post.id for post in posts]
+    media_dict = {}
+    if post_ids:
+        media_objects = Media.objects.filter(post_id__in=post_ids).order_by('id')
+        for media in media_objects:
+            if media.post_id not in media_dict:
+                media_dict[media.post_id] = []
+            media_dict[media.post_id].append(media)
+    
+    # Добавляем флаги и медиа к постам
     for post in posts:
         post.is_liked_by_current_user = post.id in liked_post_ids_set
-        # Просто загружаем медиа для каждого поста
-        post.media_list = Media.objects.filter(post=post)
+        post.media_list = media_dict.get(post.id, [])
+        post.comments_count = post.comments.count()  # Добавляем счетчик комментариев
     
     context = {
         'user': user,

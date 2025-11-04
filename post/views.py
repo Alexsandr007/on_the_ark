@@ -7,6 +7,7 @@ from django.utils import timezone
 from django.contrib import messages
 from .forms import MediaForm
 from .models import Like, Post, Media, Poll, PollOption, Tag
+from post.models import Comment
 from django.views.decorators.http import require_http_methods
 from utils.profanity_filter import profanity_filter 
 from django.core.files.storage import FileSystemStorage
@@ -545,3 +546,35 @@ def like_post(request, post_id):
             'success': False,
             'error': str(e)
         }, status=500)
+    
+
+@login_required
+@require_POST
+def add_comment(request, post_id):
+    try:
+        post = Post.objects.get(id=post_id)
+        content = request.POST.get('content', '').strip()
+        
+        if not content:
+            return JsonResponse({'success': False, 'error': 'Комментарий не может быть пустым'})
+        
+        comment = Comment.objects.create(
+            post=post,
+            author=request.user,
+            content=content
+        )
+        
+        return JsonResponse({
+            'success': True,
+            'comment': {
+                'author_name': request.user.username,
+                'content': content,
+                'created_at': 'Только что'
+            },
+            'comments_count': post.comments.count()
+        })
+        
+    except Post.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Пост не найден'})
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)})
