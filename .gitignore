@@ -48,3 +48,4 @@ venv.bak/
 # Статические файлы (если собираются при деплое)
 /staticfiles/
 /mediafiles/
+/media/

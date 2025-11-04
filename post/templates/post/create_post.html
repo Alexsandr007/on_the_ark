@@ -102,18 +102,54 @@
               <button type="button" class="preview-remove" data-poll-id="{{ post.poll.id }}">×</button>
             </div>
             {% endif %}
+
+            <!-- Превью временного медиа (если есть ошибка и файл сохранен) -->
+            {% if temp_media_url and temp_media_type %}
+            {% if temp_media_type == 'photo' %}
+            <div class="preview-item preview-image">
+              <img src="{{ temp_media_url }}" alt="Превью изображения">
+              <button type="button" class="preview-remove preview-remove-temp">×</button>
+            </div>
+            {% elif temp_media_type == 'video' %}
+            <div class="preview-item preview-video">
+              <video controls>
+                <source src="{{ temp_media_url }}" type="video/mp4">
+                Ваш браузер не поддерживает видео.
+              </video>
+              <button type="button" class="preview-remove preview-remove-temp">×</button>
+            </div>
+            {% elif temp_media_type == 'audio' %}
+            <div class="preview-item preview-audio">
+              <audio controls>
+                <source src="{{ temp_media_url }}" type="audio/mpeg">
+                Ваш браузер не поддерживает аудио.
+              </audio>
+              <button type="button" class="preview-remove preview-remove-temp">×</button>
+            </div>
+            {% endif %}
+            {% endif %}
           </div>
+          {% if messages %}
+          <div class="messages-container">
+            {% for message in messages %}
+            <div class="alert alert-{% if message.tags %}{{ message.tags }}{% else %}error{% endif %}">
+              {{ message }}
+            </div>
+            {% endfor %}
+          </div>
+          {% endif %}
           <div class="article__form">
             <!-- Заполняем поля текущими значениями при редактировании -->
             <input class="article__form--title" placeholder="Заголовок" name="title"
-              value="{% if is_edit %}{{ post.title|default:'' }}{% endif %}">
+              value="{% if form_data.title %}{{ form_data.title }}{% elif is_edit %}{{ post.title|default:'' }}{% endif %}">
 
-            <textarea placeholder="Текст поста" name="content">{% if is_edit %}{{ post.content }}{% endif %}</textarea>
+            <textarea placeholder="Текст поста"
+              name="content">{% if form_data.content %}{{ form_data.content }}{% elif is_edit %}{{ post.content }}{% endif %}</textarea>
 
             <!-- В вашей форме замените поле тегов на: -->
             <input class="article__form--tag" placeholder="Теги, не более 6" id="tag_input_display">
             <input type="hidden" name="tags_input" id="hidden_tags_input"
-              value="{% if is_edit %}{{ existing_tags }}{% endif %}">
+  value="{% if form_data.tags_input %}{{ form_data.tags_input }}{% elif is_edit %}{{ existing_tags }}{% endif %}">
             <div class="article__form--tags">
               <!-- Здесь будут отображаться визуальные теги -->
             </div>
@@ -186,7 +222,7 @@
   </section>
 
   <!-- Скрытые поля для медиа и голосования -->
-  <input type="hidden" name="media_type" id="media_type">
+<input type="hidden" name="media_type" id="media_type" value="{% if form_data.media_type %}{{ form_data.media_type }}{% endif %}">
   <input type="file" name="file" id="file_input" style="display: none;">
 
   <!-- Заполняем поля голосования если есть -->
@@ -332,40 +368,20 @@
     }
     return true;
   }
-
-  // Пример интеграции: При клике на "Фото" активировать загрузку файла и установить тип
-  document.getElementById('photo-upload').addEventListener('click', function () {
-    document.getElementById('media_type').value = 'photo';
-    const fileInput = document.getElementById('file_input');
-    fileInput.accept = 'image/*'; // Устанавливаем accept для фото
-    fileInput.click();
-  });
-  // Аналогично для видео и аудио
-  document.getElementById('video-upload').addEventListener('click', function () {
-    document.getElementById('media_type').value = 'video';
-    const fileInput = document.getElementById('file_input');
-    fileInput.accept = 'video/*';
-    fileInput.click();
-  });
-  document.getElementById('audio-upload').addEventListener('click', function () {
-    document.getElementById('media_type').value = 'audio';
-    const fileInput = document.getElementById('file_input');
-    fileInput.accept = 'audio/*';
-    fileInput.click();
-  });
-  // Для голосования: показать поля (без файлов)
-  document.getElementById('poll-create').addEventListener('click', function () {
-    document.getElementById('poll_question').style.display = 'block';
-    document.getElementById('poll_options').style.display = 'block';
-  });
-
-  // Валидация при выборе файла
-  document.getElementById('file_input').addEventListener('change', function () {
-    const file = this.files[0];
-    const mediaType = document.getElementById('media_type').value;
-    if (file && !validateFile(file, mediaType)) {
-      this.value = ''; // Очищаем выбор
-    }
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Обработчик для кнопки удаления временного медиа
+    document.querySelectorAll('.preview-remove-temp').forEach(button => {
+      button.addEventListener('click', function () {
+        // Скрыть превью и очистить сессию (нужен AJAX-запрос к view для очистки)
+        this.parentElement.style.display = 'none';
+        // Пример: отправить AJAX на endpoint для очистки сессии
+        fetch('/clear_temp_media/', {
+          method: 'POST'
+        }); // Создайте такой URL в urls.py
+      });
+    });
   });
 </script>
 {% endblock %}

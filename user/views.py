@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 
 def home(request):
     if request.user.is_authenticated:
-        return render(request, 'user/profile/profile.html')
+        return redirect('profile')
     return render(request, 'user/homePage.html', {
         'register_form': RegisterForm(),
         'login_form': LoginForm(),
@@ -224,6 +224,7 @@ def profile(request):
         'posts': posts,
         'posts_count': posts.count(),
     }
+    print(context)
     return render(request, 'user/profile/profile.html', context)
 
 def logout_view(request):

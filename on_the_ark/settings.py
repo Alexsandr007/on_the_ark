@@ -113,11 +113,15 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGIN_REDIRECT_URL = '/dashboard/'
-LOGOUT_REDIRECT_URL = '/'
-
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+
+TEMP_MEDIA_URL = '/temp/'
+TEMP_MEDIA_ROOT = os.path.join(BASE_DIR, 'temp_media')
+
+if not os.path.exists(TEMP_MEDIA_ROOT):
+    os.makedirs(TEMP_MEDIA_ROOT)
 
 AUTH_USER_MODEL = 'user.CustomUser'
 

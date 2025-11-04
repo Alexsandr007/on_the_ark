@@ -42,3 +42,5 @@ document.addEventListener('DOMContentLoaded', function() {
     // Добавляем слушатель на изменение медиа-запроса
     mediaQuery.addListener(handleMediaChange);
 });
+
+
