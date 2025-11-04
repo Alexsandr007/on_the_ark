@@ -328,6 +328,7 @@ $('#aboutForm').on('submit', function(e) {
 });
 
 // AJAX для goal (десктоп)
+// AJAX для goal (десктоп)
 $('#goalForm').on('submit', function(e) {
   e.preventDefault();
   if ($(this).data('submitting')) return;
@@ -351,17 +352,36 @@ $('#goalForm').on('submit', function(e) {
           $('.profile__item--destination .profile__card--header h2').text(data.goal.goal_title || 'Цель:');
           // Обновляем описание
           $('.profile__item--destination .profile__card--body p').first().text(data.goal.goal_description);
-          // Обновляем прогресс (если goal_amount есть)
-          if (data.goal.goal_amount) {
+          
+          // Если блока прогресса еще нет (первое создание цели), создаем его
+          if (!$('.profile__progress').length) {
+            const progressHTML = `
+              <div class="profile__progress">
+                <h3 id="progress-text">0 из ${data.goal.goal_amount}</h3>
+                <div class="profile__progress--block">
+                  <div class="profile__progress--bar"></div>
+                </div>
+              </div>
+            `;
+            $('.profile__item--destination .profile__card--body p').after(progressHTML);
+          } else {
+            // Если блок уже есть, просто обновляем текст
             $('.profile__progress h3').text('0 из ' + data.goal.goal_amount);
           }
+          
           // Меняем кнопку на "Изменить"
           $('#targetBtn').html('Изменить цель <img src="/static/images/profile/pen.png">');
+          
+          // Обновляем прогресс-бар
+          setTimeout(updateProgressBar, 50);
         }
         
         setTimeout(() => {
           $('#modalOverlay').removeClass('active');
           $('#goalForm')[0].reset();
+          
+          // РАЗБЛОКИРОВКА ПРОКРУТКИ - добавляем эту строку
+          $('body').css('overflow', 'auto');
         }, 1000);
       } else {
         var errorMsg = data.errors ? Object.values(data.errors).join(', ') : 'Ошибка';
@@ -376,5 +396,3 @@ $('#goalForm').on('submit', function(e) {
     }
   });
 });
-
-

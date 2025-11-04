@@ -1,6 +1,9 @@
 {% load static %}
 <div class="cover-title__img">     
-    <button id="changeBackgroundBtn" class="transparent-profile__plus">Изменить обложку</button>
+    <button id="changeBackgroundBtn" class="transparent-profile__plus tooltip">
+        Изменить обложку
+        <span class="tooltiptext">Рекомендуемый размер: 1440 × 433 пикселей</span>
+    </button>
 </div>
 
 
@@ -38,7 +41,7 @@
                         <div id="imageOverlay" class="image-overlay">Изменить фото</div>
                     </div>
                     <div class="content-title">
-                        <h2>{{ user.email }}</h2>
+                        <h2>{%if user.username %}{{ user.username }}{% else %}{{ user.email }}{% endif %}</h2>
                         <input id="professionInput" placeholder="{% if user.profession %}{{ user.profession }}{% else %}чем вы занимаетесь?{% endif %}">
                     </div>
                 </div>
@@ -48,13 +51,6 @@
                         <p>Видимость аккаунта</p>
                         <label class="toggle-switch">
                             <input type="checkbox" id="isVisibleToggle" {% if user.is_visible %}checked{% endif %}>
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                    <div class="block-text"> 
-                        <p>Возможность связи</p>
-                        <label class="toggle-switch">
-                            <input type="checkbox" id="isAuthorToggle" {% if user.is_author %}checked{% endif %}>
                             <span class="slider"></span>
                         </label>
                     </div>

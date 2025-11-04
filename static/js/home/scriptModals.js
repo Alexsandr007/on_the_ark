@@ -116,31 +116,104 @@ document.addEventListener('DOMContentLoaded', function() {
   const registerBtn = document.getElementById('registerBtn');
   const modalClose = document.getElementById('modalClose');
   const registerBtnBurger = document.getElementById('registerBtnBurger');
+  const authorButtons = document.querySelectorAll('.transparent-button.active');
 
+  function getFirstInput() {
+    return document.querySelector('#registerForm input:not([type="hidden"])');
+  }
+
+  // Функция открытия модального окна (без автора)
   function openModal() {
     modalOverlay.classList.add('active');
+    // Сбрасываем чекбокс автора при обычном открытии
+    const authorCheckbox = document.querySelector('input[name="is_author"]');
+    if (authorCheckbox) {
+      authorCheckbox.checked = false;
+      const customCheckbox = authorCheckbox.nextElementSibling;
+      if (customCheckbox) {
+        customCheckbox.classList.remove('checked');
+      }
+    }
+    // Автофокус на поле email
+    setTimeout(() => {
+      const firstInput = getFirstInput();
+      if (firstInput) {
+        firstInput.focus();
+      }
+    }, 150); // Увеличиваем задержку для надежности
   }
-  const openButtons = [registerBtn, registerBtnBurger];
 
-  openButtons.forEach(button => {
-    button.addEventListener('click', openModal);
-  });
+  // Функция открытия модального окна как автор
+  function openModalAsAuthor() {
+    modalOverlay.classList.add('active');
+    // Проставляем чекбокс автора
+    const authorCheckbox = document.querySelector('input[name="is_author"]');
+    if (authorCheckbox) {
+      authorCheckbox.checked = true;
+      const customCheckbox = authorCheckbox.nextElementSibling;
+      if (customCheckbox) {
+        customCheckbox.classList.add('checked');
+      }
+    }
+    // Автофокус на поле email
+    setTimeout(() => {
+      const firstInput = getFirstInput();
+      if (firstInput) {
+        firstInput.focus();
+      }
+    }, 150); // Увеличиваем задержку для надежности
+  }
 
-  modalClose.addEventListener('click', function() {
+  // Функция закрытия модального окна
+  function closeModal() {
     modalOverlay.classList.remove('active');
+  }
+
+  // Обработчики для кнопок регистрации
+  if (registerBtn) {
+    registerBtn.addEventListener('click', openModal);
+  }
+  
+  if (registerBtnBurger) {
+    registerBtnBurger.addEventListener('click', openModal);
+  }
+
+  // Обработчики для кнопок "Стать автором"
+  authorButtons.forEach(button => {
+    button.addEventListener('click', openModalAsAuthor);
   });
+
+  // Закрытие модального окна
+  if (modalClose) {
+    modalClose.addEventListener('click', closeModal);
+  }
 
   modalOverlay.addEventListener('click', function(event) {
     if (event.target === modalOverlay) {
-      modalOverlay.classList.remove('active');
+      closeModal();
     }
   });
 
   document.addEventListener('keydown', function(event) {
     if (event.key === 'Escape' && modalOverlay.classList.contains('active')) {
-      modalOverlay.classList.remove('active');
+      closeModal();
     }
   });
+
+  // Синхронизация кастомного чекбокса
+  const authorCheckbox = document.querySelector('input[name="is_author"]');
+  if (authorCheckbox) {
+    authorCheckbox.addEventListener('change', function() {
+      const customCheckbox = this.nextElementSibling;
+      if (customCheckbox) {
+        if (this.checked) {
+          customCheckbox.classList.add('checked');
+        } else {
+          customCheckbox.classList.remove('checked');
+        }
+      }
+    });
+  }
 });
 
 // JavaScript для модального окна авторизации
@@ -149,9 +222,20 @@ document.addEventListener('DOMContentLoaded', function() {
   const registerBtn = document.getElementById('authBtn');
   const modalClose = document.getElementById('modalCloseAuth');
   const registerBtnBurger = document.getElementById('authBtnBurger');
+  
+  function getFirstInput() {
+    return document.querySelector('#loginForm input:not([type="hidden"])');
+  }
 
   function openModal() {
     modalOverlay.classList.add('active');
+      // Автофокус на поле email
+    setTimeout(() => {
+      const firstInput = getFirstInput();
+      if (firstInput) {
+        firstInput.focus();
+      }
+    }, 150); // Увеличиваем задержку для надежности
   }
   const openButtons = [registerBtn, registerBtnBurger];
 
@@ -174,6 +258,8 @@ document.addEventListener('DOMContentLoaded', function() {
       modalOverlay.classList.remove('active');
     }
   });
+
+
 });
 
 // JavaScript для модального окна восстановления
@@ -182,8 +268,19 @@ document.addEventListener('DOMContentLoaded', function() {
   const registerBtn = document.getElementById('recoveryBtn');
   const modalClose = document.getElementById('modalCloseRecovery');
 
+  function getFirstInput() {
+    return document.querySelector('#resetForm input:not([type="hidden"])');
+  }
+
   registerBtn.addEventListener('click', function() {
     modalOverlay.classList.add('active');
+      // Автофокус на поле email
+    setTimeout(() => {
+      const firstInput = getFirstInput();
+      if (firstInput) {
+        firstInput.focus();
+      }
+    }, 150); // Увеличиваем задержку для надежности
   });
 
   modalClose.addEventListener('click', function() {
@@ -201,6 +298,7 @@ document.addEventListener('DOMContentLoaded', function() {
       modalOverlay.classList.remove('active');
     }
   });
+
 });
 
 // // JavaScript для модального окна ошибки (оставлено без изменений)

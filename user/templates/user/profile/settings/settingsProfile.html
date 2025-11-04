@@ -113,14 +113,6 @@
                         style="display: none; margin-bottom: 15px; padding: 10px; border-radius: 5px;"></div>
 
                     <div class="edit__social--container">
-                        <!-- Twitter -->
-                        <div class="edit__social--input">
-                            <div>
-                                <img src="{% static 'images/profile/settingsProfile/social/twitter.png' %}">
-                            </div>
-                            <input name="twitter" placeholder="Ссылка на аккаунт"
-                                value="{{ user.social_links.twitter|default_if_none:'' }}">
-                        </div>
 
                         <!-- TikTok -->
                         <div class="edit__social--input">
@@ -149,15 +141,6 @@
                                 value="{{ user.social_links.vk|default_if_none:'' }}">
                         </div>
 
-                        <!-- X -->
-                        <div class="edit__social--input">
-                            <div>
-                                <img src="{% static 'images/profile/settingsProfile/social/x.png' %}">
-                            </div>
-                            <input name="x" placeholder="Ссылка на аккаунт"
-                                value="{{ user.social_links.x|default_if_none:'' }}">
-                        </div>
-
                         <!-- B -->
                         <div class="edit__social--input">
                             <div>
@@ -165,24 +148,6 @@
                             </div>
                             <input name="b" placeholder="Ссылка на аккаунт"
                                 value="{{ user.social_links.b|default_if_none:'' }}">
-                        </div>
-
-                        <!-- Instagram -->
-                        <div class="edit__social--input">
-                            <div>
-                                <img src="{% static 'images/profile/settingsProfile/social/inst.png' %}">
-                            </div>
-                            <input name="instagram" placeholder="Ссылка на аккаунт"
-                                value="{{ user.social_links.instagram|default_if_none:'' }}">
-                        </div>
-
-                        <!-- Behance -->
-                        <div class="edit__social--input">
-                            <div>
-                                <img src="{% static 'images/profile/settingsProfile/social/be.png' %}">
-                            </div>
-                            <input name="behance" placeholder="Ссылка на аккаунт"
-                                value="{{ user.social_links.behance|default_if_none:'' }}">
                         </div>
 
                         <!-- Website -->
@@ -203,39 +168,63 @@
                 <div class="edit__content--profile">
                     <h2>Активные сессии</h2>
                     <p class="edit__sessions-text">Текущие устройства</p>
-                    <div class="edit__sessions--container">
-                        <div class="edit__sessions--item">
+
+                    <!-- Контейнер для сообщений -->
+                    <div id="session-message" style="display: none;"></div>
+
+                    <div class="edit__sessions--container" id="sessions-container">
+                        {% if user_sessions %}
+                        {% for session in user_sessions %}
+                        <div class="edit__sessions--item" data-session-key="{{ session.session_key }}"
+                            {% if session.is_current %}data-current="true" {% endif %}>
                             <div class="edit__sessions--block">
-                                <img src="{% static 'images/profile/settingsProfile/icon4-4.png' %}">
+                                {% if session.is_current %}
+                                <img src="{% static 'images/profile/settingsProfile/icon4-4.png' %}"
+                                    alt="Текущее устройство">
+                                <span style="color: green; margin-left: 5px; font-weight: bold;">(Текущая)</span>
+                                {% else %}
+                                <input type="checkbox" name="session_ids" value="{{ session.session_key }}"
+                                    class="session-checkbox">
+                                {% if 'IPhone' in session.device_info %}
+                                <img src="{% static 'images/profile/settingsProfile/social/apple.png' %}" alt="Apple">
+                                {% else %}
+                                <img src="{% static 'images/profile/settingsProfile/icon4-4.png' %}" alt="Браузер">
+                                {% endif %}
+                                {% endif %}
                                 <div class="edit__sessions--info">
-                                    <p>Google Browser 25.08.0, Windows 11</p>
-                                    <p>Россия, 123.456.7.890</p>
+                                    <p><strong>{{ session.device_info }}</strong></p>
+                                    <p>{{ session.location }}, {{ session.ip_address }}</p>
+                                    <small style="color: #888;">ID: {{ session.session_key|slice:":10" }}...</small>
                                 </div>
                             </div>
                             <div class="edit__sessions--date">
-                                <p>10.12.2025</p>
+                                <p>{{ session.last_activity|date:"d.m.Y H:i" }}</p>
                             </div>
                         </div>
-                        <div class="edit__sessions--item">
-                            <div class="edit__sessions--block">
-                                <input type="checkbox">
-                                <img src="{% static 'images/profile/settingsProfile/social/apple.png' %}">
-                                <div class="edit__sessions--info">
-                                    <p>IPhone Валерия</p>
-                                    <p>Россия, 123.456.7.890</p>
-                                </div>
-                            </div>
-                            <div class="edit__sessions--date">
-                                <p>9.12.2025</p>
-                            </div>
+                        {% endfor %}
+                        {% else %}
+                        <div id="no-sessions-message" style="text-align: center; padding: 20px; color: #666;">
+                            <p>Нет активных сессий</p>
+                            <small>Сессии появятся после авторизации на разных устройствах</small>
                         </div>
-                        <p class="edit__sessions--footer-text">Вы можете завершить все сессии разом, кроме текущей.
+                        {% endif %}
+
+                        <p class="edit__sessions--footer-text">
+                            {% if user_sessions|length > 1 %}
+                            Выберите сессии, которые хотите завершить.
+                            {% else %}
+                            Для завершения других сессий войдите с другого устройства.
+                            {% endif %}
                         </p>
                     </div>
                 </div>
+
+                {% if user_sessions|length > 1 %}
                 <div class="edit__social--footer">
-                    <button>Завершить сессии</button>
+                    <button id="terminate-sessions-btn" type="button" style="margin-right:20px" disabled>Завершить выбранные сессии</button>
+                    <button id="select-all-btn" type="button">Выбрать все</button>
                 </div>
+                {% endif %}
             </div>
             <div class="edit__content--item" id="second">
                 <div class="edit__content--profile">
@@ -266,6 +255,7 @@
 <script src="{% static 'js/header/header.js' %}"></script>
 <script src="{% static 'js/profile/settingsProfile/edit.js' %}"></script>
 <script src="{% static 'js/profile/settingsProfile/scriptModalsPayment.js' %}"></script>
+<script src="{% static 'js/profile/settingsProfile/scriptSessionView.js' %}"></script>
 <script src="{% static 'js/profile/scriptPersonalAccountSideBar.js' %}"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -314,62 +304,62 @@
     });
 
 
-    document.addEventListener('DOMContentLoaded', function() {
-    const saveButton = document.getElementById('saveSocialLinks');
-    const messageDiv = document.getElementById('socialMessage');
-    
-    // Функция для показа сообщений
-    function showMessage(message, isSuccess) {
-        messageDiv.textContent = message;
-        messageDiv.style.display = 'block';
-        messageDiv.style.backgroundColor = isSuccess ? '#d4edda' : '#f8d7da';
-        messageDiv.style.color = isSuccess ? '#155724' : '#721c24';
-        messageDiv.style.border = isSuccess ? '1px solid #c3e6cb' : '1px solid #f5c6cb';
-        
-        // Автоматически скрыть сообщение через 5 секунд
-        setTimeout(() => {
-            messageDiv.style.display = 'none';
-        }, 5000);
-    }
-    
-    // Обработчик нажатия кнопки сохранения
-    saveButton.addEventListener('click', function() {
-        // Собираем данные из всех полей ввода
-        const socialData = {
-            twitter: document.querySelector('input[name="twitter"]').value,
-            tiktok: document.querySelector('input[name="tiktok"]').value,
-            youtube: document.querySelector('input[name="youtube"]').value,
-            vk: document.querySelector('input[name="vk"]').value,
-            x: document.querySelector('input[name="x"]').value,
-            b: document.querySelector('input[name="b"]').value,
-            instagram: document.querySelector('input[name="instagram"]').value,
-            behance: document.querySelector('input[name="behance"]').value,
-            website: document.querySelector('input[name="website"]').value
-        };
-        
-        // Отправляем AJAX запрос
-        fetch("{% url 'update_social_links' %}", {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Requested-With': 'XMLHttpRequest',
-                'X-CSRFToken': '{{ csrf_token }}'
-            },
-            body: JSON.stringify(socialData)
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                showMessage(data.message, true);
-            } else {
-                showMessage(data.message, false);
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            showMessage('Произошла ошибка при отправке данных', false);
+    document.addEventListener('DOMContentLoaded', function () {
+        const saveButton = document.getElementById('saveSocialLinks');
+        const messageDiv = document.getElementById('socialMessage');
+
+        // Функция для показа сообщений
+        function showMessage(message, isSuccess) {
+            messageDiv.textContent = message;
+            messageDiv.style.display = 'block';
+            messageDiv.style.backgroundColor = isSuccess ? '#d4edda' : '#f8d7da';
+            messageDiv.style.color = isSuccess ? '#155724' : '#721c24';
+            messageDiv.style.border = isSuccess ? '1px solid #c3e6cb' : '1px solid #f5c6cb';
+
+            // Автоматически скрыть сообщение через 5 секунд
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        // Обработчик нажатия кнопки сохранения
+        saveButton.addEventListener('click', function () {
+            // Собираем данные из всех полей ввода
+            const socialData = {
+                twitter: document.querySelector('input[name="twitter"]').value,
+                tiktok: document.querySelector('input[name="tiktok"]').value,
+                youtube: document.querySelector('input[name="youtube"]').value,
+                vk: document.querySelector('input[name="vk"]').value,
+                x: document.querySelector('input[name="x"]').value,
+                b: document.querySelector('input[name="b"]').value,
+                instagram: document.querySelector('input[name="instagram"]').value,
+                behance: document.querySelector('input[name="behance"]').value,
+                website: document.querySelector('input[name="website"]').value
+            };
+
+            // Отправляем AJAX запрос
+            fetch("{% url 'update_social_links' %}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: JSON.stringify(socialData)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showMessage(data.message, true);
+                    } else {
+                        showMessage(data.message, false);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showMessage('Произошла ошибка при отправке данных', false);
+                });
         });
     });
-});
 </script>
 {% endblock %}

@@ -296,6 +296,13 @@ ease;
     border-color: #C4321A;
 }
 
+.loginForm{
+        display: flex;
+    flex-direction: column;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
 
 .modal-checkbox input:checked + .checkbox-custom {
     border-color: #000000;

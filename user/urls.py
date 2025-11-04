@@ -24,7 +24,8 @@ urlpatterns = [
     path('update-photo-ajax/', views.update_photo_ajax, name='update_photo_ajax'),
     path('update-background-ajax/', views.update_background_ajax, name='update_background_ajax'),
     path('profile/agree-privacy-policy/', views.agree_privacy_policy, name='agree_privacy_policy'),
-    path('profile/update-social-links/', views.update_social_links, name='update_social_links'),
+    path('profile/update-social-links/', views.update_social_links, name='update_social_links'), 
+    path('sessions/terminate/', views.terminate_sessions, name='terminate_sessions'),
 ]
 
 

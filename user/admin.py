@@ -13,7 +13,6 @@ class CustomUserAdmin(UserAdmin):
     fieldsets = (
         (None, {'fields': ('email', 'username', 'password')}),
         ('Персональная информация', {'fields': ('photo', 'about', 'bio', 'date_birth', 'balance')}),
-        ('Социальные сети', {'fields': ('vk_link', 'instagram_link', 'twitter_link', 'youtube_link', 'talk_link')}),
         ('Настройки', {'fields': ('is_visible',)}),
         ('Права доступа', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
         ('Важные даты', {'fields': ('last_login', 'date_created', 'date_updated')}),

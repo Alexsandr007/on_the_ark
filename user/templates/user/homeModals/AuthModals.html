@@ -36,7 +36,7 @@
     <button class="modal-close" id="modalCloseAuth"></button>
     <h2 class="modal-title">С Возвращением на борт</h2>
     
-    <form id="loginForm">
+    <form id="loginForm" class="loginForm">
       {% csrf_token %}
       <div id="loginMessage" style="margin-top: 10px; color: red;"></div>  <!-- Место для ошибок -->
       <input type="email" class="modal-input" name="username" placeholder="Почта" required>

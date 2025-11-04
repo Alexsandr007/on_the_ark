@@ -47,6 +47,46 @@ body {
     }
 }
 
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 200px;
+    background-color: #ffffff;
+    color: rgba(196, 50, 26, 1);;
+    text-align: center;
+    border-radius: 6px;
+    padding: 8px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%; /* Расположение над кнопкой */
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #ffffff transparent transparent transparent;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
 
 .shop {
     display: none;
@@ -616,6 +656,10 @@ background: #110401;
     width: 100%;
 }
 
+.profile__articles--btn p{
+    margin: 0px;
+}
+
 .profile__articles--split {
     font-weight: 400;
     font-size: 20px;
@@ -777,8 +821,74 @@ background: #110401;
     font-size: 14px;
     line-height: 140%;
     letter-spacing: 0%;
-    color: #929090;
+    color: #000000;
 
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown__trigger {
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.dropdown__trigger:hover {
+    background-color: #f5f5f5;
+}
+
+.dropdown__menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 8px 0;
+    min-width: 180px;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.2s ease;
+}
+
+.dropdown__menu.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown__item {
+    width: 100%;
+    padding: 10px 16px;
+    border: none;
+    background: none;
+    text-align: left;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.dropdown__item:hover {
+    background-color: #f8f9fa;
+}
+
+.dropdown__item--danger {
+    color: #dc3545;
+}
+
+.dropdown__item--danger:hover {
+    background-color: #fff5f5;
+    color: #c82333;
 }
 
 .profile__card--header h2 {

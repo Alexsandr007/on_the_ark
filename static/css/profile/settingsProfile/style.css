@@ -4,13 +4,22 @@
 }
 
 @font-face {
+    font-family: "Manrope";
+    src: url("../../../fonts/Manrope.ttf")format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
     font-family: "Manmore";
-    src: url("../fonts/Manrope.ttf");
+    src: url("../../../fonts/Manrope.ttf")format('woff2');
+    font-weight: normal;
+    font-style: normal;
 }
 
 @font-face {
     font-family: "Roboto";
-    src: url("../fonts/Roboto.ttf");
+    src: url("../../../fonts/Roboto.ttf")format('woff2');
 }
 
 body {

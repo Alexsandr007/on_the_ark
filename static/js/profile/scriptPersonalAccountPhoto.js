@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const imageOverlay = document.getElementById('imageOverlay');
     const profileImage = document.getElementById('profileImage');
     const profileImageHeader = document.getElementById('profileImageHeader');
+    const profileImageSideBar = document.getElementById('profileImageSideBar');
     const fileInput = document.createElement('input');  // Скрытый input для файла
     fileInput.type = 'file';
     fileInput.accept = 'image/*';
@@ -31,6 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (data.success) {
                         profileImage.src = data.photo_url;  // Обновить изображение
                         profileImageHeader.src = data.photo_url;
+                        profileImageSideBar.src = data.photo_url;
                         console.log('Фото обновлено');
                     } else {
                         alert('Ошибка загрузки фото');

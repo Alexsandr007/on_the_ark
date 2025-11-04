@@ -225,15 +225,222 @@
     handleAdToggle();
     handleScheduleToggle();
 
+    function initMediaPreview() {
+        const mediaPreview = document.getElementById('media-preview');
+        const fileInput = document.getElementById('file_input');
+        const mediaTypeInput = document.getElementById('media_type');
+        const pollQuestionInput = document.getElementById('poll_question');
+        const pollOptionsInput = document.getElementById('poll_options');
+
+        function toggleMediaPreview() {
+            const mediaPreview = document.getElementById('media-preview');
+            if (mediaPreview.children.length === 0) {
+                mediaPreview.style.display = 'none';
+            } else {
+                mediaPreview.style.display = 'flex';
+            }
+        }
+
+        // Функция для создания превью изображения
+        function createImagePreview(file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const previewItem = document.createElement('div');
+                previewItem.className = 'preview-item preview-image';
+                previewItem.innerHTML = `
+                    <img src="${e.target.result}" alt="Превью изображения">
+                    <button type="button" class="preview-remove">×</button>
+                `;
+                mediaPreview.innerHTML = '';
+                mediaPreview.appendChild(previewItem);
+                setupRemoveButton(previewItem);
+                toggleMediaPreview(); // Показываем блок
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function createVideoPreview(file) {
+            const url = URL.createObjectURL(file);
+            const previewItem = document.createElement('div');
+            previewItem.className = 'preview-item preview-video';
+            previewItem.innerHTML = `
+                <video controls>
+                    <source src="${url}" type="${file.type}">
+                    Ваш браузер не поддерживает видео.
+                </video>
+                <button type="button" class="preview-remove">×</button>
+            `;
+            mediaPreview.innerHTML = '';
+            mediaPreview.appendChild(previewItem);
+            setupRemoveButton(previewItem);
+            toggleMediaPreview(); // Показываем блок
+        }
+
+        function createAudioPreview(file) {
+            const url = URL.createObjectURL(file);
+            const previewItem = document.createElement('div');
+            previewItem.className = 'preview-item preview-audio';
+            previewItem.innerHTML = `
+                <audio controls>
+                    <source src="${url}" type="${file.type}">
+                    Ваш браузер не поддерживает аудио.
+                </audio>
+                <button type="button" class="preview-remove">×</button>
+            `;
+            mediaPreview.innerHTML = '';
+            mediaPreview.appendChild(previewItem);
+            setupRemoveButton(previewItem);
+            toggleMediaPreview(); // Показываем блок
+        }
+
+        function createPollPreview() {
+            const question = pollQuestionInput.value.trim();
+            const options = pollOptionsInput.value.split(',').map(opt => opt.trim()).filter(opt => opt);
+            
+            if (question && options.length > 0) {
+                const previewItem = document.createElement('div');
+                previewItem.className = 'preview-item preview-poll';
+                
+                let optionsHtml = '';
+                options.forEach(option => {
+                    optionsHtml += `<li>${option}</li>`;
+                });
+                
+                previewItem.innerHTML = `
+                    <h4>${question}</h4>
+                    <ul>${optionsHtml}</ul>
+                    <button type="button" class="preview-remove">×</button>
+                `;
+                
+                mediaPreview.innerHTML = '';
+                mediaPreview.appendChild(previewItem);
+                setupRemoveButton(previewItem);
+                toggleMediaPreview(); // Показываем блок
+            }
+        }
+
+        // Функция для настройки кнопки удаления
+        function setupRemoveButton(previewItem) {
+            const removeBtn = previewItem.querySelector('.preview-remove');
+            removeBtn.addEventListener('click', function() {
+                previewItem.remove();
+                toggleMediaPreview(); // Проверяем нужно ли скрыть блок
+                
+                fileInput.value = '';
+                mediaTypeInput.value = '';
+                pollQuestionInput.value = '';
+                pollOptionsInput.value = '';
+                pollQuestionInput.style.display = 'none';
+                pollOptionsInput.style.display = 'none';
+            });
+        }
+
+
+
+        // Обработчики для кнопок загрузки медиа
+        document.getElementById('photo-upload').addEventListener('click', function() {
+            mediaTypeInput.value = 'photo';
+            fileInput.accept = 'image/*';
+            fileInput.click();
+        });
+
+        document.getElementById('video-upload').addEventListener('click', function() {
+            mediaTypeInput.value = 'video';
+            fileInput.accept = 'video/*';
+            fileInput.click();
+        });
+
+        document.getElementById('audio-upload').addEventListener('click', function() {
+            mediaTypeInput.value = 'audio';
+            fileInput.accept = 'audio/*';
+            fileInput.click();
+        });
+
+        document.getElementById('poll-create').addEventListener('click', function() {
+            pollQuestionInput.style.display = 'block';
+            pollOptionsInput.style.display = 'block';
+            
+            // Показываем превью голосования при вводе
+            pollQuestionInput.addEventListener('input', createPollPreview);
+            pollOptionsInput.addEventListener('input', createPollPreview);
+            
+            // Сразу создаем превью если есть данные
+            if (pollQuestionInput.value || pollOptionsInput.value) {
+                createPollPreview();
+            }
+        });
+
+        // Обработчик выбора файла
+        fileInput.addEventListener('change', function() {
+            const file = this.files[0];
+            const mediaType = mediaTypeInput.value;
+            
+            if (file) {
+                switch(mediaType) {
+                    case 'photo':
+                        createImagePreview(file);
+                        break;
+                    case 'video':
+                        createVideoPreview(file);
+                        break;
+                    case 'audio':
+                        createAudioPreview(file);
+                        break;
+                }
+            }
+        });
+
+        // Обработчики для удаления существующих медиа при редактировании
+        document.querySelectorAll('.preview-remove[data-media-id]').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const mediaId = this.getAttribute('data-media-id');
+                if (confirm('Удалить медиафайл?')) {
+                    this.closest('.preview-item').remove();
+                    toggleMediaPreview(); // Проверяем нужно ли скрыть блок
+                    
+                    // Добавьте скрытое поле для отметки об удалении
+                    const deleteInput = document.createElement('input');
+                    deleteInput.type = 'hidden';
+                    deleteInput.name = 'delete_media';
+                    deleteInput.value = mediaId;
+                    document.getElementById('post-form').appendChild(deleteInput);
+                }
+            });
+        });
+
+        // Обработчики для удаления существующего голосования при редактировании
+        document.querySelectorAll('.preview-remove[data-poll-id]').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const pollId = this.getAttribute('data-poll-id');
+                if (confirm('Удалить голосование?')) {
+                    this.closest('.preview-item').remove();
+                    toggleMediaPreview(); // Проверяем нужно ли скрыть блок
+                    
+                    // Добавьте скрытое поле для отметки об удалении
+                    const deleteInput = document.createElement('input');
+                    deleteInput.type = 'hidden';
+                    deleteInput.name = 'delete_poll';
+                    deleteInput.value = pollId;
+                    document.getElementById('post-form').appendChild(deleteInput);
+                }
+            });
+        });
+    }
+
+    // Инициализируем медиа превью после загрузки DOM
+    if (document.getElementById('media-preview')) {
+        initMediaPreview();
+    }
+
     // закрытие поповеров при клике вне
     document.addEventListener('click', (e) => {
-      const pop = scheduleItem.querySelector('.af-popover[data-key="schedule"]');
-      if (pop && !scheduleItem.contains(e.target)) {
-        removePopover(scheduleItem, 'schedule');
-        scheduleCheckbox.checked = true;
-      }
+        const pop = scheduleItem.querySelector('.af-popover[data-key="schedule"]');
+        if (pop && !scheduleItem.contains(e.target)) {
+            removePopover(scheduleItem, 'schedule');
+            scheduleCheckbox.checked = true;
+        }
 
-      const adPop = adItem.querySelector('.af-popover[data-key="ad"]');
-      if (adPop && !adItem.contains(e.target)) removePopover(adItem, 'ad');
+        const adPop = adItem.querySelector('.af-popover[data-key="ad"]');
+        if (adPop && !adItem.contains(e.target)) removePopover(adItem, 'ad');
     });
-  })();
+})();

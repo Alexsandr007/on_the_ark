@@ -5,192 +5,201 @@
 {% block title %}На ковчеге - Платформа для поддержки российской культуры{% endblock %}
 
 {% block extra_head %}
-    <link rel="stylesheet" href="{% static 'css/post/style.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/profile/stylePersonalAccountSideBar.css' %}" />
+<link rel="stylesheet" href="{% static 'css/post/style.css' %}" />
+<link rel="stylesheet" href="{% static 'css/profile/stylePersonalAccountSideBar.css' %}" />
 {% endblock %}
 
 {% block header %}
-   {% include "include/profileHeader.html" %}
+{% include "include/profileHeader.html" %}
 {% endblock %}
 
 {% block content %}
-  <form method="post" enctype="multipart/form-data" id="post-form">  <!-- Добавлена форма для отправки данных -->
-    {% csrf_token %}
-    <section class="edit__block">
-      <div class="edit__fon"></div>
-      <img class="edit__header--image" src="{% static 'images/post/fon2.png' %}">
-      <div class="ribbons-container">
-        <svg class="ribbons" width="1073" height="290" viewBox="0 0 1073 290" fill="none"
-          xmlns="http://www.w3.org/2000/svg">
-          <!-- Ваш SVG-код остается без изменений -->
-          <path d="M9 0V245" stroke="#C43418" />
-          <path d="M84 28.5V273.5" stroke="#C43418" />
-          <path d="M235 44.5V289.5" stroke="#C43418" />
-          <path d="M386 44.5V289.5" stroke="#C43418" />
-          <path d="M537 44.5V289.5" stroke="#C43418" />
-          <path d="M688 44.5V289.5" stroke="#C43418" />
-          <path d="M839 44.5V289.5" stroke="#C43418" />
-          <path d="M990 44.5V289.5" stroke="#C43418" />
-          <path d="M160 44.5V289.5" stroke="#C43418" />
-          <path d="M311 44.5V289.5" stroke="#C43418" />
-          <path d="M462 44.5V289.5" stroke="#C43418" />
-          <path d="M613 44.5V289.5" stroke="#C43418" />
-          <path d="M764 44.5V289.5" stroke="#C43418" />
-          <path d="M915 44.5V289.5" stroke="#C43418" />
-          <path d="M1065 44.5V289.5" stroke="#C43418" />
-          <circle cx="234.5" cy="174" r="5.5" fill="#C43418" />
-          <circle cx="385.5" cy="174" r="5.5" fill="#C43418" />
-          <circle cx="536.5" cy="174" r="5.5" fill="#C43418" />
-          <circle cx="687.5" cy="174" r="5.5" fill="#C43418" />
-          <circle cx="838.5" cy="174" r="5.5" fill="#C43418" />
-          <circle cx="989.5" cy="174" r="5.5" fill="#C43418" />
-          <circle cx="159.5" cy="176" r="5.5" fill="#C43418" />
-          <circle cx="310.5" cy="176" r="5.5" fill="#C43418" />
-          <circle cx="461.5" cy="176" r="5.5" fill="#C43418" />
-          <circle cx="612.5" cy="176" r="5.5" fill="#C43418" />
-          <circle cx="763.5" cy="176" r="5.5" fill="#C43418" />
-          <circle cx="914.5" cy="176" r="5.5" fill="#C43418" />
-          <circle cx="1064.5" cy="176" r="5.5" fill="#C43418" />
-          <circle cx="83.5" cy="201" r="5.5" fill="#C43418" />
-          <circle cx="234.5" cy="217" r="5.5" fill="#C43418" />
-          <circle cx="385.5" cy="217" r="5.5" fill="#C43418" />
-          <circle cx="536.5" cy="217" r="5.5" fill="#C43418" />
-          <circle cx="687.5" cy="217" r="5.5" fill="#C43418" />
-          <circle cx="838.5" cy="217" r="5.5" fill="#C43418" />
-          <circle cx="989.5" cy="217" r="5.5" fill="#C43418" />
-          <circle cx="8.5" cy="207.5" r="5.5" fill="#C43418" />
-          <circle cx="159.5" cy="252" r="5.5" fill="#C43418" />
-          <circle cx="310.5" cy="252" r="5.5" fill="#C43418" />
-          <circle cx="461.5" cy="252" r="5.5" fill="#C43418" />
-          <circle cx="612.5" cy="252" r="5.5" fill="#C43418" />
-          <circle cx="763.5" cy="252" r="5.5" fill="#C43418" />
-          <circle cx="914.5" cy="252" r="5.5" fill="#C43418" />
-          <circle cx="1064.5" cy="252" r="5.5" fill="#C43418" />
-          <circle cx="83.5" cy="250" r="5.5" fill="#C43418" />
-          <circle cx="234.5" cy="266" r="5.5" fill="#C43418" />
-          <circle cx="385.5" cy="266" r="5.5" fill="#C43418" />
-          <circle cx="536.5" cy="266" r="5.5" fill="#C43418" />
-          <circle cx="687.5" cy="266" r="5.5" fill="#C43418" />
-          <circle cx="838.5" cy="266" r="5.5" fill="#C43418" />
-          <circle cx="989.5" cy="266" r="5.5" fill="#C43418" />
-          <circle cx="83.5" cy="179" r="8.5" fill="#C43418" />
-          <circle cx="234.5" cy="195" r="8.5" fill="#C43418" />
-          <circle cx="385.5" cy="195" r="8.5" fill="#C43418" />
-          <circle cx="536.5" cy="195" r="8.5" fill="#C43418" />
-          <circle cx="687.5" cy="195" r="8.5" fill="#C43418" />
-          <circle cx="838.5" cy="195" r="8.5" fill="#C43418" />
-          <circle cx="989.5" cy="195" r="8.5" fill="#C43418" />
-          <circle cx="8.5" cy="185.5" r="8.5" fill="#C43418" />
-          <circle cx="159.5" cy="231" r="8.5" fill="#C43418" />
-          <circle cx="310.5" cy="231" r="8.5" fill="#C43418" />
-          <circle cx="461.5" cy="231" r="8.5" fill="#C43418" />
-          <circle cx="612.5" cy="231" r="8.5" fill="#C43418" />
-          <circle cx="763.5" cy="231" r="8.5" fill="#C43418" />
-          <circle cx="914.5" cy="231" r="8.5" fill="#C43418" />
-          <circle cx="1064.5" cy="231" r="8.5" fill="#C43418" />
+<!-- Добавляем проверку на режим редактирования -->
+{% if is_edit %}
+<input type="hidden" name="post_id" value="{{ post.id }}">
+{% endif %}
+
+<form method="post" enctype="multipart/form-data" id="post-form">
+  {% csrf_token %}
+  <section class="edit__block">
+    <div class="edit__fon"></div>
+    <img class="edit__header--image" src="{% static 'images/post/fon2.png' %}">
+    <div class="ribbons-container">
+      <!-- ... ваш существующий SVG код ... -->
+    </div>
+    <div class="article__container">
+      <a href="{% if is_edit %}{% url 'profile' %}{% else %}http://{% endif %}" class="back-link">
+        <svg width="8" height="13" viewBox="0 0 8 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M2.90905 6.50004L8 11.5556L6.54547 13L0 6.50004L6.54547 0L8 1.44445L2.90905 6.50004Z" fill="black" />
         </svg>
-      </div>
-      <div class="article__container">
-        <a href="http://" class="back-link">
-          <svg width="8" height="13" viewBox="0 0 8 13" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M2.90905 6.50004L8 11.5556L6.54547 13L0 6.50004L6.54547 0L8 1.44445L2.90905 6.50004Z" fill="black" />
-          </svg>
-          Назад
-        </a>
-        <h2 class="main-title">Новый пост</h2>
-        <div class="article__body">
-          <div class="article__body--main">
-            <div class="article__header">
-              <div class="article__header--item" id="photo-upload">
-                <img src="{% static 'images/post/foto.png' %}">
-                Фото
-              </div>
-              <div class="article__header--item" id="video-upload">
-                <img src="{% static 'images/post/video.png' %}">
-                Видео
-              </div>
-              <div class="article__header--item" id="audio-upload">
-                <img src="{% static 'images/post/music.png' %}">
-                Аудио
-              </div>
-              <div class="article__header--item" id="poll-create">
-                <img src="{% static 'images/post/golos.png' %}">
-                Голосование
-              </div>
-              <div class="article__header--item article__header--item-setting">
-                <img src="{% static 'images/post/settings.png' %}">
-              </div>
+        Назад
+      </a>
+
+      <!-- Изменяем заголовок в зависимости от режима -->
+      <h2 class="main-title">{% if is_edit %}Редактировать пост{% else %}Новый пост{% endif %}</h2>
+
+      <div class="article__body">
+        <div class="article__body--main">
+          <div class="article__header">
+            <div class="article__header--item" id="photo-upload">
+              <img src="{% static 'images/post/foto.png' %}">
+              Фото
             </div>
-            <div class="article__form">
-              <input class="article__form--title" placeholder="Заголовок" name="title">  <!-- Добавлен name для title -->
-              <textarea placeholder="Текст поста" name="content"></textarea>  <!-- Добавлен name для content -->
-              <input class="article__form--tag" placeholder="Теги, не более 6" name="tags_input">  <!-- Добавлен name для tags_input -->
-              <div class="article__form--tags">
-                <!-- Здесь можно добавить отображение выбранных тегов через JS -->
-              </div>
+            <div class="article__header--item" id="video-upload">
+              <img src="{% static 'images/post/video.png' %}">
+              Видео
+            </div>
+            <div class="article__header--item" id="audio-upload">
+              <img src="{% static 'images/post/music.png' %}">
+              Аудио
+            </div>
+            <div class="article__header--item" id="poll-create">
+              <img src="{% static 'images/post/golos.png' %}">
+              Голосование
+            </div>
+            <div class="article__header--item article__header--item-setting">
+              <img src="{% static 'images/post/settings.png' %}">
             </div>
           </div>
-          <div class="article__body--card">
-            <div class="article__body--card-header">
-              <p>Кто может видеть пост</p>
+          <div class="media-preview" id="media-preview">
+            {% if is_edit and post.media.exists %}
+            <!-- Превью существующего медиа при редактировании -->
+            {% with media=post.media.first %}
+            {% if media.media_type == 'photo' %}
+            <div class="preview-item preview-image">
+              <img src="{{ media.file.url }}" alt="Превью изображения">
+              <button type="button" class="preview-remove" data-media-id="{{ media.id }}">×</button>
             </div>
-            <div class="article__body--card-body">
-              <label class="article__body--card-item">
-                <input type="radio" name="visibility" value="all_users">  <!-- Добавлен name для visibility -->
-                Все пользователи
-              </label>
-              <label class="article__body--card-item">
-                <input type="radio" name="visibility" value="subscribers_only">
-                Только подписчики
-              </label>
-              <label class="article__body--card-item">
-                <input type="radio" name="visibility" value="one_time_payment">
-                Разовая оплата
-              </label>
+            {% elif media.media_type == 'video' %}
+            <div class="preview-item preview-video">
+              <video controls>
+                <source src="{{ media.file.url }}" type="video/mp4">
+                Ваш браузер не поддерживает видео.
+              </video>
+              <button type="button" class="preview-remove" data-media-id="{{ media.id }}">×</button>
             </div>
+            {% elif media.media_type == 'audio' %}
+            <div class="preview-item preview-audio">
+              <audio controls>
+                <source src="{{ media.file.url }}" type="audio/mpeg">
+                Ваш браузер не поддерживает аудио.
+              </audio>
+              <button type="button" class="preview-remove" data-media-id="{{ media.id }}">×</button>
+            </div>
+            {% endif %}
+            {% endwith %}
+            {% endif %}
+
+            {% if is_edit and post.poll %}
+            <!-- Превью существующего голосования при редактировании -->
+            <div class="preview-item preview-poll">
+              <h4>{{ post.poll.question }}</h4>
+              <ul>
+                {% for option in post.poll.options.all %}
+                <li>{{ option.option_text }}</li>
+                {% endfor %}
+              </ul>
+              <button type="button" class="preview-remove" data-poll-id="{{ post.poll.id }}">×</button>
+            </div>
+            {% endif %}
+          </div>
+          <div class="article__form">
+            <!-- Заполняем поля текущими значениями при редактировании -->
+            <input class="article__form--title" placeholder="Заголовок" name="title"
+              value="{% if is_edit %}{{ post.title|default:'' }}{% endif %}">
+
+            <textarea placeholder="Текст поста" name="content">{% if is_edit %}{{ post.content }}{% endif %}</textarea>
+
+            <!-- В вашей форме замените поле тегов на: -->
+            <input class="article__form--tag" placeholder="Теги, не более 6" id="tag_input_display">
+            <input type="hidden" name="tags_input" id="hidden_tags_input"
+              value="{% if is_edit %}{{ existing_tags }}{% endif %}">
+            <div class="article__form--tags">
+              <!-- Здесь будут отображаться визуальные теги -->
+            </div>
+
           </div>
         </div>
-        <div class="article__footer">
-          <div class="article__footer--container">
-            <div class="article__footer--item">
-              <label class="switch__text" for="adpost">Рекламный пост</label>
-              <label class="switch">
-                <input class="switch__input" type="checkbox" id="adpost" name="is_ad">  <!-- Добавлен name для is_ad -->
-                <span class="switch__track" aria-hidden="true"></span>
-              </label>
-              <!-- Поповер для ad_description добавляется через JS -->
-              <textarea name="ad_description" placeholder="О рекламодателе" style="display: none;"></textarea>  <!-- Скрытое поле для ad_description -->
-            </div>
-            <div class="article__footer--item">
-              <label class="switch__text" for="schedulepost">Запланировать постинг</label>
-              <label class="switch">
-                <input class="switch__input" type="checkbox" id="schedulepost">  <!-- Оставлено для JS -->
-                <span class="switch__track" aria-hidden="true"></span>
-              </label>
-              <input type="hidden" id="selectedDate" name="scheduled_at">  <!-- Добавлен name для scheduled_at -->
-            </div>
-            <div class="article__footer--item">
-              <label class="switch__text" for="disable_comments">Отключить комментарии</label>
-              <label class="switch">
-                <input class="switch__input" type="checkbox" id="disable_comments" name="comments_disabled">  <!-- Исправлен ID и добавлен name для comments_disabled -->
-                <span class="switch__track" aria-hidden="true"></span>
-              </label>
-            </div>
+        <div class="article__body--card">
+          <div class="article__body--card-header">
+            <p>Кто может видеть пост</p>
           </div>
-          <button type="submit" class="article__footer--btn">Опубликовать пост</button>
+          <div class="article__body--card-body">
+            <label class="article__body--card-item">
+              <input type="radio" name="visibility" value="all_users"
+                {% if is_edit and post.visibility == 'all_users' %}checked{% endif %}>
+              Все пользователи
+            </label>
+            <label class="article__body--card-item">
+              <input type="radio" name="visibility" value="subscribers_only"
+                {% if is_edit and post.visibility == 'subscribers_only' %}checked{% endif %}>
+              Только подписчики
+            </label>
+            <label class="article__body--card-item">
+              <input type="radio" name="visibility" value="one_time_payment"
+                {% if is_edit and post.visibility == 'one_time_payment' %}checked{% endif %}>
+              Разовая оплата
+            </label>
+          </div>
         </div>
       </div>
-    </section>
-    <!-- Скрытые поля для медиа и голосования -->
-    <input type="hidden" name="media_type" id="media_type">  <!-- Для типа медиа (photo/video/audio) -->
-    <input type="file" name="file" id="file_input" style="display: none;">  <!-- Для файла медиа -->
-    <input type="text" name="question" id="poll_question" placeholder="Вопрос голосования" style="display: none;">  <!-- Для вопроса голосования -->
-    <textarea name="options" id="poll_options" placeholder="Варианты через запятую" style="display: none;"></textarea>  <!-- Для опций голосования -->
-  </form>
+      <div class="article__footer">
+        <div class="article__footer--container">
+          <div class="article__footer--item">
+            <label class="switch__text" for="adpost">Рекламный пост</label>
+            <label class="switch">
+              <input class="switch__input" type="checkbox" id="adpost" name="is_ad"
+                {% if is_edit and post.is_ad %}checked{% endif %}>
+              <span class="switch__track" aria-hidden="true"></span>
+            </label>
+            <!-- Поле для описания рекламы -->
+            <textarea name="ad_description" placeholder="О рекламодателе"
+              style="display: none;">{% if is_edit %}{{ post.ad_description|default:'' }}{% endif %}</textarea>
+          </div>
+          {% if not is_edit %}
+          <div class="article__footer--item">
+            <label class="switch__text" for="schedulepost">Запланировать постинг</label>
+            <label class="switch">
+              <input class="switch__input" type="checkbox" id="schedulepost"
+                {% if is_edit and post.scheduled_at %}checked{% endif %}>
+              <span class="switch__track" aria-hidden="true"></span>
+            </label>
+            <input type="hidden" id="selectedDate" name="scheduled_at"
+              value="{% if is_edit and post.scheduled_at %}{{ post.scheduled_at|date:'c' }}{% endif %}">
+          </div>
+          {% endif %}
+          <div class="article__footer--item">
+            <label class="switch__text" for="disable_comments">Отключить комментарии</label>
+            <label class="switch">
+              <input class="switch__input" type="checkbox" id="disable_comments" name="comments_disabled"
+                {% if is_edit and post.comments_disabled %}checked{% endif %}>
+              <span class="switch__track" aria-hidden="true"></span>
+            </label>
+          </div>
+        </div>
+        <!-- Меняем текст кнопки в зависимости от режима -->
+        <button type="submit" class="article__footer--btn">
+          {% if is_edit %}Обновить пост{% else %}Опубликовать пост{% endif %}
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Скрытые поля для медиа и голосования -->
+  <input type="hidden" name="media_type" id="media_type">
+  <input type="file" name="file" id="file_input" style="display: none;">
+
+  <!-- Заполняем поля голосования если есть -->
+  <input type="text" name="question" id="poll_question" placeholder="Вопрос голосования" style="display: none;"
+    value="{% if is_edit %}{{ poll_question|default:'' }}{% endif %}">
+
+  <textarea name="options" id="poll_options" placeholder="Варианты через запятую"
+    style="display: none;">{% if is_edit %}{{ poll_options|default:'' }}{% endif %}</textarea>
+</form>
 {% endblock %}
 
 {% block footer %}
-   {% include "include/baseFooter.html" %}
+{% include "include/baseFooter.html" %}
 {% endblock %}
 
 {% block extra_scripts %}
@@ -203,11 +212,12 @@
 <script src="{% static 'js/post/settings.js' %}"></script>
 <script src="{% static 'js/post/charCounter.js' %}"></script>
 <script src="{% static 'js/post/menu.js' %}"></script>
+<script src="{% static 'js/post/editPost.js' %}"></script>
 <script src="{% static 'js/profile/scriptPersonalAccountSideBar.js' %}"></script>
 
 <!-- JS для поповера и календаря (без дублирования) -->
 <script>
-(() => {
+  (() => {
     const items = document.querySelectorAll('.article__footer--item');
     if (items.length < 2) return;
 
@@ -233,6 +243,7 @@
       }
       return pop;
     }
+
     function removePopover(container, key) {
       const pop = container.querySelector(`.af-popover[data-key="${key}"]`);
       if (pop) pop.remove();
@@ -252,16 +263,16 @@
         const popoverTextarea = pop.querySelector('.af-popover__textearea');
         const hiddenTextarea = document.querySelector('textarea[name="ad_description"]');
         if (hiddenTextarea) {
-          popoverTextarea.value = hiddenTextarea.value;  // Загружаем существующее значение
-          popoverTextarea.addEventListener('input', function() {
-            hiddenTextarea.value = this.value;  // Обновляем скрытую textarea
-            console.log('ad_description updated:', hiddenTextarea.value);  // ===== ОТЛАДКА =====
+          popoverTextarea.value = hiddenTextarea.value; // Загружаем существующее значение
+          popoverTextarea.addEventListener('input', function () {
+            hiddenTextarea.value = this.value; // Обновляем скрытую textarea
+            console.log('ad_description updated:', hiddenTextarea.value); // ===== ОТЛАДКА =====
             // Обновляем счетчик символов
             const remaining = 150 - this.value.length;
             pop.querySelector('.af-popover__text').textContent = `До 150 символов ( осталось ${remaining} )`;
           });
         } else {
-          console.error('Hidden textarea not found');  // ===== ОТЛАДКА =====
+          console.error('Hidden textarea not found'); // ===== ОТЛАДКА =====
         }
       } else {
         removePopover(adItem, 'ad');
@@ -269,13 +280,16 @@
         const hiddenTextarea = document.querySelector('textarea[name="ad_description"]');
         if (hiddenTextarea) {
           hiddenTextarea.value = '';
-          console.log('ad_description cleared');  // ===== ОТЛАДКА =====
+          console.log('ad_description cleared'); // ===== ОТЛАДКА =====
         }
       }
     }
 
     // ===== Datetime picker (ваш оригинальный код остается без изменений)
-    function makeDatePicker({ initial, onApply }) {
+    function makeDatePicker({
+      initial,
+      onApply
+    }) {
       // ... (ваш код для календаря, вставьте его сюда)
     }
 
@@ -305,7 +319,7 @@
 
 <!-- Добавлен скрипт для интеграции медиа/голосования -->
 <script>
- // Функция для проверки файла на клиенте
+  // Функция для проверки файла на клиенте
   function validateFile(file, expectedType) {
     const allowedTypes = {
       photo: ['image/jpeg', 'image/png', 'image/gif', 'image/bmp', 'image/webp'],
@@ -320,40 +334,38 @@
   }
 
   // Пример интеграции: При клике на "Фото" активировать загрузку файла и установить тип
-  document.getElementById('photo-upload').addEventListener('click', function() {
+  document.getElementById('photo-upload').addEventListener('click', function () {
     document.getElementById('media_type').value = 'photo';
     const fileInput = document.getElementById('file_input');
-    fileInput.accept = 'image/*';  // Устанавливаем accept для фото
+    fileInput.accept = 'image/*'; // Устанавливаем accept для фото
     fileInput.click();
   });
   // Аналогично для видео и аудио
-  document.getElementById('video-upload').addEventListener('click', function() {
+  document.getElementById('video-upload').addEventListener('click', function () {
     document.getElementById('media_type').value = 'video';
     const fileInput = document.getElementById('file_input');
     fileInput.accept = 'video/*';
     fileInput.click();
   });
-  document.getElementById('audio-upload').addEventListener('click', function() {
+  document.getElementById('audio-upload').addEventListener('click', function () {
     document.getElementById('media_type').value = 'audio';
     const fileInput = document.getElementById('file_input');
     fileInput.accept = 'audio/*';
     fileInput.click();
   });
   // Для голосования: показать поля (без файлов)
-  document.getElementById('poll-create').addEventListener('click', function() {
+  document.getElementById('poll-create').addEventListener('click', function () {
     document.getElementById('poll_question').style.display = 'block';
     document.getElementById('poll_options').style.display = 'block';
   });
 
   // Валидация при выборе файла
-  document.getElementById('file_input').addEventListener('change', function() {
+  document.getElementById('file_input').addEventListener('change', function () {
     const file = this.files[0];
     const mediaType = document.getElementById('media_type').value;
     if (file && !validateFile(file, mediaType)) {
-      this.value = '';  // Очищаем выбор
+      this.value = ''; // Очищаем выбор
     }
   });
 </script>
 {% endblock %}
-
-

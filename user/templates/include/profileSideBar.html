@@ -4,7 +4,7 @@
     <div class="sidebar__profile-preview">
         <div class="sidebar__profile-preview-pad">
             <div class="sidebar__profile-preview-picture">
-                <img src="{% if user.photo %}{{ user.photo.url }}{% else %}{% static 'images/profile/profile_default.png' %}{% endif %}" alt="Фото профиля">
+                <img src="{% if user.photo %}{{ user.photo.url }}{% else %}{% static 'images/profile/profile_default.png' %}{% endif %}" alt="Фото профиля" id="profileImageSideBar">
             </div>
             <div class="sidebar__profile-preview-pattern"></div>
         </div>

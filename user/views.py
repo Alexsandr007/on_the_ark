@@ -11,9 +11,12 @@ import string
 from user.models import CustomUser
 from post.models import Media, Post
 from .forms import RegisterForm, LoginForm, PasswordResetForm, AboutForm, GoalForm
-from .models import CustomUser, UserGoal, UserSocialLinks
+from .models import CustomUser, UserGoal, UserSocialLinks, UserSession
 from django.core.files.storage import default_storage
+from django.contrib.sessions.models import Session
+from django.utils import timezone
 
+from django.views.decorators.http import require_http_methods
 import logging
 
 logger = logging.getLogger(__name__)
@@ -51,10 +54,25 @@ def change_profile(request):
         else:
             user.save()
             messages.success(request, 'Профиль успешно обновлен!')
+
+
         
         return redirect('change_profile')
+    user_sessions = UserSession.objects.filter(
+    user=request.user
+    ).order_by('-last_activity')
+    
+    # Помечаем текущую сессию
+    current_session_key = request.session.session_key
+    for session in user_sessions:
+        session.is_current = (session.session_key == current_session_key)
+    
+    context = {
+        'user_sessions': user_sessions,
+        'current_session_key': current_session_key
+    }
 
-    return render(request, 'user/profile/settings/settingsProfile.html')
+    return render(request, 'user/profile/settings/settingsProfile.html', context)
 
 
 @login_required
@@ -102,14 +120,10 @@ def update_social_links(request):
             social_links, created = UserSocialLinks.objects.get_or_create(user=request.user)
             
             # Обновляем поля
-            social_links.twitter = data.get('twitter', '')
             social_links.tiktok = data.get('tiktok', '')
             social_links.youtube = data.get('youtube', '')
             social_links.vk = data.get('vk', '')
-            social_links.x = data.get('x', '')
             social_links.b = data.get('b', '')
-            social_links.instagram = data.get('instagram', '')
-            social_links.behance = data.get('behance', '')
             social_links.website = data.get('website', '')
             
             social_links.save()
@@ -313,6 +327,90 @@ def update_background_ajax(request):
         return JsonResponse({'success': True, 'background_url': user.background_photo.url})
     
     return JsonResponse({'success': False})
+
+
+@login_required
+@require_http_methods(["POST"])
+def terminate_sessions(request):
+    try:
+        # Проверяем, что это AJAX запрос
+        if not request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return JsonResponse({
+                'status': 'error',
+                'message': 'Разрешены только AJAX запросы'
+            }, status=400)
+        
+        current_session_key = request.session.session_key
+        
+        # Получаем данные из AJAX запроса
+        try:
+            data = json.loads(request.body)
+            selected_session_keys = data.get('selected_sessions', [])
+        except json.JSONDecodeError:
+            return JsonResponse({
+                'status': 'error',
+                'message': 'Неверный формат JSON'
+            }, status=400)
+        
+        # Проверяем, что не пытаемся удалить текущую сессию
+        if current_session_key in selected_session_keys:
+            selected_session_keys.remove(current_session_key)
+        
+        if not selected_session_keys:
+            return JsonResponse({
+                'status': 'error',
+                'message': 'Не выбраны сессии для завершения'
+            }, status=400)
+        
+        # Удаляем только выбранные сессии
+        sessions_to_delete = UserSession.objects.filter(
+            user=request.user,
+            session_key__in=selected_session_keys
+        ).exclude(session_key=current_session_key)
+        
+        deleted_sessions_count = sessions_to_delete.count()
+        
+        # Удаляем сессии из базы данных Django
+        for user_session in sessions_to_delete:
+            try:
+                Session.objects.get(session_key=user_session.session_key).delete()
+            except Session.DoesNotExist:
+                pass
+        
+        # Удаляем записи из нашей модели
+        sessions_to_delete.delete()
+        
+        # Получаем обновленный список сессий
+        user_sessions = UserSession.objects.filter(user=request.user).order_by('-last_activity')
+        sessions_data = []
+        
+        for session in user_sessions:
+            sessions_data.append({
+                'session_key': session.session_key,
+                'device_info': session.device_info,
+                'location': session.location,
+                'ip_address': session.ip_address,
+                'last_activity': session.last_activity.strftime('%d.%m.%Y'),
+                'is_current': session.session_key == current_session_key
+            })
+        
+        return JsonResponse({
+            'status': 'success',
+            'message': f'Завершено сессий: {deleted_sessions_count}',
+            'sessions': sessions_data,
+            'remaining_sessions': len(sessions_data),
+            'deleted_count': deleted_sessions_count
+        })
+        
+    except Exception as e:
+        import traceback
+        print(f"Ошибка в terminate_sessions: {e}")
+        print(traceback.format_exc())
+        
+        return JsonResponse({
+            'status': 'error',
+            'message': f'Произошла ошибка: {str(e)}'
+        }, status=500)
 
 def support(request):
     return render(request, 'user/profile/support.html')

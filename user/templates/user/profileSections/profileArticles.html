@@ -3,16 +3,14 @@
     <div class="profile__articles--block">
         <div class="profile__articles--text">
             <h2>Публикации</h2>
-            <p>{{ posts_count }} записей</p>  <!-- Динамический счетчик -->
-        </div>
-        <div>
-            <img class="profile__articles--image" src="{% static 'images/profile/dots.png' %}">
+            <p>{{ posts_count }} записей</p> <!-- Динамический счетчик -->
         </div>
     </div>
     <div class="profile__articles--container">
         <div class="profile__articles--header">
             <div class="profile__articles--btn">
-                <button class="active" data-filter="all">Все посты {% if user.username %}{{ user.username }}{% endif %}</button>
+                <button class="active" data-filter="all">Все посты
+                    <p>{% if user.username %}{{ user.username }}{% endif %}<p/></button>
             </div>
             <div class="profile__articles--split">|</div>
             <div class="profile__articles--btn">
@@ -28,59 +26,67 @@
                 </button>
             </div>
         </div>
-        
+
         {% if posts %}
-            {% for post in posts %}
-                 <div class="profile__articles--item" data-type="{% if post.media_list and post.media_list.0.media_type == 'photo' %}image{% elif post.media_list and post.media_list.0.media_type == 'video' %}video{% elif post.poll %}poll{% else %}text{% endif %}">
-                    <div class="profile__article-card">
-                        <div class="profile__article-card--body">
-                            <div class="profile__article-card--body-header">
-                                <div class="profile__articles--text">
-                                    <p>{{ post.published_at|date:"d M Y H:i" }}</p>  <!-- Дата публикации -->
-                                </div>
-                                <div>
-                                    <img class="profile__articles--image" src="{% static 'images/profile/dots.png' %}">
-                                </div>
+        {% for post in posts %}
+        <div class="profile__articles--item"
+            data-type="{% if post.media_list and post.media_list.0.media_type == 'photo' %}image{% elif post.media_list and post.media_list.0.media_type == 'video' %}video{% elif post.poll %}poll{% else %}text{% endif %}">
+            <div class="profile__article-card">
+                <div class="profile__article-card--body">
+                    <div class="profile__article-card--body-header">
+                        <div class="profile__articles--text">
+                            <p>{{ post.published_at|date:"d M Y H:i" }}</p> <!-- Дата публикации -->
+                        </div>
+                        <div class="dropdown">
+                            <div class="dropdown__trigger">
+                                <img class="profile__articles--image" src="{% static 'images/profile/dots.png' %}">
                             </div>
-                            
-                            {% if post.media_list %}
-                                {% for media in post.media_list %}
-                                    {% if media.media_type == 'photo' %}
-                                        <img class="profile__article--main" src="{{ media.file.url }}" alt="Фото">
-                                    {% elif media.media_type == 'video' %}
-                                        <video class="profile__article--main" controls>
-                                            <source src="{{ media.file.url }}" type="video/mp4">
-                                        </video>
-                                    {% endif %}
-                                {% endfor %}
-                            {% endif %}
-                            
-                            <p>{{ post.content }}</p>  <!-- Текст поста -->
-                            
-                            <div class="profile__article--buttons">
-                                <div class="profile__article--btn">
-                                    <div class="profile__article--btn">
-                                        <img src="{% static 'images/post/comments.png' %}">
-                                        <p>0</p>  <!-- Замените на реальное количество комментариев -->
-                                    </div>
-                                    <div class="profile__article--btn">
-                                        <img src="{% static 'images/post/like.png' %}">
-                                        <p>0</p>  <!-- Замените на реальное количество лайков -->
-                                    </div>
-                                </div>
-                                {% if post.visibility == 'one_time_payment' %}
-                                    <button class="profile__article--warning">Задонатить</button>  <!-- Только для платных постов -->
-                                {% endif %}
+                            <div class="dropdown__menu">
+                                <button class="dropdown__item" onclick="window.location.href='{% url 'edit_post' post.id %}'">✏️ Редактировать пост</button>
+                                <button class="dropdown__item dropdown__item--danger" onclick="deletePost({{ post.id }})">🗑️ Удалить
+                                    пост</button>
                             </div>
                         </div>
                     </div>
+
+                    {% if post.media_list %}
+                    {% for media in post.media_list %}
+                    {% if media.media_type == 'photo' %}
+                    <img class="profile__article--main" src="{{ media.file.url }}" alt="Фото">
+                    {% elif media.media_type == 'video' %}
+                    <video class="profile__article--main" controls>
+                        <source src="{{ media.file.url }}" type="video/mp4">
+                    </video>
+                    {% endif %}
+                    {% endfor %}
+                    {% endif %}
+
+                    <p>{{ post.content }}</p> <!-- Текст поста -->
+
+                    <div class="profile__article--buttons">
+                        <div class="profile__article--btn">
+                            <div class="profile__article--btn">
+                                <img src="{% static 'images/post/comment.svg' %}">
+                                <p>0</p> <!-- Замените на реальное количество комментариев -->
+                            </div>
+                            <div class="profile__article--btn">
+                                <img src="{% static 'images/post/like.svg' %}">
+                                <p>0</p> <!-- Замените на реальное количество лайков -->
+                            </div>
+                        </div>
+                        {% if post.visibility == 'one_time_payment' %}
+                        <button class="profile__article--warning">Задонатить</button> <!-- Только для платных постов -->
+                        {% endif %}
+                    </div>
                 </div>
-            {% endfor %}
-        {% else %}
-            <div class="profile__articles--item">
-                <h2>У вас пока нет постов..(</h2>
-                <img src="{% static 'images/profile/sad_men.png' %}">
             </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="profile__articles--item">
+            <h2>У вас пока нет постов..(</h2>
+            <img src="{% static 'images/profile/sad_men.png' %}">
+        </div>
         {% endif %}
     </div>
 </section>

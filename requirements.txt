@@ -1,6 +1,7 @@
-Django==4.2.24
+Django==5.2
 python-decouple==3.8
-Pillow==10.0.1
-gunicorn==21.2.0
-psycopg2-binary==2.9.7
+Pillow==11.1.0
+gunicorn==23.0.0
+psycopg2-binary==2.9.11
 python-dotenv==1.1.1
+user-agents==2.2.0

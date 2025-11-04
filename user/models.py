@@ -1,5 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.contrib.sessions.models import Session
+from django.utils import timezone
+import uuid
 
 
 class CustomUser(AbstractUser):
@@ -41,15 +44,28 @@ class UserGoal(models.Model):
 
 class UserSocialLinks(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='social_links')
-    twitter = models.URLField(max_length=100, blank=True, null=True, verbose_name="Twitter")
     tiktok = models.URLField(max_length=100, blank=True, null=True, verbose_name="TikTok")
     youtube = models.URLField(max_length=100, blank=True, null=True, verbose_name="YouTube")
     vk = models.URLField(max_length=100, blank=True, null=True, verbose_name="VK")
-    x = models.URLField(max_length=100, blank=True, null=True, verbose_name="X")
     b = models.URLField(max_length=100, blank=True, null=True, verbose_name="B")
-    instagram = models.URLField(max_length=100, blank=True, null=True, verbose_name="Instagram")
-    behance = models.URLField(max_length=100, blank=True, null=True, verbose_name="Behance")
     website = models.URLField(max_length=100, blank=True, null=True, verbose_name="Website")
 
     def __str__(self):
         return f"Соцсети пользователя {self.user.email}"
+    
+
+class UserSession(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    session_key = models.CharField(max_length=40)
+    user_agent = models.TextField(blank=True)
+    ip_address = models.GenericIPAddressField(null=True, blank=True)
+    device_info = models.CharField(max_length=255, blank=True)
+    location = models.CharField(max_length=255, blank=True)
+    last_activity = models.DateTimeField(default=timezone.now)
+    is_current = models.BooleanField(default=False)
+    
+    class Meta:
+        unique_together = ('user', 'session_key')
+    
+    def __str__(self):
+        return f"{self.user.username} - {self.device_info}"
