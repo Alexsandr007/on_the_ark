@@ -312,6 +312,7 @@ $('#aboutForm').on('submit', function(e) {
         setTimeout(() => {
           $('#modalOverlayAbout').removeClass('active');
           $('#aboutForm')[0].reset();
+          document.body.style.overflow = '';
         }, 1000);
       } else {
         var errorMsg = data.errors ? Object.values(data.errors).join(', ') : 'Ошибка';

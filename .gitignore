@@ -49,3 +49,4 @@ venv.bak/
 /staticfiles/
 /mediafiles/
 /media/
+/temp_media/

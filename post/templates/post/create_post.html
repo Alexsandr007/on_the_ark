@@ -28,7 +28,7 @@
       <!-- ... ваш существующий SVG код ... -->
     </div>
     <div class="article__container">
-      <a href="{% if is_edit %}{% url 'profile' %}{% else %}http://{% endif %}" class="back-link">
+      <a href="{% url 'profile' %}" class="back-link">
         <svg width="8" height="13" viewBox="0 0 8 13" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M2.90905 6.50004L8 11.5556L6.54547 13L0 6.50004L6.54547 0L8 1.44445L2.90905 6.50004Z" fill="black" />
         </svg>
@@ -53,15 +53,15 @@
               <img src="{% static 'images/post/music.png' %}">
               Аудио
             </div>
-            <div class="article__header--item" id="poll-create">
+            {% comment %} <div class="article__header--item" id="poll-create">
               <img src="{% static 'images/post/golos.png' %}">
               Голосование
-            </div>
+            </div> {% endcomment %}
             <div class="article__header--item article__header--item-setting">
               <img src="{% static 'images/post/settings.png' %}">
             </div>
           </div>
-          <div class="media-preview" id="media-preview">
+          <div class="media-preview" id="media-preview" style="{% if is_edit or temp_media_url and temp_media_type %}display:flex;{% else %}display:none;{% endif %}">
             {% if is_edit and post.media.exists %}
             <!-- Превью существующего медиа при редактировании -->
             {% with media=post.media.first %}
@@ -92,7 +92,7 @@
 
             {% if is_edit and post.poll %}
             <!-- Превью существующего голосования при редактировании -->
-            <div class="preview-item preview-poll">
+            <div class="preview-item preview-poll" >
               <h4>{{ post.poll.question }}</h4>
               <ul>
                 {% for option in post.poll.options.all %}
@@ -149,7 +149,7 @@
             <!-- В вашей форме замените поле тегов на: -->
             <input class="article__form--tag" placeholder="Теги, не более 6" id="tag_input_display">
             <input type="hidden" name="tags_input" id="hidden_tags_input"
-  value="{% if form_data.tags_input %}{{ form_data.tags_input }}{% elif is_edit %}{{ existing_tags }}{% endif %}">
+              value="{% if form_data.tags_input %}{{ form_data.tags_input }}{% elif is_edit %}{{ existing_tags }}{% endif %}">
             <div class="article__form--tags">
               <!-- Здесь будут отображаться визуальные теги -->
             </div>
@@ -163,7 +163,8 @@
           <div class="article__body--card-body">
             <label class="article__body--card-item">
               <input type="radio" name="visibility" value="all_users"
-                {% if is_edit and post.visibility == 'all_users' %}checked{% endif %}>
+                {% if is_edit and post.visibility == 'all_users' %}checked{% endif %}
+                {% if not is_edit %}checked{% endif %}>
               Все пользователи
             </label>
             <label class="article__body--card-item">
@@ -222,7 +223,8 @@
   </section>
 
   <!-- Скрытые поля для медиа и голосования -->
-<input type="hidden" name="media_type" id="media_type" value="{% if form_data.media_type %}{{ form_data.media_type }}{% endif %}">
+  <input type="hidden" name="media_type" id="media_type"
+    value="{% if form_data.media_type %}{{ form_data.media_type }}{% endif %}">
   <input type="file" name="file" id="file_input" style="display: none;">
 
   <!-- Заполняем поля голосования если есть -->

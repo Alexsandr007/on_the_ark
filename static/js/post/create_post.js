@@ -335,17 +335,17 @@
             fileInput.click();
         });
 
-        document.getElementById('poll-create').addEventListener('click', function() {
-            pollQuestionInput.style.display = 'block';
-            pollOptionsInput.style.display = 'block';
+        // document.getElementById('poll-create').addEventListener('click', function() {
+        //     pollQuestionInput.style.display = 'block';
+        //     pollOptionsInput.style.display = 'block';
             
-            pollQuestionInput.addEventListener('input', createPollPreview);
-            pollOptionsInput.addEventListener('input', createPollPreview);
+        //     pollQuestionInput.addEventListener('input', createPollPreview);
+        //     pollOptionsInput.addEventListener('input', createPollPreview);
             
-            if (pollQuestionInput.value || pollOptionsInput.value) {
-                createPollPreview();
-            }
-        });
+        //     if (pollQuestionInput.value || pollOptionsInput.value) {
+        //         createPollPreview();
+        //     }
+        // });
 
         fileInput.addEventListener('change', function() {
             const file = this.files[0];

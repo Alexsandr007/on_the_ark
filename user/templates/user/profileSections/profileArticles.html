@@ -3,7 +3,7 @@
     <div class="profile__articles--block">
         <div class="profile__articles--text">
             <h2>Публикации</h2>
-            <p>{{ posts_count }} записей</p> 
+            <p>{{ posts_count }} записей</p>
         </div>
     </div>
     <div class="profile__articles--container">
@@ -39,7 +39,7 @@
                             <p>{{ post.published_at|date:"d M Y H:i" }}</p>
                         </div>
                         <div class="dropdown">
-                            <div class="dropdown__trigger">
+                            <div class="dropdown__trigger" data-post-id="{{ post.id }}">
                                 <img class="profile__articles--image" src="{% static 'images/profile/dots.png' %}">
                             </div>
                             <div class="dropdown__menu">
@@ -52,7 +52,6 @@
                             </div>
                         </div>
                     </div>
-
                     {% if post.media_list %}
                     {% for media in post.media_list %}
                     {% if media.media_type == 'photo' %}
@@ -73,7 +72,7 @@
                                 <img src="{% static 'images/post/comment.svg' %}" class="comment-icon">
                                 <span class="comments-count">{{ post.comments_count }}</span>
                             </div>
-                            <div class="profile__article--btn like-btn {% if post.is_liked_by_current_user %}active{% endif %}" 
+                            <div class="profile__article--btn like-btn {% if post.is_liked_by_current_user %}active{% endif %}"
                                 data-post-id="{{ post.id }}">
                                 <img src="{% static 'images/post/like.svg' %}" class="like-icon">
                                 <span class="likes-count">{{ post.likes.count }}</span>
@@ -84,7 +83,7 @@
                         {% endif %}
                     </div>
 
-              
+
                     <div class="comments-section" id="comments-section-{{ post.id }}" style="display: none;">
                         <div class="comments-list">
                             {% for comment in post.comments.all|slice:":5" %}
@@ -103,14 +102,11 @@
                             <div class="no-comments">Пока нет комментариев</div>
                             {% endfor %}
                         </div>
-                        
+
                         <form class="comment-form" data-post-id="{{ post.id }}">
                             {% csrf_token %}
                             <div class="comment-input-wrapper">
-                                <textarea 
-                                    class="comment-input" 
-                                    placeholder="Напишите комментарий..." 
-                                    rows="2"
+                                <textarea class="comment-input" placeholder="Напишите комментарий..." rows="2"
                                     required></textarea>
                                 <button type="submit" class="comment-submit-btn">
                                     <img src="{% static 'images/post/send.svg' %}" alt="Отправить">

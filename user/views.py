@@ -50,10 +50,9 @@ def change_profile(request):
             else:
                 user.email = email
                 user.save()
-                messages.success(request, 'Профиль успешно обновлен!')
         else:
             user.save()
-            messages.success(request, 'Профиль успешно обновлен!')
+
 
 
         

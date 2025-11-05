@@ -1,26 +1,54 @@
-// Обработчик клика по триггеру
-document.querySelector('.dropdown__trigger').addEventListener('click', function(e) {
-    e.stopPropagation();
-    const menu = this.nextElementSibling;
-    menu.classList.toggle('show');
+// Обработчик клика по всем триггерам выпадающих меню
+document.addEventListener('DOMContentLoaded', function() {
+    // Добавляем обработчики для всех выпадающих меню
+    const dropdownTriggers = document.querySelectorAll('.dropdown__trigger');
+    
+    dropdownTriggers.forEach(trigger => {
+        trigger.addEventListener('click', function(e) {
+            e.stopPropagation();
+            
+            // Закрываем все открытые меню
+            const openMenus = document.querySelectorAll('.dropdown__menu.show');
+            openMenus.forEach(menu => {
+                menu.classList.remove('show');
+            });
+            
+            // Открываем текущее меню
+            const menu = this.nextElementSibling;
+            if (menu && menu.classList.contains('dropdown__menu')) {
+                menu.classList.add('show');
+            }
+        });
+    });
+
+    // Закрытие меню при клике вне его
+    document.addEventListener('click', function(e) {
+        // Если клик не по триггеру и не по самому меню
+        if (!e.target.closest('.dropdown__trigger') && !e.target.closest('.dropdown__menu')) {
+            const openMenus = document.querySelectorAll('.dropdown__menu.show');
+            openMenus.forEach(menu => {
+                menu.classList.remove('show');
+            });
+        }
+    });
+
+    // Закрытие меню при клике на пункт меню (если нужно)
+    const dropdownItems = document.querySelectorAll('.dropdown__item');
+    dropdownItems.forEach(item => {
+        item.addEventListener('click', function() {
+            const menu = this.closest('.dropdown__menu');
+            if (menu) {
+                menu.classList.remove('show');
+            }
+        });
+    });
 });
 
-// Закрытие меню при клике вне его
-document.addEventListener('click', function() {
-    const openMenu = document.querySelector('.dropdown__menu.show');
-    if (openMenu) {
-        openMenu.classList.remove('show');
-    }
-});
-
-
-// Функция для удаления поста
+// Функция для удаления поста (остается без изменений)
 function deletePost(postId) {
     if (confirm('Вы уверены, что хотите удалить этот пост? Это действие нельзя отменить.')) {
-        // Создаем CSRF токен для Django
         const csrftoken = getCookie('csrftoken');
         
-        // Отправляем DELETE запрос на сервер
         fetch(`/post/delete/${postId}/`, {
             method: 'DELETE',
             headers: {
@@ -36,19 +64,20 @@ function deletePost(postId) {
         })
         .then(data => {
             if (data.success) {
-                // Показываем сообщение об успехе
                 showNotification('Пост успешно удален', 'success');
                 
-                // Удаляем пост из DOM
-                const postElement = document.querySelector(`[data-post-id="${postId}"]`);
+                // Находим и удаляем весь элемент поста
+                const postElement = document.querySelector(`.profile__articles--item [data-post-id="${postId}"]`);
                 if (postElement) {
-                    postElement.remove();
+                    postElement.closest('.profile__articles--item').remove();
                 }
                 
-                // Или перезагружаем страницу через 1.5 секунды
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1500);
+                // Если постов не осталось, показываем сообщение
+                if (!document.querySelector('.profile__articles--item')) {
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1500);
+                }
             } else {
                 throw new Error(data.error || 'Ошибка при удалении');
             }
@@ -60,7 +89,7 @@ function deletePost(postId) {
     }
 }
 
-// Вспомогательная функция для получения CSRF токена
+// Остальные функции без изменений
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -76,14 +105,11 @@ function getCookie(name) {
     return cookieValue;
 }
 
-// Функция для показа уведомлений
 function showNotification(message, type = 'info') {
-    // Создаем элемент уведомления
     const notification = document.createElement('div');
     notification.className = `notification notification-${type}`;
     notification.textContent = message;
     
-    // Стили для уведомления
     notification.style.cssText = `
         position: fixed;
         top: 20px;
@@ -107,7 +133,6 @@ function showNotification(message, type = 'info') {
     
     document.body.appendChild(notification);
     
-    // Удаляем уведомление через 3 секунды
     setTimeout(() => {
         notification.style.animation = 'slideOut 0.3s ease';
         setTimeout(() => {
@@ -118,16 +143,19 @@ function showNotification(message, type = 'info') {
     }, 3000);
 }
 
-// Добавьте CSS для анимации уведомлений
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes slideIn {
-        from { transform: translateX(100%); opacity: 0; }
-        to { transform: translateX(0); opacity: 1; }
-    }
-    @keyframes slideOut {
-        from { transform: translateX(0); opacity: 1; }
-        to { transform: translateX(100%); opacity: 0; }
-    }
-`;
-document.head.appendChild(style);
+// Добавляем CSS для анимации уведомлений
+if (!document.querySelector('#notification-styles')) {
+    const style = document.createElement('style');
+    style.id = 'notification-styles';
+    style.textContent = `
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+    `;
+    document.head.appendChild(style);
+}
