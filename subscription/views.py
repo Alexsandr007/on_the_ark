@@ -25,7 +25,7 @@ def create_subscription(request):
         if form.is_valid():
             subscription = form.save()
             messages.success(request, 'Подписка успешно создана!')
-            return redirect('subscription:subscription_list')
+            return redirect('create_post')
         else:
             messages.error(request, 'Пожалуйста, исправьте ошибки в форме.')
     else:
