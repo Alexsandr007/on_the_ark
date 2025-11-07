@@ -243,12 +243,13 @@ def edit_post(request, post_id):
     temp_storage = FileSystemStorage(location=settings.TEMP_MEDIA_ROOT, base_url=settings.TEMP_MEDIA_URL)
     temp_media_url = None
     temp_media_type = None
+    user_subscriptions = Subscription.objects.filter(is_active=True)  # ДОБАВИТЬ ЭТУ СТРОКУ
 
     if request.method == 'POST':
         title = request.POST.get('title', '').strip()
         content = request.POST.get('content', '').strip()
         tags_input = request.POST.get('tags_input', '').strip()
-        visibility = request.POST.get('visibility', 'all_users')
+        visibility = request.POST.get('visibility', 'all_users')  # ИЗМЕНИТЬ НА subscription ЕСЛИ МЕНЯЛИ HTML
         is_ad = request.POST.get('is_ad') == 'on'
         ad_description = request.POST.get('ad_description', '').strip() if is_ad else ''
         scheduled_at_str = request.POST.get('scheduled_at', '').strip()
@@ -271,27 +272,43 @@ def edit_post(request, post_id):
             'options_str': options_str,
         }
 
-        if not title:
-            messages.error(request, 'Текст заголовка обязателен.')
+        # ДОБАВИТЬ ФУНКЦИЮ save_temp_file
+        def save_temp_file():
             file = request.FILES.get('file')
             if file and media_type:
                 temp_filename = temp_storage.save(file.name, file)
                 request.session['temp_media_filename'] = temp_filename
                 request.session['temp_media_type'] = media_type
-                temp_media_url = temp_storage.url(temp_filename)
-                temp_media_type = media_type
-            return render(request, 'post/create_post.html', {'form_data': form_data, 'temp_media_url': temp_media_url, 'temp_media_type': temp_media_type, 'post': post, 'existing_tags': ', '.join([tag.name for tag in post.tags.all()]), 'is_edit': True})
+                return temp_storage.url(temp_filename), media_type
+            elif 'temp_media_filename' in request.session:
+                return temp_storage.url(request.session['temp_media_filename']), request.session.get('temp_media_type')
+            return None, None
+
+        if not title:
+            messages.error(request, 'Текст заголовка обязателен.')
+            temp_media_url, temp_media_type = save_temp_file()  # ИСПОЛЬЗОВАТЬ ФУНКЦИЮ
+            return render(request, 'post/create_post.html', {
+                'form_data': form_data, 
+                'temp_media_url': temp_media_url, 
+                'temp_media_type': temp_media_type, 
+                'post': post, 
+                'existing_tags': ', '.join([tag.name for tag in post.tags.all()]), 
+                'is_edit': True,
+                'user_subscriptions': user_subscriptions  # ДОБАВИТЬ
+            })
 
         if not content:
             messages.error(request, 'Текст поста обязателен.')
-            file = request.FILES.get('file')
-            if file and media_type:
-                temp_filename = temp_storage.save(file.name, file)
-                request.session['temp_media_filename'] = temp_filename
-                request.session['temp_media_type'] = media_type
-                temp_media_url = temp_storage.url(temp_filename)
-                temp_media_type = media_type
-            return render(request, 'post/create_post.html', {'form_data': form_data, 'temp_media_url': temp_media_url, 'temp_media_type': temp_media_type, 'post': post, 'existing_tags': ', '.join([tag.name for tag in post.tags.all()]), 'is_edit': True})
+            temp_media_url, temp_media_type = save_temp_file()  # ИСПОЛЬЗОВАТЬ ФУНКЦИЮ
+            return render(request, 'post/create_post.html', {
+                'form_data': form_data, 
+                'temp_media_url': temp_media_url, 
+                'temp_media_type': temp_media_type, 
+                'post': post, 
+                'existing_tags': ', '.join([tag.name for tag in post.tags.all()]), 
+                'is_edit': True,
+                'user_subscriptions': user_subscriptions  # ДОБАВИТЬ
+            })
 
         fields_to_check = {
             'заголовок': title,
@@ -306,14 +323,16 @@ def edit_post(request, post_id):
                     request, 
                     f'Поле "{field_name}" содержит нецензурную лексику. Пожалуйста, отредактируйте текст.'
                 )
-                file = request.FILES.get('file')
-                if file and media_type:
-                    temp_filename = temp_storage.save(file.name, file)
-                    request.session['temp_media_filename'] = temp_filename
-                    request.session['temp_media_type'] = media_type
-                    temp_media_url = temp_storage.url(temp_filename)
-                    temp_media_type = media_type
-                return render(request, 'post/create_post.html', {'form_data': form_data, 'temp_media_url': temp_media_url, 'temp_media_type': temp_media_type, 'post': post, 'existing_tags': ', '.join([tag.name for tag in post.tags.all()]), 'is_edit': True})
+                temp_media_url, temp_media_type = save_temp_file()  # ИСПОЛЬЗОВАТЬ ФУНКЦИЮ
+                return render(request, 'post/create_post.html', {
+                    'form_data': form_data, 
+                    'temp_media_url': temp_media_url, 
+                    'temp_media_type': temp_media_type, 
+                    'post': post, 
+                    'existing_tags': ', '.join([tag.name for tag in post.tags.all()]), 
+                    'is_edit': True,
+                    'user_subscriptions': user_subscriptions  # ДОБАВИТЬ
+                })
 
         scheduled_at = None
         if scheduled_at_str:
@@ -321,14 +340,34 @@ def edit_post(request, post_id):
                 scheduled_at = timezone.datetime.fromisoformat(scheduled_at_str.replace('Z', '+00:00'))
             except ValueError:
                 messages.error(request, 'Неверный формат даты.')
-                file = request.FILES.get('file')
-                if file and media_type:
-                    temp_filename = temp_storage.save(file.name, file)
-                    request.session['temp_media_filename'] = temp_filename
-                    request.session['temp_media_type'] = media_type
-                    temp_media_url = temp_storage.url(temp_filename)
-                    temp_media_type = media_type
-                return render(request, 'post/create_post.html', {'form_data': form_data, 'temp_media_url': temp_media_url, 'temp_media_type': temp_media_type, 'post': post, 'existing_tags': ', '.join([tag.name for tag in post.tags.all()]), 'is_edit': True})
+                temp_media_url, temp_media_type = save_temp_file()  # ИСПОЛЬЗОВАТЬ ФУНКЦИЮ
+                return render(request, 'post/create_post.html', {
+                    'form_data': form_data, 
+                    'temp_media_url': temp_media_url, 
+                    'temp_media_type': temp_media_type, 
+                    'post': post, 
+                    'existing_tags': ', '.join([tag.name for tag in post.tags.all()]), 
+                    'is_edit': True,
+                    'user_subscriptions': user_subscriptions  # ДОБАВИТЬ
+                })
+
+        # ДОБАВИТЬ ЛОГИКУ ДЛЯ ПОДПИСКИ (ТАК ЖЕ КАК В create_post)
+        subscription = None
+        if visibility and visibility != 'all_users':  
+            try:
+                subscription = Subscription.objects.get(id=visibility, is_active=True)  
+            except (Subscription.DoesNotExist, ValueError):
+                messages.error(request, 'Выбранная подписка не найдена')
+                temp_media_url, temp_media_type = save_temp_file()
+                return render(request, 'post/create_post.html', {
+                    'form_data': form_data, 
+                    'temp_media_url': temp_media_url, 
+                    'temp_media_type': temp_media_type, 
+                    'post': post, 
+                    'existing_tags': ', '.join([tag.name for tag in post.tags.all()]), 
+                    'is_edit': True,
+                    'user_subscriptions': user_subscriptions
+                })
 
         delete_media_id = request.POST.get('delete_media')
         if delete_media_id:
@@ -342,9 +381,11 @@ def edit_post(request, post_id):
         if delete_poll_id and hasattr(post, 'poll'):
             post.poll.delete()
 
+        # ОБНОВИТЬ ПОЛЯ ПОСТА С УЧЕТОМ ПОДПИСКИ
         post.title = title if title else None
         post.content = content
-        post.visibility = visibility
+        post.visibility = 'all_users'  # ВСЕГДА all_users
+        post.subscription = subscription  # УСТАНОВИТЬ ПОДПИСКУ
         post.is_ad = is_ad
         post.ad_description = ad_description
         post.scheduled_at = scheduled_at
@@ -361,14 +402,16 @@ def edit_post(request, post_id):
             for name in tag_names:
                 if profanity_filter.contains_profanity(name):
                     messages.error(request, f'Тег "{name}" содержит нецензурную лексику.')
-                    file = request.FILES.get('file')
-                    if file and media_type:
-                        temp_filename = temp_storage.save(file.name, file)
-                        request.session['temp_media_filename'] = temp_filename
-                        request.session['temp_media_type'] = media_type
-                        temp_media_url = temp_storage.url(temp_filename)
-                        temp_media_type = media_type
-                    return render(request, 'post/create_post.html', {'form_data': form_data, 'temp_media_url': temp_media_url, 'temp_media_type': temp_media_type, 'post': post, 'existing_tags': ', '.join([tag.name for tag in post.tags.all()]), 'is_edit': True})
+                    temp_media_url, temp_media_type = save_temp_file()
+                    return render(request, 'post/create_post.html', {
+                        'form_data': form_data, 
+                        'temp_media_url': temp_media_url, 
+                        'temp_media_type': temp_media_type, 
+                        'post': post, 
+                        'existing_tags': ', '.join([tag.name for tag in post.tags.all()]), 
+                        'is_edit': True,
+                        'user_subscriptions': user_subscriptions
+                    })
                 
                 tag, created = Tag.objects.get_or_create(name=name)
                 post.tags.add(tag)
@@ -384,12 +427,16 @@ def edit_post(request, post_id):
                 media.save()
             else:
                 messages.error(request, f"Ошибка загрузки {media_type}: {media_form.errors}")
-                temp_filename = temp_storage.save(file.name, file)
-                request.session['temp_media_filename'] = temp_filename
-                request.session['temp_media_type'] = media_type
-                temp_media_url = temp_storage.url(temp_filename)
-                temp_media_type = media_type
-                return render(request, 'post/create_post.html', {'form_data': form_data, 'temp_media_url': temp_media_url, 'temp_media_type': temp_media_type, 'post': post, 'existing_tags': ', '.join([tag.name for tag in post.tags.all()]), 'is_edit': True})
+                temp_media_url, temp_media_type = save_temp_file()
+                return render(request, 'post/create_post.html', {
+                    'form_data': form_data, 
+                    'temp_media_url': temp_media_url, 
+                    'temp_media_type': temp_media_type, 
+                    'post': post, 
+                    'existing_tags': ', '.join([tag.name for tag in post.tags.all()]), 
+                    'is_edit': True,
+                    'user_subscriptions': user_subscriptions
+                })
 
         if hasattr(post, 'poll'):
             post.poll.delete()
@@ -398,14 +445,16 @@ def edit_post(request, post_id):
             if (profanity_filter.contains_profanity(question) or 
                 profanity_filter.contains_profanity(options_str)):
                 messages.error(request, 'Вопрос или варианты ответа содержат нецензурную лексику.')
-                file = request.FILES.get('file')
-                if file and media_type:
-                    temp_filename = temp_storage.save(file.name, file)
-                    request.session['temp_media_filename'] = temp_filename
-                    request.session['temp_media_type'] = media_type
-                    temp_media_url = temp_storage.url(temp_filename)
-                    temp_media_type = media_type
-                return render(request, 'post/create_post.html', {'form_data': form_data, 'temp_media_url': temp_media_url, 'temp_media_type': temp_media_type, 'post': post, 'existing_tags': ', '.join([tag.name for tag in post.tags.all()]), 'is_edit': True})
+                temp_media_url, temp_media_type = save_temp_file()
+                return render(request, 'post/create_post.html', {
+                    'form_data': form_data, 
+                    'temp_media_url': temp_media_url, 
+                    'temp_media_type': temp_media_type, 
+                    'post': post, 
+                    'existing_tags': ', '.join([tag.name for tag in post.tags.all()]), 
+                    'is_edit': True,
+                    'user_subscriptions': user_subscriptions
+                })
             
             poll = Poll.objects.create(post=post, question=question)
             for option in options_str.split(','):
@@ -429,6 +478,7 @@ def edit_post(request, post_id):
         'is_edit': True,  
         'temp_media_url': temp_media_url,
         'temp_media_type': temp_media_type,
+        'user_subscriptions': user_subscriptions,  # ДОБАВИТЬ В КОНТЕКСТ
     }
     
     if hasattr(post, 'poll'):
