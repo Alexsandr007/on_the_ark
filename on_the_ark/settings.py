@@ -27,7 +27,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'user',
-    'post'
+    'post',
+    'subscription'
 ]
 
 MIDDLEWARE = [
@@ -64,11 +65,14 @@ WSGI_APPLICATION = 'on_the_ark.wsgi.application'
 # Database
 if DEBUG:
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+        'OPTIONS': {
+            'timeout': 20,  # Увеличиваем таймаут
         }
     }
+}
 else:
     # Для продакшн/Docker используем PostgreSQL
     DATABASES = {

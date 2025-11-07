@@ -1,0 +1,296 @@
+{% extends "user/base.html" %}
+{% load static %}
+
+
+{% block title %}На ковчеге - Платформа для поддержки российской культуры{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/fonts/addFonts.css' %}">
+<link rel="stylesheet" href="{% static 'css/subscription/style.css' %}" />
+<link rel="stylesheet" href="{% static 'css/subscription/buttons.css' %}" />
+<link rel="stylesheet" href="{% static 'css/subscription/global-colors.css' %}" />
+<link rel="stylesheet" href="{% static 'css/subscription/global-fonts.css' %}" />
+<link rel="stylesheet" href="{% static 'css/subscription/style-reset.css' %}" />
+<link rel="stylesheet" href="{% static 'css/profile/stylePersonalAccountSideBar.css' %}" />
+{% endblock %}
+
+{% block header %}
+{% include "include/profileHeader.html" %}
+{% endblock %}
+
+
+{% block content %}
+<div class="edit__fon"></div>
+<div class="page-overlay"></div>
+<div class="go-back">
+    <img class="go-back__ornament" src="{% static 'images/subscription/new-tariff-page-subheader-ornament.svg' %}">
+    <img class="go-back__ornament--mobile" src="{% static 'images/subscription/new-tariff-page-ornament--mobile.svg' %}">
+</div>    
+<main class="main">
+    <div class="container">
+        <button class="go-back__button" onclick="window.history.back()">
+            <i class="fas fa-chevron-left"></i> Назад
+        </button>
+        <div class="title-wrapper">
+            <h1>Создать подписку</h1>
+        </div>
+
+        <form class="form" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <!-- Вывод общих ошибок формы -->
+            {% if form.non_field_errors %}
+            <div class="alert alert-danger">
+                {% for error in form.non_field_errors %}
+                    {{ error }}
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <div class="form__content">
+                <div class="form__column-left">
+                    <div class="upload-box">
+                        <!-- Исправленный input для загрузки изображения -->
+                        {{ form.image }}
+                        <label for="{{ form.image.id_for_label }}" class="upload-btn" style="margin: 0 !important;">
+                            <img src="{% static 'images/subscription/upload-img.svg' %}"><span>Загрузить иллюстрацию</span>
+                        </label>
+                        <div class="tariff__upload-hint">
+                            Рекомендуемый размер: 250 × 100px<br/>Весом не более 5 мб
+                        </div>
+                        <!-- Контейнер для превью изображения -->
+                        <div class="image-preview" id="imagePreview" style="display: none;">
+                            <img id="previewImage" src="" alt="Превью изображения">
+                            <span id="removeImage" class="remove-image">×</span>
+                        </div>
+                        {% if form.image.errors %}
+                        <div class="error-message">
+                            {% for error in form.image.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Остальные поля формы остаются без изменений -->
+                    <fieldset class="tariff__title">
+                        <label for="id_name">Название подписки</label>
+                        {{ form.name }}
+                        {% if form.name.errors %}
+                        <div class="error-message">
+                            {% for error in form.name.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </fieldset>
+                    
+                    <fieldset class="tariff__description">
+                        <label for="id_description">Что входит в подписку</label>
+                        {{ form.description }}
+                        {% if form.description.errors %}
+                        <div class="error-message">
+                            {% for error in form.description.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </fieldset>
+                    
+                    <fieldset class="tariff__price">
+                        <label for="id_price">Стоимость за месяц</label>
+                        <div class="tariff__price-content">
+                            {{ form.price }}
+                        </div>
+                        <span class="tariff__price-hint">Не более 100 000₽</span>
+                        {% if form.price.errors %}
+                        <div class="error-message">
+                            {% for error in form.price.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </fieldset>
+                    
+                    <div class="create-tariff create-tariff--desctop">
+                        <button type="submit" class="button">Сформировать подписку</button>
+                    </div>
+                </div>
+                <div class="form__column-right">
+                    <!-- Правая колонка без изменений -->
+                    <div class="toggle-item-box">
+                        <label class="toggle-item">
+                            Ограниченное количество подписчиков
+                            <div class="switch">
+                                {{ form.is_limited_subscribers }}
+                                <span class="slider-bg"></span>
+                            </div>
+                        </label>
+                        {{ form.max_subscribers }}
+                        {% if form.max_subscribers.errors %}
+                        <div class="error-message">
+                            {% for error in form.max_subscribers.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                
+                    <div class="toggle-item-box">
+                        <label class="toggle-item">
+                            Активировать скидку
+                            <div class="switch">
+                                {{ form.is_discount_active }}
+                                <span class="slider-bg"></span>
+                            </div>
+                        </label>
+                        <div class="slider-wrapper" id="discountSliderWrapper">
+                            <input type="range" name="discount_percent" min="0" max="50" step="1" value="{{ form.discount_percent.value|default:'10' }}" 
+                                   class="slider" id="id_discount_percent" />
+                            <div class="slider-fill" id="discountFill"></div>
+                            <div class="slider-value" id="discountValue">{{ form.discount_percent.value|default:'10' }}%</div>
+                        </div>
+                        {% if form.discount_percent.errors %}
+                        <div class="error-message">
+                            {% for error in form.discount_percent.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                
+                    <div class="toggle-item-box">
+                        <label class="toggle-item">
+                            Добавить пробный период
+                            <div class="switch">
+                                {{ form.has_trial_period }}
+                                <span class="slider-bg"></span>
+                            </div>
+                        </label>
+                        <div class="slider-wrapper" id="trialSliderWrapper">
+                            <input type="range" name="trial_days" min="14" max="28" step="1" value="{{ form.trial_days.value|default:'14' }}" 
+                                   class="slider" id="id_trial_days" />
+                            <div class="slider-fill" id="trialFill"></div>
+                            <div class="slider-value" id="trialValue">{{ form.trial_days.value|default:'14' }} дней</div>
+                        </div>
+                        {% if form.trial_days.errors %}
+                        <div class="error-message">
+                            {% for error in form.trial_days.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="create-tariff create-tariff--mobile">
+                <button type="submit" class="button">Сформировать подписку</button>
+            </div>
+        </form>
+    </div>
+</main>
+{% endblock %}
+
+{% block footer %}
+{% include "include/baseFooter.html" %}
+{% endblock %}
+
+{% block extra_scripts %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{% static 'js/header/header.js' %}"></script>
+    <script src="{% static 'js/subscription/navMenuMobile.js' %}"></script>
+    <script src="{% static 'js/subscription/newTariffFormMaintenance.js' %}"></script>
+    <script src="{% static 'js/profile/scriptPersonalAccountSideBar.js' %}"></script>
+
+<script>
+// JavaScript для обновления значений слайдеров
+document.addEventListener('DOMContentLoaded', function() {
+    // Скидка
+    const discountRange = document.getElementById('id_discount_percent');
+    const discountValue = document.getElementById('discountValue');
+    const discountFill = document.getElementById('discountFill');
+    
+    if (discountRange) {
+        discountRange.addEventListener('input', function() {
+            discountValue.textContent = this.value + '%';
+            updateSliderFill(this, discountFill);
+        });
+        updateSliderFill(discountRange, discountFill);
+    }
+    
+    // Пробный период
+    const trialRange = document.getElementById('id_trial_days');
+    const trialValue = document.getElementById('trialValue');
+    const trialFill = document.getElementById('trialFill');
+    
+    if (trialRange) {
+        trialRange.addEventListener('input', function() {
+            trialValue.textContent = this.value + ' дней';
+            updateSliderFill(this, trialFill);
+        });
+        updateSliderFill(trialRange, trialFill);
+    }
+    
+    function updateSliderFill(slider, fillElement) {
+        const value = (slider.value - slider.min) / (slider.max - slider.min) * 100;
+        fillElement.style.width = value + '%';
+    }
+    
+    // Показ/скрытие полей при переключении toggle
+    const limitedSubscribersToggle = document.getElementById('id_is_limited_subscribers');
+    const maxSubscribersInput = document.getElementById('id_max_subscribers');
+    
+    if (limitedSubscribersToggle && maxSubscribersInput) {
+        function toggleMaxSubscribers() {
+            maxSubscribersInput.style.display = limitedSubscribersToggle.checked ? 'block' : 'none';
+        }
+        
+        limitedSubscribersToggle.addEventListener('change', toggleMaxSubscribers);
+        toggleMaxSubscribers(); // Initial state
+    }
+
+    // Функционал для превью изображения
+    const imageInput = document.getElementById('{{ form.image.id_for_label }}');
+    const imagePreview = document.getElementById('imagePreview');
+    const previewImage = document.getElementById('previewImage');
+    const removeImageBtn = document.getElementById('removeImage');
+    const uploadBtn = document.querySelector('.upload-btn');
+
+    if (imageInput) {
+        // Обработчик выбора файла
+        imageInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                
+                reader.addEventListener('load', function() {
+                    previewImage.src = reader.result;
+                    imagePreview.style.display = 'block';
+                    uploadBtn.style.display = 'none'; // Скрываем кнопку загрузки
+                });
+                
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Обработчик удаления изображения
+        removeImageBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            imageInput.value = ''; // Очищаем input
+            imagePreview.style.display = 'none';
+            uploadBtn.style.display = 'flex'; // Показываем кнопку загрузки
+        });
+    }
+
+    // Исправление проблемы с открытием диалога выбора файла
+    // Убедимся, что label корректно связан с input
+    const imageLabel = document.querySelector('label[for="{{ form.image.id_for_label }}"]');
+    if (imageLabel) {
+        imageLabel.addEventListener('click', function(e) {
+            // Предотвращаем множественные срабатывания
+            e.stopPropagation();
+        });
+    }
+});
+</script> 
+{% endblock %}

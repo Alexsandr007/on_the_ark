@@ -16,7 +16,7 @@
                 class="nav__text">Мой профиль</span></a>
         <a href="#" class="nav__link"><img src="{% static 'images/profile/sidebar-icons/icon-wallet.svg' %}" class="nav__icon"><span
                 class="nav__text">Кошелёк</span></a>
-        <a href="#" class="nav__link"><img src="{% static 'images/profile/sidebar-icons/icon-paid-subs.svg' %}" class="nav__icon"><span
+        <a href="{% url 'subscription:create_subscription_function' %}" class="nav__link"><img src="{% static 'images/profile/sidebar-icons/icon-paid-subs.svg' %}" class="nav__icon"><span
                 class="nav__text">Подписки</span></a>
         <a href="#" class="nav__link"><img src="{% static 'images/profile/sidebar-icons/icon-notifications.svg' %}" class="nav__icon"><span
                 class="nav__text">Уведомления</span></a>
