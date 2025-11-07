@@ -23,7 +23,7 @@ class PostForm(forms.ModelForm):
     def save(self, commit=True):
         instance = super().save(commit=False)
         tags_str = self.cleaned_data.get('tags_input', '')
-        tag_names = [name.strip() for name in tags_str.split(',') if name.strip()][:6]  # Ограничение 6 тегами
+        tag_names = [name.strip() for name in tags_str.split(',') if name.strip()][:6]
         if commit:
             instance.save()
             instance.tags.set([Tag.objects.get_or_create(name=name)[0] for name in tag_names])
@@ -34,7 +34,6 @@ class MediaForm(forms.ModelForm):
         fields = ['media_type', 'file']
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Добавляем валидаторы в зависимости от media_type
         if 'media_type' in self.data:
             media_type = self.data['media_type']
             if media_type == 'photo':
@@ -43,11 +42,9 @@ class MediaForm(forms.ModelForm):
                 self.fields['file'].validators.append(FileExtensionValidator(['mp4', 'avi', 'mov', 'wmv', 'flv', 'webm']))
             elif media_type == 'audio':
                 self.fields['file'].validators.append(FileExtensionValidator(['mp3', 'wav', 'flac', 'aac', 'ogg']))
-            # Для голосования файлы не нужны, но если случайно, блокируем
     def clean_file(self):
         file = self.cleaned_data.get('file')
         if file:
-            # Проверка MIME-типа для дополнительной защиты
             allowed_mime = {
                 'photo': ['image/jpeg', 'image/png', 'image/gif', 'image/bmp', 'image/webp'],
                 'video': ['video/mp4', 'video/avi', 'video/quicktime', 'video/x-ms-wmv', 'video/x-flv', 'video/webm'],

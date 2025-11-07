@@ -34,7 +34,7 @@ class RegisterForm(forms.ModelForm):
         return user
 
 class LoginForm(AuthenticationForm):
-    username = forms.EmailField(label="Email")  # Переопределяем на email
+    username = forms.EmailField(label="Email") 
 
 class PasswordResetForm(forms.Form):
     email = forms.EmailField(label="Email")

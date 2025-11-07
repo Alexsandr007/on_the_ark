@@ -61,7 +61,8 @@
               <img src="{% static 'images/post/settings.png' %}">
             </div>
           </div>
-          <div class="media-preview" id="media-preview" style="{% if is_edit or temp_media_url and temp_media_type %}display:flex;{% else %}display:none;{% endif %}">
+          <div class="media-preview" id="media-preview"
+            style="{% if is_edit or temp_media_url and temp_media_type %}display:flex;{% else %}display:none;{% endif %}">
             {% if is_edit and post.media.exists %}
             <!-- Превью существующего медиа при редактировании -->
             {% with media=post.media.first %}
@@ -92,7 +93,7 @@
 
             {% if is_edit and post.poll %}
             <!-- Превью существующего голосования при редактировании -->
-            <div class="preview-item preview-poll" >
+            <div class="preview-item preview-poll">
               <h4>{{ post.poll.question }}</h4>
               <ul>
                 {% for option in post.poll.options.all %}
@@ -161,22 +162,28 @@
             <p>Кто может видеть пост</p>
           </div>
           <div class="article__body--card-body">
+            <!-- Вариант "Все пользователи" -->
             <label class="article__body--card-item">
               <input type="radio" name="visibility" value="all_users"
-                {% if is_edit and post.visibility == 'all_users' %}checked{% endif %}
-                {% if not is_edit %}checked{% endif %}>
+                {% if is_edit and not post.subscription %}checked{% endif %} {% if not is_edit %}checked{% endif %}>
               Все пользователи
             </label>
+
+            <!-- Варианты с подписками -->
+            {% for subscription in user_subscriptions %}
             <label class="article__body--card-item">
-              <input type="radio" name="visibility" value="subscribers_only"
-                {% if is_edit and post.visibility == 'subscribers_only' %}checked{% endif %}>
-              Только подписчики
+              <input type="radio" name="visibility" value="{{ subscription.id }}"
+                {% if is_edit and post.subscription.id == subscription.id %}checked{% endif %}>
+              {{ subscription.name }}
             </label>
-            <label class="article__body--card-item">
-              <input type="radio" name="visibility" value="one_time_payment"
-                {% if is_edit and post.visibility == 'one_time_payment' %}checked{% endif %}>
-              Разовая оплата
-            </label>
+            {% empty %}
+            <div class="no-subscriptions">
+              <p>У вас пока нет активных подписок</p>
+              <a href="{% url 'subscription:create_subscription' %}" class="create-subscription-link">
+                Создать подписку
+              </a>
+            </div>
+            {% endfor %}
           </div>
         </div>
       </div>

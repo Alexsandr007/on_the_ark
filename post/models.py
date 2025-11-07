@@ -12,8 +12,6 @@ class Tag(models.Model):
 class Post(models.Model):
     VISIBILITY_CHOICES = [
         ('all_users', 'Все пользователи'),
-        ('subscribers_only', 'Только подписчики'),
-        ('one_time_payment', 'Разовая оплата'),
     ]
 
     author = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='posts', verbose_name="Автор")
@@ -21,19 +19,32 @@ class Post(models.Model):
     content = models.TextField(blank=True, null=True, verbose_name="Текст поста")
     tags = models.ManyToManyField(Tag, blank=True, related_name='posts', verbose_name="Теги")
     visibility = models.CharField(max_length=20, choices=VISIBILITY_CHOICES, default='all_users', verbose_name="Видимость")
+    subscription = models.ForeignKey(
+        'subscription.Subscription', 
+        on_delete=models.SET_NULL, 
+        blank=True, 
+        null=True, 
+        verbose_name="Подписка",
+        help_text="Если выбрана подписка, пост будет доступен только подписчикам"
+    )
     is_ad = models.BooleanField(default=False, verbose_name="Рекламный пост")
     ad_description = models.CharField(max_length=150, blank=True, null=True, verbose_name="Описание рекламодателя")
     scheduled_at = models.DateTimeField(blank=True, null=True, verbose_name="Запланированное время публикации")
     comments_disabled = models.BooleanField(default=False, verbose_name="Отключить комментарии")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Дата обновления")
-    published_at = models.DateTimeField(blank=True, null=True, verbose_name="Дата публикации")  # Для планирования
+    published_at = models.DateTimeField(blank=True, null=True, verbose_name="Дата публикации")
 
     def __str__(self):
         return self.title or f"Пост от {self.author.email}"
 
+    @property
+    def display_visibility(self):
+        if self.subscription:
+            return f"Подписка: {self.subscription.name}"
+        return "Все пользователи"
+
     def publish(self):
-        """Метод для публикации поста (если запланирован)"""
         if self.scheduled_at and self.scheduled_at <= timezone.now():
             self.published_at = timezone.now()
             self.save()

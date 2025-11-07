@@ -6,19 +6,16 @@ import os
 from pathlib import Path
 
 from dotenv import load_dotenv
-load_dotenv()  # Загружает переменные из .env в os.environ
+load_dotenv()  
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Quick-start development settings - unsuitable for production
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-fallback-secret-key')
 
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1,0.0.0.0').split(',')
 
-# Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -62,19 +59,17 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'on_the_ark.wsgi.application'
 
-# Database
 if DEBUG:
     DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
         'OPTIONS': {
-            'timeout': 20,  # Увеличиваем таймаут
+            'timeout': 20, 
         }
     }
 }
 else:
-    # Для продакшн/Docker используем PostgreSQL
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
@@ -86,7 +81,6 @@ else:
         }
     }
 
-# Password validation
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -102,15 +96,13 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# Internationalization
 LANGUAGE_CODE = 'ru-ru'
 TIME_ZONE = 'Europe/Moscow'
 USE_I18N = True
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # ИСПРАВЛЕННАЯ СТРОКА
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
@@ -129,7 +121,6 @@ if not os.path.exists(TEMP_MEDIA_ROOT):
 
 AUTH_USER_MODEL = 'user.CustomUser'
 
-# Email settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')

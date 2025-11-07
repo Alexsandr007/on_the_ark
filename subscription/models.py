@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 
+from user.models import CustomUser
+
 class Subscription(models.Model):
     name = models.CharField(max_length=200, verbose_name="Название подписки")
     description = models.TextField(verbose_name="Описание подписки")
@@ -17,7 +19,6 @@ class Subscription(models.Model):
         verbose_name="Иллюстрация подписки"
     )
     
-    # Дополнительные опции
     is_limited_subscribers = models.BooleanField(
         default=False,
         verbose_name="Ограниченное количество подписчиков"
@@ -59,7 +60,6 @@ class Subscription(models.Model):
     
     @property
     def final_price(self):
-        """Цена со скидкой"""
         if self.is_discount_active and self.discount_percent > 0:
             discount_amount = (self.price * self.discount_percent) / 100
             return self.price - discount_amount
@@ -69,3 +69,15 @@ class Subscription(models.Model):
         from django.core.exceptions import ValidationError
         if self.price > 100000:
             raise ValidationError({'price': 'Стоимость не может превышать 100 000₽'})
+        
+
+
+class UserSubscription(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='user_subscriptions')
+    subscription = models.ForeignKey(Subscription, on_delete=models.CASCADE)
+    subscribed_at = models.DateTimeField(auto_now_add=True)
+    expires_at = models.DateTimeField()
+    is_active = models.BooleanField(default=True)
+    
+    class Meta:
+        unique_together = ['user', 'subscription']

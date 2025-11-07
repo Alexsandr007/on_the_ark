@@ -5,6 +5,8 @@ from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
 from django.contrib import messages
+
+from subscription.models import Subscription, UserSubscription
 from .forms import MediaForm
 from .models import Like, Post, Media, Poll, PollOption, Tag
 from post.models import Comment
@@ -22,6 +24,8 @@ def create_post(request):
     temp_storage = FileSystemStorage(location=settings.TEMP_MEDIA_ROOT, base_url=settings.TEMP_MEDIA_URL)
     temp_media_url = None
     temp_media_type = None
+
+    user_subscriptions = Subscription.objects.filter(is_active=True)
 
     if request.method == 'POST':
         title = request.POST.get('title', '').strip()
@@ -102,12 +106,28 @@ def create_post(request):
                     'temp_media_url': temp_media_url, 
                     'temp_media_type': temp_media_type
                 })
+            
+
+        subscription = None
+        if visibility and visibility != 'all_users':  
+            try:
+                subscription = Subscription.objects.get(id=visibility, is_active=True)  
+            except (Subscription.DoesNotExist, ValueError):
+                messages.error(request, 'Выбранная подписка не найдена')
+                temp_media_url, temp_media_type = save_temp_file()
+                return render(request, 'post/create_post.html', {
+                    'form_data': form_data, 
+                    'temp_media_url': temp_media_url, 
+                    'temp_media_type': temp_media_type,
+                    'user_subscriptions': user_subscriptions
+                })
 
         post = Post(
             author=request.user,
             title=title if title else None,
             content=content,
-            visibility=visibility,
+            visibility='all_users', 
+            subscription=subscription, 
             is_ad=is_ad,
             ad_description=ad_description,
             scheduled_at=scheduled_at,
@@ -124,9 +144,10 @@ def create_post(request):
                     post.delete()
                     temp_media_url, temp_media_type = save_temp_file()
                     return render(request, 'post/create_post.html', {
-                        'form_data': form_data, 
+                        'form_data': {}, 
                         'temp_media_url': temp_media_url, 
-                        'temp_media_type': temp_media_type
+                        'temp_media_type': temp_media_type,
+                        'user_subscriptions': user_subscriptions
                     })
                 
                 tag, created = Tag.objects.get_or_create(name=name)
@@ -170,9 +191,10 @@ def create_post(request):
                 post.delete()
                 temp_media_url, temp_media_type = save_temp_file()
                 return render(request, 'post/create_post.html', {
-                    'form_data': form_data, 
+                    'form_data': {}, 
                     'temp_media_url': temp_media_url, 
-                    'temp_media_type': temp_media_type
+                    'temp_media_type': temp_media_type,
+                    'user_subscriptions': user_subscriptions
                 })
             
             poll = Poll.objects.create(post=post, question=question)
@@ -206,7 +228,8 @@ def create_post(request):
     return render(request, 'post/create_post.html', {
         'form_data': {}, 
         'temp_media_url': temp_media_url, 
-        'temp_media_type': temp_media_type
+        'temp_media_type': temp_media_type,
+        'user_subscriptions': user_subscriptions
     })
 
 @login_required
@@ -528,3 +551,29 @@ def add_comment(request, post_id):
         return JsonResponse({'success': False, 'error': 'Пост не найден'})
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)})
+    
+
+def get_visible_posts(user):
+    """Получить посты, доступные пользователю"""
+    if user.is_authenticated:
+        public_posts = Post.objects.filter(
+            published_at__isnull=False,
+            subscription__isnull=True
+        )
+        
+        user_active_subscriptions = UserSubscription.objects.filter(
+            user=user, 
+            is_active=True
+        ).values_list('subscription_id', flat=True)
+        
+        subscription_posts = Post.objects.filter(
+            published_at__isnull=False,
+            subscription_id__in=user_active_subscriptions
+        )
+        
+        return public_posts.union(subscription_posts).order_by('-published_at')
+    else:
+        return Post.objects.filter(
+            published_at__isnull=False,
+            subscription__isnull=True
+        ).order_by('-published_at')

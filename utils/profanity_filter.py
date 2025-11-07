@@ -4,7 +4,6 @@ from django.conf import settings
 class ProfanityFilter:
     def __init__(self, bad_words_file=None):
         if bad_words_file is None:
-            # Путь к файлу с нецензурными словами
             bad_words_file = os.path.join(settings.BASE_DIR, 'bad_words.txt')
         
         self.bad_words = self._load_bad_words(bad_words_file)
@@ -16,7 +15,7 @@ class ProfanityFilter:
             with open(file_path, 'r', encoding='utf-8') as file:
                 for line in file:
                     word = line.strip().lower()
-                    if word and not word.startswith('#'):  # Пропускаем комментарии
+                    if word and not word.startswith('#'):
                         bad_words.add(word)
         except FileNotFoundError:
             print(f"Файл {file_path} не найден. Создайте файл с нецензурными словами.")
@@ -29,7 +28,6 @@ class ProfanityFilter:
         
         text_lower = text.lower()
         
-        # Простая проверка на вхождение слов
         for bad_word in self.bad_words:
             if bad_word in text_lower:
                 return True
@@ -43,5 +41,4 @@ class ProfanityFilter:
                 return field_name
         return None
 
-# Создаем глобальный экземпляр фильтра
 profanity_filter = ProfanityFilter()

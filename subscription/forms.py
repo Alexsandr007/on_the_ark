@@ -74,7 +74,7 @@ class SubscriptionForm(forms.ModelForm):
     def clean_image(self):
         image = self.cleaned_data.get('image')
         if image:
-            if image.size > 5 * 1024 * 1024:  # 5MB
+            if image.size > 5 * 1024 * 1024: 
                 raise forms.ValidationError("Размер изображения не должен превышать 5 МБ")
             if not image.name.lower().endswith(('.png', '.jpg', '.jpeg')):
                 raise forms.ValidationError("Поддерживаются только форматы PNG, JPG и JPEG")
