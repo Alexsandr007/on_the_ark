@@ -112,7 +112,15 @@ main {
     cursor: pointer;
 }
 
-
+@media (max-width: 1350px) {
+    .form__content {
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+        flex-direction: column;
+        gap: 20px;
+    }
+}
 
 
 .go-back {
@@ -572,7 +580,7 @@ input:checked + .slider-bg:before {
     gap: 20px;
   }
   .form__column-left {
-    min-width: 320px;
+      min-width: 290px;
   }
   .form__column-left label {
     font-weight: 400;
@@ -615,3 +623,11 @@ input:checked + .slider-bg:before {
   }
 }
 /*# sourceMappingURL=style.css.map */
+
+@media (max-width: 400px) {
+  .toggle-item {
+      flex-direction: column;
+      justify-content: center;
+      align-items: start;
+  }
+}
