@@ -1,4 +1,58 @@
-@charset "UTF-8";
+@font-face {
+    font-family: "Manrope";
+    src: url("../../fonts/Manrope.ttf") format('woff2');  /* .ttf -> truetype */
+    src: url("../../fonts/Manrope.ttf") format('woff');  /* .ttf -> truetype */
+    src: url("../../fonts/Manrope.ttf") format('truetype');  /* .ttf -> truetype */
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Manmore";  /* Опечатка? Manrope? */
+    src: url("../../fonts/Manrope.ttf") format('woff2');
+    src: url("../../fonts/Manrope.ttf") format('woff');
+    src: url("../../fonts/Manrope.ttf") format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Roboto";
+    src: url("../../fonts/Roboto.ttf") format('woff2');
+    src: url("../../fonts/Roboto.ttf") format('woff');
+    src: url("../../fonts/Roboto.ttf") format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Helvetica-Bold";
+    src: url("../../fonts/Helvetica-Bold.ttf") format('woff2');
+    src: url("../../fonts/Helvetica-Bold.ttf") format('woff');
+    src: url("../../fonts/Helvetica-Bold.ttf") format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Helvetica-Light";
+    src: url("../../fonts/helvetica-light.otf") format('woff2');
+    src: url("../../fonts/helvetica-light.otf") format('woff');
+    src: url("../../fonts/helvetica-light.otf") format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Manmore-ExtraLight";
+    src: url("../../fonts/manrope-extralight.ttf") format('woff2');
+    src: url("../../fonts/manrope-extralight.ttf") format('woff');
+    src: url("../../fonts/manrope-extralight.ttf") format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
 body {
   font-family: "Manmore";
   color: #111;
@@ -252,6 +306,7 @@ h1 {
   border-radius: 20px;
 }
 .tariff__description-input {
+  font-family: "Manmore";
   width: 100%;
   padding: 15px 25px;
   border-radius: 20px;

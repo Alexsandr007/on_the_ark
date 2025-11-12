@@ -15,409 +15,334 @@
 
 {% block content %}
 <section class="wallet__block">
-        <div class="wallet__fon">
+    <div class="wallet__fon">
 
-        </div>
-        <img class="wallet__header--image" src="{% static 'images/wallet/fon2.png' %}">
-        <div class="prof__header">
-            <a onclick="window.history.back()">
-                 Назад</a>
-        </div>
-        <div class="wallet_alert">
-            <img src="{% static 'images/wallet/warning.png' %}">
-            <p>Чтобы начать принимать выплаты, необходимо пройти верификацию аккаунта На Ковчеге</p>
-            <button>Приступить</button>
-        </div>
-        <div class="prof__block">
-            <div class="prof__block--container">
-                <h2 class="prof__block--text">Кошелёк
-                    <div class="prof__wallet--btn-header">
-                        <button>
-                            <img src="{% static 'images/wallet/walletbtn.png' %}">
-                        </button>
+    </div>
+    <img class="wallet__header--image" src="{% static 'images/wallet/fon2.png' %}">
+    <div class="prof__header">
+        <a onclick="window.history.back()">
+            Назад</a>
+    </div>
+    <div class="wallet_alert">
+        <img src="{% static 'images/wallet/warning.png' %}">
+        <p>Чтобы начать принимать выплаты, необходимо пройти верификацию аккаунта На Ковчеге</p>
+        <button>Приступить</button>
+    </div>
+    <div class="prof__block">
+        <div class="prof__block--container">
+            <h2 class="prof__block--text">Кошелёк
+                <div class="prof__wallet--btn-header">
+                    <button>
+                        <img src="{% static 'images/wallet/walletbtn.png' %}">
+                    </button>
+                </div>
+            </h2>
+            <div class="wallet__container">
+                <div class="wallet__sidebar">
+                    <div class="wallet__sidebar--item active" data-tab="stats">
+                        <p>Статистика</p>
                     </div>
-                </h2>
-                <div class="wallet__container">
-                    <div class="wallet__sidebar">
-                        <div class="wallet__sidebar--item">
-                            <p>Статистика</p>
+                    <div class="wallet__sidebar--item" data-tab="donations">
+                        <p>Донаты</p>
+                    </div>
+                    <div class="wallet__sidebar--item" data-tab="payouts">
+                        <p>История выплат</p>
+                    </div>
+                    <div class="wallet__sidebar--item" data-tab="withdrawal">
+                        <p>Способ вывода</p>
+                    </div>
+                </div>
+                <div class="wallet__content">
+                    <!-- Статистика -->
+                    <div class="wallet__content--item wallet__content--item--stats active" id="stats">
+                        <div class="wallet__content--profile">
+                            <h2 class="wallet__content--profile--text">Сегодня</h2>
+                            <div class="wallet__content--today">
+                                <div class="wallet__content--today-header">
+                                    <div class="wallet__content--today-left">
+                                        <h3><img src="{% static 'images/wallet/today1.png' %}">Наблюдателей</h3>
+                                        <p>{% if stats.today.followers %}+{{ stats.today.followers }}{% else %}0{% endif %}
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <h3><img src="{% static 'images/wallet/today2.png' %}">Платных подписчиков</h3>
+                                        <p>{% if stats.today.subscribers %}+{{ stats.today.subscribers }}{% else %}0{% endif %}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="wallet__content--today-header">
+                                    <div class="wallet__content--today-left">
+                                        <p>{% if stats.today.balance %}+{{ stats.today.balance }}₽{% else %}0₽{% endif %}
+                                        </p>
+                                        <h3>На балансе</h3>
+                                    </div>
+                                    <div class="wallet__content--today-left">
+                                        <p>{% if stats.total_earned %}+{{ stats.total_earned }}₽{% else %}0₽{% endif %}
+                                        </p>
+                                        <h3>Всего заработано</h3>
+                                    </div>
+                                    <div>
+                                        <p>{% if stats.today.blocked %}-{{ stats.today.blocked }}₽{% else %}0₽{% endif %}
+                                        </p>
+                                        <h3>Заблокировано</h3>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="wallet__sidebar--item">
-                            <p>Донаты</p>
-                        </div>
-                        <div class="wallet__sidebar--item">
-                            <p>История выплат</p>
-                        </div>
-                        <div class="wallet__sidebar--item">
-                            <p>Способ вывода</p>
+                        <div class="wallet__content--profile">
+                            <h2 class="wallet__content--profile--text">Статистика за <select>
+                                    <option selected>
+                                        Месяц
+                                    </option>
+                                    <option>
+                                        Неделя
+                                    </option>
+                                    <option>
+                                        Год
+                                    </option>
+                                </select></h2>
+                            <div class="wallet__content--today">
+                                <div class="wallet__content--stats-header">
+                                    <div>
+                                        <h3><img src="{% static 'images/wallet/Frame.png' %}">Наблюдателей</h3>
+                                        <p>{% if stats.period.followers %}+{{ stats.period.followers }}{% else %}0{% endif %}
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <h3><img src="{% static 'images/wallet/Frame-3.png' %}">Подписчиков</h3>
+                                        <p>{% if stats.period.subscribers %}+{{ stats.period.subscribers }}{% else %}0{% endif %}
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <h3><img src="{% static 'images/wallet/Frame-6.png' %}">Отмена подписки</h3>
+                                        <p>{% if stats.period.unsubscribed %}-{{ stats.period.unsubscribed }}{% else %}0{% endif %}
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <h3><img src="{% static 'images/wallet/Frame-5.png' %}">Продление подписок</h3>
+                                        <p>{% if stats.period.renewals %}+{{ stats.period.renewals }}{% else %}0{% endif %}
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <h3><img src="{% static 'images/wallet/Frame-4.png' %}">Донатов</h3>
+                                        <p>{% if stats.period.donations %}+{{ stats.period.donations }}{% else %}0{% endif %}
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <h3><img src="{% static 'images/wallet/Frame-7.png' %}">Покупок постов</h3>
+                                        <p>{% if stats.period.post_purchases %}+{{ stats.period.post_purchases }}{% else %}0{% endif %}
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <h3><img src="{% static 'images/wallet/Frame-2.png' %}">Запросили возврат</h3>
+                                        <p>{% if stats.period.refunds %}-{{ stats.period.refunds }}{% else %}0{% endif %}
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <h3><img src="{% static 'images/wallet/Frame-3.png' %}">Личных сообщений</h3>
+                                        <p>{% if stats.period.messages %}+{{ stats.period.messages }}{% else %}0{% endif %}
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <h3><img src="{% static 'images/wallet/Frame-8.png' %}">Пришло на счет</h3>
+                                        <p>{% if stats.period.income %}+{{ stats.period.income }}{% else %}0{% endif %}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="wallet__content">
-                        <div class="wallet__content--item wallet__content--item--stats" id="first">
-                            <div class="wallet__content--profile">
-                                <h2 class="wallet__content--profile--text">Сегодня</h2>
-                                <div class="wallet__content--today">
-                                    <div class="wallet__content--today-header">
-                                        <div class="wallet__content--today-left">
-                                            <h3><img src="{% static 'images/wallet/today1.png' %}">Наблюдателей</h3>
-                                            <p>+130</p>
-                                        </div>
-                                        <div>
-                                            <h3><img src="{% static 'images/wallet/today2.png' %}">Платных подписчиков</h3>
-                                            <p>+162</p>
-                                        </div>
+
+                    <!-- Донаты -->
+                    <div class="wallet__content--item" id="donations">
+                        <div class="wallet__content--profile">
+                            <div class="wallet__history--header">
+                                <div class="wallet__history--header--text">
+                                    <div class="wallet__history--header--resent">
+
                                     </div>
-                                    <div class="wallet__content--today-header">
-                                        <div class="wallet__content--today-left">
-                                            <p>+25 600₽</p>
-                                            <h3>На балансе</h3>
-                                        </div>
-                                        <div class="wallet__content--today-left">
-                                            <p>+450 000₽</p>
-                                            <h3>Всего заработано</h3>
-                                        </div>
-                                        <div>
-                                            <p>-1300₽</p>
-                                            <h3>Заблокировано</h3>
+                                    <div class="custom-select">
+                                        <div class="select-trigger">Сортировать по ▾</div>
+                                        <div class="options">
+                                            <label><input type="checkbox" value="new"> Сначала новые</label>
+                                            <label><input type="checkbox" value="old"> Сначала старые</label>
+                                            <label><input type="checkbox" value="desc"> Убывание суммы</label>
+                                            <label><input type="checkbox" value="asc"> Возрастание суммы</label>
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
-                            <div class="wallet__content--profile">
-                                <h2 class="wallet__content--profile--text">Статистика за <select>
-                                        <option selected>
-                                            Месяц
-                                        </option>
-                                        <option>
-                                            Неделя
-                                        </option>
-                                        <option>
-                                            Год
-                                        </option>
-                                    </select></h2>
-                                <div class="wallet__content--today">
-                                    <div class="wallet__content--stats-header">
-                                        <div>
-                                            <h3><img src="{% static 'images/wallet/Frame.png' %}">Наблюдателей</h3>
-                                            <p>+130</p>
-                                        </div>
-                                        <div>
-                                            <h3><img src="{% static 'images/wallet/Frame-3.png' %}">Подписчиков</h3>
-                                            <p>+162</p>
-                                        </div>
-                                        <div>
-                                            <h3><img src="{% static 'images/wallet/Frame-6.png' %}">Отмена подписки</h3>
-                                            <p>-56</p>
-                                        </div>
-                                        <div>
-                                            <h3><img src="{% static 'images/wallet/Frame-5.png' %}">Продление подписок</h3>
-                                            <p>+ 200</p>
-                                        </div>
-                                        <div>
-                                            <h3><img src="{% static 'images/wallet/Frame-4.png' %}">Донатов</h3>
-                                            <p>+357 995</p>
-                                        </div>
-                                        <div>
-                                            <h3><img src="{% static 'images/wallet/Frame-7.png' %}">Покупок постов</h3>
-                                            <p>+ 789</p>
-                                        </div>
-                                        <div>
-                                            <h3><img src="{% static 'images/wallet/Frame-2.png' %}">Запросили возврат</h3>
-                                            <p>-102</p>
-                                        </div>
-                                        <div>
-                                            <h3><img src="{% static 'images/wallet/Frame-3.png' %}">Личных сообщений</h3>
-                                            <p>+ 2500</p>
-                                        </div>
-                                        <div>
-                                            <h3><img src="{% static 'images/wallet/Frame-8.png' %}">Пришло на счет</h3>
-                                            <p>+ 609 456</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                        <div class="wallet__content--item" id="second">
-                            <div class="wallet__content--profile">
-                                <div class="wallet__history--header">
-                                    <div class="wallet__history--header--text">
-                                        <div class="wallet__history--header--resent">
-
-                                        </div>
-                                        <div class="custom-select">
-                                            <div class="select-trigger">Сортировать по ▾</div>
-                                            <div class="options">
-                                                <label><input type="checkbox" value="new"> Сначала новые</label>
-                                                <label><input type="checkbox" value="old"> Сначала старые</label>
-                                                <label><input type="checkbox" value="desc"> Убывание суммы</label>
-                                                <label><input type="checkbox" value="asc"> Возрастание суммы</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="wallet__sessions--container">
-                                    <div class="wallet__donate--item">
-                                        <p class="wallet__donate--date">25.08.2025</p>
-                                        <div class="wallet__donate--mes">
-                                            <div class="wallet__donate--block">
-                                                <img src="{% static 'images/wallet/socials/Ellipse 115-1.png' %}">
-                                                <div class="wallet__donate--info">
-                                                    <h3>Егор Морозов</h3>
-                                                    <div class="wallet__donate--comment">
-                                                        <p>Комментарий:</p>
-                                                        <p>Мечты должны исполняться!</p>
-                                                    </div>
+                            <div class="wallet__sessions--container">
+                                {% if donations %}
+                                {% for donation in donations %}
+                                <div class="wallet__donate--item">
+                                    <p class="wallet__donate--date">{{ donation.date }}</p>
+                                    <div class="wallet__donate--mes">
+                                        <div class="wallet__donate--block">
+                                            <img
+                                                src="{% static donation.avatar|default:'images/wallet/socials/Ellipse 115.png' %}">
+                                            <div class="wallet__donate--info">
+                                                <h3>{{ donation.user_name }}</h3>
+                                                <div class="wallet__donate--comment">
+                                                    <p>Комментарий:</p>
+                                                    <p>{{ donation.comment }}</p>
                                                 </div>
                                             </div>
-                                            <div class="wallet__donate--summ">
-                                                <img src="{% static 'images/wallet/donate.png' %}">
-                                                <p>+800₽</p>
-                                            </div>
+                                        </div>
+                                        <div class="wallet__donate--summ">
+                                            <img src="{% static 'images/wallet/donate.png' %}">
+                                            <p>+{{ donation.amount }}₽</p>
                                         </div>
                                     </div>
-                                    <div class="wallet__donate--item">
-                                        <p class="wallet__donate--date">25.08.2025</p>
-                                        <div class="wallet__donate--mes">
-                                            <div class="wallet__donate--block">
-                                                <img src="{% static 'images/wallet/socials/Ellipse 115-2.png' %}">
-                                                <div class="wallet__donate--info">
-                                                    <h3>Артём Маломаев</h3>
-                                                    <div class="wallet__donate--comment">
-                                                        <p>Комментарий:</p>
-                                                        <p>Давно за тобой слежу, классные картины, так держать!</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="wallet__donate--summ">
-                                                <img src="{% static 'images/wallet/donate.png' %}">
-                                                <p>+9000₽</p>
-                                            </div>
+                                </div>
+                                {% endfor %}
+                                {% else %}
+                                {% comment %} <div class="wallet__empty-state">
+                                    <h3>Пока здесь ничего нет</h3>
+                                    <p>Когда вы получите донаты, они появятся в этом разделе</p>
+                                </div> {% endcomment %}
+                                <div class="profile__articles--item">
+                                    <h2>У вас пока нет донатов..(</h2>
+                                    <p>Когда вы получите донаты, они появятся в этом разделе</p>
+                                    <img src="{% static 'images/profile/sad_men.png' %}">
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- История выплат -->
+                    <div class="wallet__content--item" id="payouts">
+                        <div class="wallet__content--profile">
+                            <div class="wallet__history--header">
+                                <div class="wallet__history--header--text">
+                                    <div class="wallet__history--header--resent">
+                                        <h2>Недавние выплаты</h2>
+                                        <div class="wallet__history--header--sum">
+                                            <p>{% if recent_payouts_period %}{{ recent_payouts_period }}{% else %}Нет
+                                                данных{% endif %}</p>
+                                            <h3>{% if recent_payouts_amount %}{{ recent_payouts_amount }} ₽{% else %}0
+                                                ₽{% endif %}</h3>
                                         </div>
                                     </div>
-                                    <div class="wallet__donate--item">
-                                        <p class="wallet__donate--date">25.08.2025</p>
-                                        <div class="wallet__donate--mes">
-                                            <div class="wallet__donate--block">
-                                                <img src="{% static 'images/wallet/socials/Ellipse 115.png' %}">
-                                                <div class="wallet__donate--info">
-                                                    <h3>Лесной эльф</h3>
-                                                    <div class="wallet__donate--comment">
-                                                        <p>Комментарий:</p>
-                                                        <p>Я верю, что у тебя все получится! Ну а для старта хватит)</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="wallet__donate--summ">
-                                                <img src="{% static 'images/wallet/donate.png' %}">
-                                                <p>+28000₽</p>
-                                            </div>
+                                    <div class="custom-select">
+                                        <div class="select-trigger">Сортировать по ▾</div>
+                                        <div class="options">
+                                            <label><input type="checkbox" value="new"> Сначала новые</label>
+                                            <label><input type="checkbox" value="old"> Сначала старые</label>
+                                            <label><input type="checkbox" value="desc"> Убывание суммы</label>
+                                            <label><input type="checkbox" value="asc"> Возрастание суммы</label>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="wallet__content--item" id="second">
-                            <div class="wallet__content--profile">
-                                <div class="wallet__history--header">
-                                    <div class="wallet__history--header--text">
-                                        <div class="wallet__history--header--resent">
-                                            <h2>Недавние выплаты</h2>
-                                            <div class="wallet__history--header--sum">
-                                                <p>25.08.2025 – 01.09.2025</p>
-                                                <h3>75.000 ₽</h3>
-                                            </div>
-                                        </div>
-                                        <div class="custom-select">
-                                            <div class="select-trigger">Сортировать по ▾</div>
-                                            <div class="options">
-                                                <label><input type="checkbox" value="new"> Сначала новые</label>
-                                                <label><input type="checkbox" value="old"> Сначала старые</label>
-                                                <label><input type="checkbox" value="desc"> Убывание суммы</label>
-                                                <label><input type="checkbox" value="asc"> Возрастание суммы</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="wallet__history--table">
-                                    <h2>Выплаты за все время</h2>
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <td>№</td>
-                                                <td>Дата и время</td>
-                                                <td>Система</td>
-                                                <td>Сумма</td>
-                                                <td>Статус</td>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>2569</td>
-                                                <td>03.05.2025 17:55</td>
-                                                <td>VK Pay</td>
-                                                <td>29.350₽</td>
-                                                <td>Успешно</td>
-                                            </tr>
-                                            <tr>
-                                                <td>2569</td>
-                                                <td>03.05.2025 17:55</td>
-                                                <td>VK Pay</td>
-                                                <td>29.350₽</td>
-                                                <td>Успешно</td>
-                                            </tr>
-                                            <tr>
-                                                <td>2569</td>
-                                                <td>03.05.2025 17:55</td>
-                                                <td>VK Pay</td>
-                                                <td>29.350₽</td>
-                                                <td>Успешно</td>
-                                            </tr>
-                                            <tr>
-                                                <td>2569</td>
-                                                <td>03.05.2025 17:55</td>
-                                                <td>VK Pay</td>
-                                                <td>29.350₽</td>
-                                                <td>Успешно</td>
-                                            </tr>
-                                            <tr>
-                                                <td>2569</td>
-                                                <td>03.05.2025 17:55</td>
-                                                <td>VK Pay</td>
-                                                <td>29.350₽</td>
-                                                <td>Успешно</td>
-                                            </tr>
-                                            <tr>
-                                                <td>2569</td>
-                                                <td>03.05.2025 17:55</td>
-                                                <td>VK Pay</td>
-                                                <td>29.350₽</td>
-                                                <td>Успешно</td>
-                                            </tr>
-                                            <tr>
-                                                <td>2569</td>
-                                                <td>03.05.2025 17:55</td>
-                                                <td>VK Pay</td>
-                                                <td>29.350₽</td>
-                                                <td>Успешно</td>
-                                            </tr>
-                                            <tr>
-                                                <td>2569</td>
-                                                <td>03.05.2025 17:55</td>
-                                                <td>VK Pay</td>
-                                                <td>29.350₽</td>
-                                                <td>Успешно</td>
-                                            </tr>
-                                            <tr>
-                                                <td>2569</td>
-                                                <td>03.05.2025 17:55</td>
-                                                <td>VK Pay</td>
-                                                <td>29.350₽</td>
-                                                <td>Успешно</td>
-                                            </tr>
-                                            <tr>
-                                                <td>2569</td>
-                                                <td>03.05.2025 17:55</td>
-                                                <td>VK Pay</td>
-                                                <td>29.350₽</td>
-                                                <td>Успешно</td>
-                                            </tr>
-                                            <tr>
-                                                <td>2569</td>
-                                                <td>03.05.2025 17:55</td>
-                                                <td>VK Pay</td>
-                                                <td>29.350₽</td>
-                                                <td>Успешно</td>
-                                            </tr>
-                                            <tr>
-                                                <td>2569</td>
-                                                <td>03.05.2025 17:55</td>
-                                                <td>VK Pay</td>
-                                                <td>29.350₽</td>
-                                                <td>Успешно</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
+                            {% if payouts %}
+                            <div class="wallet__history--table">
+                                <h2>Выплаты за все время</h2>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <td>№</td>
+                                            <td>Дата и время</td>
+                                            <td>Система</td>
+                                            <td>Сумма</td>
+                                            <td>Статус</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for payout in payouts %}
+                                        <tr>
+                                            <td>{{ payout.id }}</td>
+                                            <td>{{ payout.date_time }}</td>
+                                            <td>{{ payout.system }}</td>
+                                            <td>{{ payout.amount }}₽</td>
+                                            <td>{{ payout.status }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
                             </div>
+                            {% else %}
+                            {% comment %} <div class="wallet__empty-state">
+                                <h3>Пока здесь ничего нет</h3>
+                                <p>Когда вы получите первую выплату, она появится в этом разделе</p>
+                            </div> {% endcomment %}
+                            <div class="profile__articles--item">
+                                <h2>У вас пока нет выплат..(</h2>
+                                <p>Когда вы получите первую выплату, она появится в этом разделе</p>
+                                <img src="{% static 'images/profile/sad_men.png' %}">
+                            </div>
+                            {% endif %}
                         </div>
-                        <div class="wallet__content--item" id="second">
-                            <div class="wallet__content--profile">
-                                <div class="wallet__sessions--container">
-                                    <div class="wallet__sessions--item">
-                                        <div class="wallet__sessions--block">
-                                            <img src="{% static 'images/wallet/socials/Frame.png' %}">
-                                            <div class="wallet__sessions--info">
-                                                <p>Банковские карты</p>
-                                                <p>Комиссия 5% + 10 руб.</p>
-                                            </div>
-                                        </div>
-                                        <div class="wallet__sessions--date">
-                                            <button>Выбрать</button>
-                                        </div>
-                                    </div>
-                                    <div class="wallet__sessions--item">
-                                        <div class="wallet__sessions--block">
-                                            <img src="{% static 'images/wallet/socials/sbp-russia 1.png' %}">
-                                            <div class="wallet__sessions--info">
-                                                <p>СБП</p>
-                                                <p>Комиссия 1,5 %</p>
-                                            </div>
-                                        </div>
-                                        <div class="wallet__sessions--date">
-                                            <button>Выбрать</button>
+                    </div>
+
+                    <!-- Способ вывода -->
+                    <div class="wallet__content--item" id="withdrawal">
+                        <div class="wallet__content--profile">
+                            <div class="wallet__sessions--container">
+                                <div class="wallet__sessions--item">
+                                    <div class="wallet__sessions--block">
+                                        <img src="{% static 'images/wallet/socials/Frame.png' %}">
+                                        <div class="wallet__sessions--info">
+                                            <p>Банковские карты</p>
+                                            <p>Комиссия 5% + 10 руб.</p>
                                         </div>
                                     </div>
-                                    <div class="wallet__sessions--item">
-                                        <div class="wallet__sessions--block">
-                                            <img src="{% static 'images/wallet/socials/Vector.png' %}">
-                                            <div class="wallet__sessions--info">
-                                                <p>ЮMoney</p>
-                                                <p>Комиссия 3%</p>
-                                            </div>
-                                        </div>
-                                        <div class="wallet__sessions--date">
-                                            <button>Выбрать</button>
-                                        </div>
-                                    </div>
-                                    <div class="wallet__sessions--item">
-                                        <div class="wallet__sessions--block">
-                                            <img src="{% static 'images/wallet/socials/Frame-1.png' %}">
-                                            <div class="wallet__sessions--info">
-                                                <p>VK PAY</p>
-                                                <p>Комиссия 4%</p>
-                                            </div>
-                                        </div>
-                                        <div class="wallet__sessions--date">
-                                            <button>Выбрать</button>
-                                        </div>
+                                    <div class="wallet__sessions--date">
+                                        <button>Выбрать</button>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="wallet__content--item" id="second">
-                            <div class="wallet__content--profile">
-                                <div class="wallet__donate-error">
-                                    <h2>У Вас пока что нет донатов...(</h2>
-                                    <p>Создавайте цели и получайте финансовую поддержку от ваших подписчиков. Все сборы
-                                        будут отображаться в этом разделе.</p>
-                                    <img src="{% static 'images/wallet/Грустный мужик.png' %}">
+                                <div class="wallet__sessions--item">
+                                    <div class="wallet__sessions--block">
+                                        <img src="{% static 'images/wallet/socials/sbp-russia 1.png' %}">
+                                        <div class="wallet__sessions--info">
+                                            <p>СБП</p>
+                                            <p>Комиссия 1,5 %</p>
+                                        </div>
+                                    </div>
+                                    <div class="wallet__sessions--date">
+                                        <button>Выбрать</button>
+                                    </div>
+                                </div>
+                                <div class="wallet__sessions--item">
+                                    <div class="wallet__sessions--block">
+                                        <img src="{% static 'images/wallet/socials/Vector.png' %}">
+                                        <div class="wallet__sessions--info">
+                                            <p>ЮMoney</p>
+                                            <p>Комиссия 3%</p>
+                                        </div>
+                                    </div>
+                                    <div class="wallet__sessions--date">
+                                        <button>Выбрать</button>
+                                    </div>
+                                </div>
+                                <div class="wallet__sessions--item">
+                                    <div class="wallet__sessions--block">
+                                        <img src="{% static 'images/wallet/socials/Frame-1.png' %}">
+                                        <div class="wallet__sessions--info">
+                                            <p>VK PAY</p>
+                                            <p>Комиссия 4%</p>
+                                        </div>
+                                    </div>
+                                    <div class="wallet__sessions--date">
+                                        <button>Выбрать</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <div class="prof__wallet--btn">
-                <button>
-                    <img src="{% static 'images/wallet/walletbtn.png' %}">
-                </button>
-            </div>
         </div>
 
-    </section>
+        <div class="prof__wallet--btn">
+            <button>
+                <img src="{% static 'images/wallet/walletbtn.png' %}">
+            </button>
+        </div>
+    </div>
+
+</section>
 {% endblock %}
 
 {% block footer %}
@@ -431,6 +356,34 @@
 <script src="{% static 'js/wallet/edit.js' %}"></script>
 <script src="{% static 'js/wallet/scriptModalsPayment.js' %}"></script>
 <script>
+    // Функция для переключения между вкладками
+    function switchTab(tabName) {
+        // Скрыть все вкладки контента
+        document.querySelectorAll('.wallet__content--item').forEach(item => {
+            item.classList.remove('active');
+        });
+
+        // Показать выбранную вкладку
+        const targetTab = document.getElementById(tabName);
+        if (targetTab) {
+            targetTab.classList.add('active');
+        }
+
+        // Обновить активный элемент сайдбара
+        document.querySelectorAll('.wallet__sidebar--item').forEach(item => {
+            item.classList.remove('active');
+        });
+        document.querySelector(`.wallet__sidebar--item[data-tab="${tabName}"]`).classList.add('active');
+    }
+
+    // Инициализация переключения вкладок
+    document.querySelectorAll('.wallet__sidebar--item').forEach(item => {
+        item.addEventListener('click', function () {
+            const tabName = this.getAttribute('data-tab');
+            switchTab(tabName);
+        });
+    });
+
     document.querySelectorAll('.custom-select').forEach((select) => {
         const trigger = select.querySelector('.select-trigger');
 
@@ -446,7 +399,9 @@
         inputs.forEach((inp) => {
             inp.addEventListener('change', (e) => {
                 if (e.target.checked) {
-                    inputs.forEach((x) => { if (x !== e.target) x.checked = false; });
+                    inputs.forEach((x) => {
+                        if (x !== e.target) x.checked = false;
+                    });
                 }
             });
         });
@@ -478,79 +433,83 @@
     const img = but.querySelector('img');
 
     but.addEventListener('mouseenter', () => {
-        img.src = '{% static 'images/wallet/wallet-white.png' %}';
+        img.src = '{% static '
+        images / wallet / wallet - white.png ' %}';
     });
 
     but.addEventListener('mouseleave', () => {
-        img.src = '{% static 'images/wallet/walletbtn.png' %}';
+        img.src = '{% static '
+        images / wallet / walletbtn.png ' %}';
     });
+
     document.addEventListener('DOMContentLoaded', () => {
-  const sidebar = document.querySelector('.wallet__sidebar');
-  if (!sidebar) return;
+        const sidebar = document.querySelector('.wallet__sidebar');
+        if (!sidebar) return;
 
-  const items = [...sidebar.querySelectorAll('.wallet__sidebar--item')];
-  if (!items.length) return;
+        const items = [...sidebar.querySelectorAll('.wallet__sidebar--item')];
+        if (!items.length) return;
 
-  const isMobile = () => window.innerWidth <= 768;
-  let currentActive = items.find(el => el.classList.contains('active')) || items[0];
-  let isOpen = false;
+        const isMobile = () => window.innerWidth <= 768;
+        let currentActive = items.find(el => el.classList.contains('active')) || items[0];
+        let isOpen = false;
 
-  function updateVisibility() {
-    if (!isMobile()) {
-      sidebar.classList.remove('wallet__dropdown', 'open');
-      items.forEach(el => (el.style.display = ''));
-      return;
-    }
+        function updateVisibility() {
+            if (!isMobile()) {
+                sidebar.classList.remove('wallet__dropdown', 'open');
+                items.forEach(el => (el.style.display = ''));
+                return;
+            }
 
-    sidebar.classList.add('wallet__dropdown');
-    sidebar.classList.toggle('open', isOpen);
+            sidebar.classList.add('wallet__dropdown');
+            sidebar.classList.toggle('open', isOpen);
 
-    items.forEach((el) => {
-      el.style.display = isOpen || el === currentActive ? 'block' : 'none';
+            items.forEach((el) => {
+                el.style.display = isOpen || el === currentActive ? 'block' : 'none';
+            });
+        }
+
+        // Обработка кликов
+        function handleClickItem(e) {
+            e.stopPropagation();
+
+            const clicked = e.currentTarget;
+            const tabName = clicked.getAttribute('data-tab');
+
+            // если клик по активному — просто открыть/закрыть
+            if (clicked === currentActive) {
+                isOpen = !isOpen;
+                updateVisibility();
+                return;
+            }
+
+            // если выбрали другой пункт
+            items.forEach(i => i.classList.remove('active'));
+            clicked.classList.add('active');
+            currentActive = clicked;
+            isOpen = false;
+            updateVisibility();
+
+            // Переключить вкладку контента
+            switchTab(tabName);
+        }
+
+        // Назначаем обработчики
+        items.forEach((el) => el.addEventListener('click', handleClickItem));
+
+        // Закрыть при клике вне
+        document.addEventListener('click', (e) => {
+            if (isOpen && !sidebar.contains(e.target)) {
+                isOpen = false;
+                updateVisibility();
+            }
+        });
+
+        // Обновлять при resize
+        window.addEventListener('resize', updateVisibility);
+
+        // Первичный вызов
+        updateVisibility();
     });
-  }
-
-  // Обработка кликов
-  function handleClickItem(e) {
-    e.stopPropagation();
-
-    const clicked = e.currentTarget;
-
-    // если клик по активному — просто открыть/закрыть
-    if (clicked === currentActive) {
-      isOpen = !isOpen;
-      updateVisibility();
-      return;
-    }
-
-    // если выбрали другой пункт
-    items.forEach(i => i.classList.remove('active'));
-    clicked.classList.add('active');
-    currentActive = clicked;
-    isOpen = false;
-    updateVisibility();
-  }
-
-  // Назначаем обработчики
-  items.forEach((el) => el.addEventListener('click', handleClickItem));
-
-  // Закрыть при клике вне
-  document.addEventListener('click', (e) => {
-    if (isOpen && !sidebar.contains(e.target)) {
-      isOpen = false;
-      updateVisibility();
-    }
-  });
-
-  // Обновлять при resize
-  window.addEventListener('resize', updateVisibility);
-
-  // Первичный вызов
-  updateVisibility();
-});
-
-
-
 </script>
 
 {% endblock %}

@@ -14,7 +14,33 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-fallback-secret-key')
 
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1,0.0.0.0').split(',')
+# Настройки для продакшена
+if not DEBUG:
+    # Доверенные источники для CSRF
+    CSRF_TRUSTED_ORIGINS = [
+        'https://nakovchege.ru',
+        'https://www.nakovchege.ru',
+        'http://nakovchege.ru',
+        'http://www.nakovchege.ru',
+    ]
+
+    ALLOWED_HOSTS = [
+        'nakovchege.ru',
+        'www.nakovchege.ru',
+        'localhost',
+        '127.0.0.1',
+    ]
+
+    # Настройки безопасности для продакшена
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+else:
+    # Настройки для разработки
+    ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1,0.0.0.0').split(',')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -60,24 +86,25 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'on_the_ark.wsgi.application'
 
+# Настройки базы данных
 if DEBUG:
     DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-        'OPTIONS': {
-            'timeout': 20, 
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+            'OPTIONS': {
+                'timeout': 20, 
+            }
         }
     }
-}
 else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
             'NAME': os.environ.get('POSTGRES_DB', 'on_the_ark'),
-            'USER': os.environ.get('POSTGRES_USER', 'postgres'),
-            'PASSWORD': os.environ.get('POSTGRES_PASSWORD', 'postgres'),
-            'HOST': os.environ.get('POSTGRES_HOST', 'db'),
+            'USER': os.environ.get('POSTGRES_USER', 'on_the_ark'),
+            'PASSWORD': os.environ.get('POSTGRES_PASSWORD', 'bM3zM2zD3g'),
+            'HOST': os.environ.get('POSTGRES_HOST', 'localhost'),
             'PORT': os.environ.get('POSTGRES_PORT', '5432'),
         }
     }
@@ -112,7 +139,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
-
 
 TEMP_MEDIA_URL = '/temp/'
 TEMP_MEDIA_ROOT = os.path.join(BASE_DIR, 'temp_media')

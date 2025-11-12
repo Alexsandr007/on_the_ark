@@ -1,0 +1,204 @@
+{% extends "user/base.html" %}
+{% load static %}
+
+{% block title %}На ковчеге - Мои подписки{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/subscription/styleModalsPayment.css' %}" />
+<link rel="stylesheet" href="{% static 'css/fonts/addFonts.css' %}">
+<link rel="stylesheet" href="{% static 'css/subscription/list_my_subscriptions/style.css' %}" />
+<link rel="stylesheet" href="{% static 'css/profile/stylePersonalAccountSideBar.css' %}" />
+{% endblock %}
+
+{% block header %}
+{% include "include/profileHeader.html" %}
+{% endblock %}
+
+{% block content %}
+<section class="advert__block">
+    <div class="advert__fon"></div>
+    <img class="advert__header--image" src="{% static 'images/subscription/list_my_subscriptions/fon2.png' %}">
+    <div class="prof__header">
+        <a onclick="window.history.back()">Назад</a>
+    </div>
+    <div class="prof__block">
+        <div class="prof__block--container">
+            <div class="advert__container">
+                <h2 class="prof__block--text">Мои подписки</h2>
+                <div class="advert__sidebar">
+                    <div class="advert__sidebar--item active" data-tab="paid">
+                        <p>Платные</p>
+                    </div>
+                    <div class="advert__sidebar--item" data-tab="free">
+                        <p>Бесплатные</p>
+                    </div>
+                </div>
+                <div class="advert__content">
+                    <!-- Платные подписки -->
+                    <div class="advert__content--item advert__content--item--stats active" id="paid">
+                        <div class="advert__content--profile">
+                            {% if has_paid_subscriptions %}
+                            <div class="advert__pay">
+                                {% for sub_data in paid_subscriptions %}
+                                <a href="#">
+                                    <div class="advert__pay--item">
+                                        <div class="advert__prof">
+                                            <div>
+                                                {% if sub_data.creator.avatar %}
+                                                    <img src="{{ sub_data.creator.avatar.url }}" alt="{{ sub_data.creator.get_full_name }}">
+                                                {% else %}
+                                                    <img src="{% static 'images/subscription/list_my_subscriptions/default-avatar.png' %}" alt="Аватар">
+                                                {% endif %}
+                                                <p>{{ sub_data.creator.get_full_name|default:sub_data.creator.username }}</p>
+                                            </div>
+                                            <h2>{{ sub_data.subscription.name }}</h2>
+                                        </div>
+                                        <div class="advert__footer">
+                                            <p>{{ sub_data.price }} ₽<span>/ месяц</span></p>
+                                            <p><img src="{% static 'images/subscription/list_my_subscriptions/warn.png' %}"><span>Осталось {{ sub_data.days_left }} дней</span></p>
+                                        </div>
+                                        <button class="tip tip--left" type="button">
+                                            <img src="{% static 'images/subscription/list_my_subscriptions/clock.png' %}" alt="">
+                                            <span>Напомнить о продлении за 10 дней</span>
+                                        </button>
+
+                                        <button class="tip tip--right" type="button">
+                                            <img src="{% static 'images/subscription/list_my_subscriptions/block.png' %}" alt="">
+                                            <span>Отменить подписку</span>
+                                        </button>
+                                    </div>
+                                </a>
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            <div class="profile__articles--item">
+                                <h3>У вас нет платных подписок</h3>
+                                <p>Найдите интересных авторов и оформите подписку, чтобы поддержать их творчество</p>
+                                <img src="{% static 'images/profile/sad_men.png' %}">
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Бесплатные подписки -->
+                    <div class="advert__content--item" id="free">
+                        <div class="advert__content--profile">
+                            {% if has_free_subscriptions %}
+                            <div class="advert__sessions--container">
+                                {% for sub_data in free_subscriptions %}
+                                <a href="#">
+                                    <div class="advert__sessions--item">
+                                        <div class="advert__sessions--block">
+                                            {% if sub_data.creator.avatar %}
+                                                <img src="{{ sub_data.creator.avatar.url }}" alt="{{ sub_data.creator.get_full_name }}">
+                                            {% else %}
+                                                <img src="{% static 'images/subscription/list_my_subscriptions/default-avatar.png' %}" alt="Аватар">
+                                            {% endif %}
+                                            <div class="advert__sessions--info">
+                                                <p>{{ sub_data.creator.get_full_name|default:sub_data.creator.username }}</p>
+                                                <span>{{ sub_data.subscription.name }}</span>
+                                            </div>
+                                        </div>
+                                        <div class="advert__sessions--date">
+                                            <button>Отменить подписку</button>
+                                        </div>
+                                    </div>
+                                </a>
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            <div class="profile__articles--item">
+                                <h3>У вас нет бесплатных подписок</h3>
+                                <p>Подпишитесь на интересных авторов, чтобы следить за их обновлениями</p>
+                                <img src="{% static 'images/profile/sad_men.png' %}">
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block footer %}
+{% include "include/baseFooter.html" %}
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{% static 'js/header/header.js' %}"></script>
+<script src="{% static 'js/subscription/list_my_subscriptions/edit.js' %}"></script>
+<script src="{% static 'js/subscription/list_my_subscriptions/scriptModalsPayment.js' %}"></script>
+<script src="{% static 'js/profile/scriptPersonalAccountSideBar.js' %}"></script>
+
+<script>
+    // Функция для переключения вкладок
+    function switchTab(tabName) {
+        // Скрыть все вкладки контента
+        document.querySelectorAll('.advert__content--item').forEach(item => {
+            item.classList.remove('active');
+        });
+        
+        // Показать выбранную вкладку
+        const targetTab = document.getElementById(tabName);
+        if (targetTab) {
+            targetTab.classList.add('active');
+        }
+        
+        // Обновить активный элемент сайдбара
+        document.querySelectorAll('.advert__sidebar--item').forEach(item => {
+            item.classList.remove('active');
+        });
+        document.querySelector(`.advert__sidebar--item[data-tab="${tabName}"]`).classList.add('active');
+    }
+
+    // Инициализация переключения вкладок
+    document.querySelectorAll('.advert__sidebar--item').forEach(item => {
+        item.addEventListener('click', function() {
+            const tabName = this.getAttribute('data-tab');
+            switchTab(tabName);
+        });
+    });
+
+    document.querySelectorAll('.custom-select').forEach((select) => {
+        const trigger = select.querySelector('.select-trigger');
+
+        trigger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            document.querySelectorAll('.custom-select.open').forEach((opened) => {
+                if (opened !== select) opened.classList.remove('open');
+            });
+            select.classList.toggle('open');
+        });
+    });
+
+    document.addEventListener('click', () => {
+        document.querySelectorAll('.custom-select.open').forEach((s) => s.classList.remove('open'));
+    });
+
+    document.querySelectorAll('.advert__sessions--date button').forEach((btn) => {
+        btn.addEventListener('click', () => {
+            btn.style.backgroundColor = 'rgba(17, 4, 1, 1)';
+        });
+    });
+
+    document.querySelectorAll('.wallet_alert button').forEach((b) => {
+        b.addEventListener('click', () => {
+            b.style.backgroundColor = 'rgba(17, 4, 1, 1)';
+        });
+    });
+
+    const but = document.querySelector('.prof__wallet--btn button');
+    const img = but.querySelector('img');
+
+    but.addEventListener('mouseenter', () => {
+        img.src = '{% static 'images/subscription/list_my_subscriptions/wallet-white.png' %}';
+    });
+
+    but.addEventListener('mouseleave', () => {
+        img.src = '{% static 'images/subscription/list_my_subscriptions/walletbtn.png' %}';
+    });
+</script>
+{% endblock %}

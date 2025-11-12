@@ -16,10 +16,12 @@
                 class="nav__text">Мой профиль</span></a>
         <a href="{% url 'wallet' %}" class="nav__link"><img src="{% static 'images/profile/sidebar-icons/icon-wallet.svg' %}" class="nav__icon"><span
                 class="nav__text">Кошелёк</span></a>
-        <a href="{% url 'subscription:subscription_list' %}" class="nav__link"><img src="{% static 'images/profile/sidebar-icons/icon-paid-subs.svg' %}" class="nav__icon"><span
+        <a href="{% url 'subscription:my_subscriptions' %}" class="nav__link"><img src="{% static 'images/profile/sidebar-icons/icon-paid-subs.svg' %}" class="nav__icon"><span
                 class="nav__text">Подписки</span></a>
-        {% comment %} <a href="{% url 'subscription:create_subscription' %}" class="nav__link"><img src="{% static 'images/profile/sidebar-icons/tarrif.svg' %}" class="nav__icon" style="width: 20px;"><span
-                class="nav__text">Мои тарифы</span></a> {% endcomment %}
+        <a href="{% url 'subscription:subscription_list' %}" class="nav__link"><img src="{% static 'images/profile/sidebar-icons/tarrif.svg' %}" class="nav__icon" style="width: 20px;"><span
+                class="nav__text">Мои тарифы</span></a>
+        <a href="" class="nav__link"><img src="{% static 'images/profile/sidebar-icons/tarrif.svg' %}" class="nav__icon" style="width: 20px;"><span
+                class="nav__text">Контент</span></a>
         <a href="#" class="nav__link"><img src="{% static 'images/profile/sidebar-icons/icon-notifications.svg' %}" class="nav__icon"><span
                 class="nav__text">Уведомления</span></a>
         <a href="{% url 'change_profile' %}" class="nav__link"><img src="{% static 'images/profile/sidebar-icons/icon-settings.svg' %}" class="nav__icon"><span
