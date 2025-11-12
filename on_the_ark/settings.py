@@ -25,7 +25,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'user',
     'post',
-    'subscription'
+    'subscription',
+    'wallet'
 ]
 
 MIDDLEWARE = [

@@ -32,10 +32,10 @@
             <i class="fas fa-chevron-left"></i> Назад
         </button>
         <div class="title-wrapper">
-            <h1>Создать подписку</h1>
+            <h1>{% if form.instance.pk %}Редактировать подписку{% else %}Создать подписку{% endif %}</h1>
         </div>
 
-        <form class="form" method="post" enctype="multipart/form-data">
+        <form class="form" method="post" enctype="multipart/form-data" id="subscriptionForm" autocomplete="off">
             {% csrf_token %}
             
             <!-- Вывод общих ошибок формы -->
@@ -72,7 +72,6 @@
                         {% endif %}
                     </div>
 
-                    <!-- Остальные поля формы остаются без изменений -->
                     <fieldset class="tariff__title">
                         <label for="id_name">Название подписки</label>
                         {{ form.name }}
@@ -113,11 +112,17 @@
                     </fieldset>
                     
                     <div class="create-tariff create-tariff--desctop">
-                        <button type="submit" class="button">Сформировать подписку</button>
+                        <button type="submit" class="button">
+                            {% if form.instance.pk %}Обновить подписку{% else %}Сформировать подписку{% endif %}
+                        </button>
+                        {% if not form.instance.pk %}
+                        {% comment %} <button type="button" class="button button--secondary" id="clearForm">
+                            Очистить форму
+                        </button> {% endcomment %}
+                        {% endif %}
                     </div>
                 </div>
                 <div class="form__column-right">
-                    <!-- Правая колонка без изменений -->
                     <div class="toggle-item-box">
                         <label class="toggle-item">
                             Ограниченное количество подписчиков
@@ -145,10 +150,10 @@
                             </div>
                         </label>
                         <div class="slider-wrapper" id="discountSliderWrapper">
-                            <input type="range" name="discount_percent" min="0" max="50" step="1" value="{{ form.discount_percent.value|default:'10' }}" 
+                            <input type="range" name="discount_percent" min="0" max="50" step="1" value="0" 
                                    class="slider" id="id_discount_percent" />
                             <div class="slider-fill" id="discountFill"></div>
-                            <div class="slider-value" id="discountValue">{{ form.discount_percent.value|default:'10' }}%</div>
+                            <div class="slider-value" id="discountValue">0%</div>
                         </div>
                         {% if form.discount_percent.errors %}
                         <div class="error-message">
@@ -168,10 +173,10 @@
                             </div>
                         </label>
                         <div class="slider-wrapper" id="trialSliderWrapper">
-                            <input type="range" name="trial_days" min="14" max="28" step="1" value="{{ form.trial_days.value|default:'14' }}" 
+                            <input type="range" name="trial_days" min="14" max="28" step="1" value="14" 
                                    class="slider" id="id_trial_days" />
                             <div class="slider-fill" id="trialFill"></div>
-                            <div class="slider-value" id="trialValue">{{ form.trial_days.value|default:'14' }} дней</div>
+                            <div class="slider-value" id="trialValue">14 дней</div>
                         </div>
                         {% if form.trial_days.errors %}
                         <div class="error-message">
@@ -184,7 +189,14 @@
                 </div>
             </div>
             <div class="create-tariff create-tariff--mobile">
-                <button type="submit" class="button">Сформировать подписку</button>
+                <button type="submit" class="button">
+                    {% if form.instance.pk %}Обновить подписку{% else %}Сформировать подписку{% endif %}
+                </button>
+                {% if not form.instance.pk %}
+                {% comment %} <button type="button" class="button button--secondary" id="clearFormMobile">
+                    Очистить форму
+                </button> {% endcomment %}
+                {% endif %}
             </div>
         </form>
     </div>
@@ -203,50 +215,118 @@
     <script src="{% static 'js/profile/scriptPersonalAccountSideBar.js' %}"></script>
 
 <script>
-// JavaScript для обновления значений слайдеров
+// JavaScript для принудительной очистки формы при создании
 document.addEventListener('DOMContentLoaded', function() {
-    // Скидка
+    // Функция для полной очистки формы
+    function forceClearForm() {
+        console.log('Очистка формы создания подписки...');
+        
+        // Очищаем текстовые поля
+        const nameField = document.getElementById('id_name');
+        const descField = document.getElementById('id_description');
+        const priceField = document.getElementById('id_price');
+        const maxSubsField = document.getElementById('id_max_subscribers');
+        
+        if (nameField) nameField.value = '';
+        if (descField) descField.value = '';
+        if (priceField) priceField.value = '';
+        if (maxSubsField) maxSubsField.value = '1000';
+        
+        // Сбрасываем чекбоксы
+        const limitedCheckbox = document.getElementById('id_is_limited_subscribers');
+        const discountCheckbox = document.getElementById('id_is_discount_active');
+        const trialCheckbox = document.getElementById('id_has_trial_period');
+        
+        if (limitedCheckbox) limitedCheckbox.checked = false;
+        if (discountCheckbox) discountCheckbox.checked = false;
+        if (trialCheckbox) trialCheckbox.checked = false;
+        
+        // Сбрасываем слайдеры к значениям по умолчанию
+        const discountSlider = document.getElementById('id_discount_percent');
+        const trialSlider = document.getElementById('id_trial_days');
+        
+        if (discountSlider) {
+            discountSlider.value = '0';
+            updateSliderDisplay(discountSlider, 'discountValue', 'discountFill', '%');
+        }
+        
+        if (trialSlider) {
+            trialSlider.value = '14';
+            updateSliderDisplay(trialSlider, 'trialValue', 'trialFill', ' дней');
+        }
+        
+        // Очищаем изображение
+        const imageInput = document.getElementById('{{ form.image.id_for_label }}');
+        const imagePreview = document.getElementById('imagePreview');
+        const uploadBtn = document.querySelector('.upload-btn');
+        
+        if (imageInput && imagePreview && uploadBtn) {
+            imageInput.value = '';
+            imagePreview.style.display = 'none';
+            uploadBtn.style.display = 'flex';
+        }
+        
+        // Скрываем поле максимальных подписчиков
+        if (maxSubsField) {
+            maxSubsField.style.display = 'none';
+        }
+        
+        console.log('Форма очищена');
+    }
+    
+    // Функция для обновления отображения слайдеров
+    function updateSliderDisplay(slider, valueId, fillId, suffix) {
+        const valueElement = document.getElementById(valueId);
+        const fillElement = document.getElementById(fillId);
+        
+        if (valueElement && fillElement) {
+            valueElement.textContent = slider.value + suffix;
+            const percent = (slider.value - slider.min) / (slider.max - slider.min) * 100;
+            fillElement.style.width = percent + '%';
+        }
+    }
+    
+    // Очищаем форму только при создании (не при редактировании)
+    {% if not form.instance.pk %}
+    // Принудительно очищаем форму сразу после загрузки
+    setTimeout(() => {
+        forceClearForm();
+    }, 50);
+    {% endif %}
+    
+    // Обработчики для кнопок очистки
+    document.getElementById('clearForm')?.addEventListener('click', forceClearForm);
+    document.getElementById('clearFormMobile')?.addEventListener('click', forceClearForm);
+    
+    // Остальной JavaScript для работы формы
     const discountRange = document.getElementById('id_discount_percent');
     const discountValue = document.getElementById('discountValue');
     const discountFill = document.getElementById('discountFill');
     
     if (discountRange) {
         discountRange.addEventListener('input', function() {
-            discountValue.textContent = this.value + '%';
-            updateSliderFill(this, discountFill);
+            updateSliderDisplay(this, 'discountValue', 'discountFill', '%');
         });
-        updateSliderFill(discountRange, discountFill);
     }
     
-    // Пробный период
     const trialRange = document.getElementById('id_trial_days');
     const trialValue = document.getElementById('trialValue');
     const trialFill = document.getElementById('trialFill');
     
     if (trialRange) {
         trialRange.addEventListener('input', function() {
-            trialValue.textContent = this.value + ' дней';
-            updateSliderFill(this, trialFill);
+            updateSliderDisplay(this, 'trialValue', 'trialFill', ' дней');
         });
-        updateSliderFill(trialRange, trialFill);
     }
     
-    function updateSliderFill(slider, fillElement) {
-        const value = (slider.value - slider.min) / (slider.max - slider.min) * 100;
-        fillElement.style.width = value + '%';
-    }
-    
-    // Показ/скрытие полей при переключении toggle
+    // Показ/скрытие поля максимальных подписчиков
     const limitedSubscribersToggle = document.getElementById('id_is_limited_subscribers');
     const maxSubscribersInput = document.getElementById('id_max_subscribers');
     
     if (limitedSubscribersToggle && maxSubscribersInput) {
-        function toggleMaxSubscribers() {
-            maxSubscribersInput.style.display = limitedSubscribersToggle.checked ? 'block' : 'none';
-        }
-        
-        limitedSubscribersToggle.addEventListener('change', toggleMaxSubscribers);
-        toggleMaxSubscribers(); // Initial state
+        limitedSubscribersToggle.addEventListener('change', function() {
+            maxSubscribersInput.style.display = this.checked ? 'block' : 'none';
+        });
     }
 
     // Функционал для превью изображения
@@ -257,40 +337,27 @@ document.addEventListener('DOMContentLoaded', function() {
     const uploadBtn = document.querySelector('.upload-btn');
 
     if (imageInput) {
-        // Обработчик выбора файла
         imageInput.addEventListener('change', function() {
             const file = this.files[0];
             if (file) {
                 const reader = new FileReader();
-                
                 reader.addEventListener('load', function() {
                     previewImage.src = reader.result;
                     imagePreview.style.display = 'block';
-                    uploadBtn.style.display = 'none'; // Скрываем кнопку загрузки
+                    uploadBtn.style.display = 'none';
                 });
-                
                 reader.readAsDataURL(file);
             }
         });
 
-        // Обработчик удаления изображения
         removeImageBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            imageInput.value = ''; // Очищаем input
+            imageInput.value = '';
             imagePreview.style.display = 'none';
-            uploadBtn.style.display = 'flex'; // Показываем кнопку загрузки
-        });
-    }
-
-    // Исправление проблемы с открытием диалога выбора файла
-    // Убедимся, что label корректно связан с input
-    const imageLabel = document.querySelector('label[for="{{ form.image.id_for_label }}"]');
-    if (imageLabel) {
-        imageLabel.addEventListener('click', function(e) {
-            // Предотвращаем множественные срабатывания
-            e.stopPropagation();
+            uploadBtn.style.display = 'flex';
         });
     }
 });
 </script> 
+
 {% endblock %}

@@ -7,6 +7,12 @@ from user.models import CustomUser
 class Subscription(models.Model):
     name = models.CharField(max_length=200, verbose_name="Название подписки")
     description = models.TextField(verbose_name="Описание подписки")
+    creator = models.ForeignKey(
+        CustomUser, 
+        on_delete=models.CASCADE, 
+        related_name='created_subscriptions',
+        verbose_name="Создатель подписки",
+    )
     price = models.DecimalField(
         max_digits=10, 
         decimal_places=2, 

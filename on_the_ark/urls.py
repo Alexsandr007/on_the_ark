@@ -8,6 +8,7 @@ urlpatterns = [
     path('', include('user.urls')),
     path('post/', include('post.urls')),
     path('subscriptions/', include('subscription.urls')),
+    path('wallet/', include('wallet.urls')),
 ]
 
 if settings.DEBUG:

@@ -1,0 +1,297 @@
+{% extends "user/base.html" %}
+{% load static %}
+
+
+{% block title %}На ковчеге - Платформа для поддержки российской культуры{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/subscription/styleModalsPayment.css' %}" />
+<link rel="stylesheet" href="{% static 'css/fonts/addFonts.css' %}">
+<link rel="stylesheet" href="{% static 'css/subscription/style.css' %}" />
+<link rel="stylesheet" href="{% static 'css/subscription/buttons.css' %}" />
+<link rel="stylesheet" href="{% static 'css/subscription/global-colors.css' %}" />
+<link rel="stylesheet" href="{% static 'css/subscription/global-fonts.css' %}" />
+<link rel="stylesheet" href="{% static 'css/subscription/style-reset.css' %}" />
+<link rel="stylesheet" href="{% static 'css/profile/stylePersonalAccountSideBar.css' %}" />
+{% endblock %}
+
+{% block header %}
+{% include "include/profileHeader.html" %}
+{% endblock %}
+
+
+{% block content %}
+<div class="edit__fon"></div>
+<div class="page-overlay"></div>
+<div class="go-back">
+    <img class="go-back__ornament" src="{% static 'images/subscription/new-tariff-page-subheader-ornament.svg' %}">
+    <img class="go-back__ornament--mobile"
+        src="{% static 'images/subscription/new-tariff-page-ornament--mobile.svg' %}">
+</div>
+<main class="main">
+    <div class="container">
+        <button class="go-back__button" onclick="window.history.back()">
+            <i class="fas fa-chevron-left"></i> Назад
+        </button>
+        <div class="title-wrapper">
+            <h1>Мои подписки</h1>
+
+            <button class="profile__btn payment-method-btn create-subscription-btn" 
+                    data-url="{% url 'subscription:create_subscription' %}"
+                    style="width:200px">
+                + Создать подписку
+            </button>
+        </div>
+        <section class="subscriptions__block">
+
+            <div class="prof__header">
+
+
+                <div class="subscriptions__container">
+                    {% if subscriptions %}
+                    <div class="subscriptions__grid">
+                        {% for subscription in subscriptions %}
+                        <div class="block-course block-course-one">
+                            <div class="slider-content">
+                                <h2>{{ subscription.name }}</h2>
+                                <div
+                                    class="subscription-status {% if subscription.is_active %}active{% else %}inactive{% endif %}">
+                                    {% if subscription.is_active %}Активна{% else %}Неактивна{% endif %}
+                                </div>
+                                <div class="block-flex-one">
+
+                                    <ul class="red-dots-list">
+                                        <li>{{ subscription.description|linebreaksbr }}</li>
+                                        {% if subscription.has_trial_period %}
+                                        <li>Пробный период: {{ subscription.trial_days }} дней</li>
+                                        {% endif %}
+                                        {% if subscription.is_limited_subscribers %}
+                                        <li>Ограниченное количество: {{ subscription.max_subscribers }}
+                                            подписчиков</li>
+                                        {% endif %}
+                                        {% if subscription.is_discount_active %}
+                                        <li>Скидка: {{ subscription.discount_percent }}%</li>
+                                        {% endif %}
+                                    </ul>
+
+                                    <div class="information-cost">
+                                        {% if subscription.image %}
+                                        <img src="{{ subscription.image.url }}" alt="{{ subscription.name }}">
+                                        {% else %}
+                                        <img src="{% static 'images/default_subscription.png' %}" alt="Подписка">
+                                        {% endif %}
+
+                                        {% if subscription.is_discount_active %}
+                                        <p class="cost-before">{{ subscription.price }} ₽</p>
+                                        <p class="cost-after">от <span>{{ subscription.final_price|floatformat:2 }}
+                                                ₽</span>/месяц</p>
+                                        {% else %}
+                                        <p class="cost-after">от <span>{{ subscription.price }} ₽</span>/месяц</p>
+                                        {% endif %}
+                                    </div>
+
+                                </div>
+
+                                <div class="subscription-buttons">
+                                    <button class="profile__btn payment-method-btn edit-subscription-btn"
+                                        data-url="{% url 'subscription:edit_subscription' subscription.pk %}">
+                                        Изменить тариф
+                                    </button>
+                                </div>
+
+
+                                {% if subscription.is_limited_subscribers %}
+                                <div class="subscription-limits">
+                                    <p>Осталось мест: {{ subscription.max_subscribers }}</p>
+                                </div>
+                                {% endif %}
+
+                                <div class="subscription-meta">
+                                    <small>Создано: {{ subscription.created_at|date:"d.m.Y" }}</small>
+                                    <small>Обновлено: {{ subscription.updated_at|date:"d.m.Y" }}</small>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Пагинация -->
+                    {% if is_paginated %}
+                    <div class="pagination">
+                        <div class="pagination__container">
+                            {% if page_obj.has_previous %}
+                            <a href="?page={{ page_obj.previous_page_number }}"
+                                class="pagination__arrow pagination__arrow--prev">
+                                ‹
+                            </a>
+                            {% endif %}
+
+                            {% for num in page_obj.paginator.page_range %}
+                            {% if page_obj.number == num %}
+                            <span class="pagination__current">{{ num }}</span>
+                            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                            <a href="?page={{ num }}" class="pagination__link">{{ num }}</a>
+                            {% endif %}
+                            {% endfor %}
+
+                            {% if page_obj.has_next %}
+                            <a href="?page={{ page_obj.next_page_number }}"
+                                class="pagination__arrow pagination__arrow--next">
+                                ›
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% else %}
+                    <div class="subscriptions__empty">
+                        <div class="wallet__donate-error">
+                            <h2>У Вас пока нет созданных подписок...</h2>
+                            <p>Создайте свою первую подписку, чтобы предлагать эксклюзивный контент вашим подписчикам.
+                            </p>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+
+            </div>
+        </section>
+    </div>
+</main>
+
+{% endblock %}
+
+{% block footer %}
+{% include "include/baseFooter.html" %}
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{% static 'js/header/header.js' %}"></script>
+<script src="{% static 'js/subscription/navMenuMobile.js' %}"></script>
+<script src="{% static 'js/subscription/newTariffFormMaintenance.js' %}"></script>
+<script src="{% static 'js/profile/scriptPersonalAccountSideBar.js' %}"></script>
+
+<script>
+    // JavaScript для обработки кликов по кнопкам-ссылкам
+    document.addEventListener('DOMContentLoaded', function () {
+        // Обработчик для кнопки "Создать подписку"
+        document.querySelectorAll('.create-subscription-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const url = this.getAttribute('data-url');
+                if (url) {
+                    window.location.href = url;
+                }
+            });
+        });
+
+        // Обработчик для кнопки "Изменить тариф"
+        document.querySelectorAll('.edit-subscription-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const url = this.getAttribute('data-url');
+                if (url) {
+                    window.location.href = url;
+                }
+            });
+        });
+
+        // Обработчик для иконки редактирования
+        document.querySelectorAll('.subscription-actions .edit-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const url = this.getAttribute('data-url');
+                if (url) {
+                    window.location.href = url;
+                }
+            });
+        });
+
+        // Скидка
+        const discountRange = document.getElementById('id_discount_percent');
+        const discountValue = document.getElementById('discountValue');
+        const discountFill = document.getElementById('discountFill');
+
+        if (discountRange) {
+            discountRange.addEventListener('input', function () {
+                discountValue.textContent = this.value + '%';
+                updateSliderFill(this, discountFill);
+            });
+            updateSliderFill(discountRange, discountFill);
+        }
+
+        // Пробный период
+        const trialRange = document.getElementById('id_trial_days');
+        const trialValue = document.getElementById('trialValue');
+        const trialFill = document.getElementById('trialFill');
+
+        if (trialRange) {
+            trialRange.addEventListener('input', function () {
+                trialValue.textContent = this.value + ' дней';
+                updateSliderFill(this, trialFill);
+            });
+            updateSliderFill(trialRange, trialFill);
+        }
+
+        function updateSliderFill(slider, fillElement) {
+            const value = (slider.value - slider.min) / (slider.max - slider.min) * 100;
+            fillElement.style.width = value + '%';
+        }
+
+        // Показ/скрытие полей при переключении toggle
+        const limitedSubscribersToggle = document.getElementById('id_is_limited_subscribers');
+        const maxSubscribersInput = document.getElementById('id_max_subscribers');
+
+        if (limitedSubscribersToggle && maxSubscribersInput) {
+            function toggleMaxSubscribers() {
+                maxSubscribersInput.style.display = limitedSubscribersToggle.checked ? 'block' : 'none';
+            }
+
+            limitedSubscribersToggle.addEventListener('change', toggleMaxSubscribers);
+            toggleMaxSubscribers(); // Initial state
+        }
+
+        // Функционал для превью изображения
+        const imageInput = document.getElementById('{{ form.image.id_for_label }}');
+        const imagePreview = document.getElementById('imagePreview');
+        const previewImage = document.getElementById('previewImage');
+        const removeImageBtn = document.getElementById('removeImage');
+        const uploadBtn = document.querySelector('.upload-btn');
+
+        if (imageInput) {
+            // Обработчик выбора файла
+            imageInput.addEventListener('change', function () {
+                const file = this.files[0];
+                if (file) {
+                    const reader = new FileReader();
+
+                    reader.addEventListener('load', function () {
+                        previewImage.src = reader.result;
+                        imagePreview.style.display = 'block';
+                        uploadBtn.style.display = 'none'; // Скрываем кнопку загрузки
+                    });
+
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // Обработчик удаления изображения
+            removeImageBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+                imageInput.value = ''; // Очищаем input
+                imagePreview.style.display = 'none';
+                uploadBtn.style.display = 'flex'; // Показываем кнопку загрузки
+            });
+        }
+
+        // Исправление проблемы с открытием диалога выбора файла
+        // Убедимся, что label корректно связан с input
+        const imageLabel = document.querySelector('label[for="{{ form.image.id_for_label }}"]');
+        if (imageLabel) {
+            imageLabel.addEventListener('click', function (e) {
+                // Предотвращаем множественные срабатывания
+                e.stopPropagation();
+            });
+        }
+    });
+</script>
+{% endblock %}

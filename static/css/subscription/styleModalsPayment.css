@@ -1,0 +1,1600 @@
+.slider-content{
+    padding: 0px 30px;
+}
+
+.arrows{
+    width: 97%;
+    padding: 23px;
+    z-index: 10;
+}
+
+.block-course{
+    /* width: 480px;
+    height: 765px; */
+    border-radius: 20px;
+    opacity: 1;
+    border-width: 1px;
+    border: 1px solid #C43418;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+    /* Стили для новых элементов */
+    .title-wrapper {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .create-subscription-btn {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 12px 24px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+        display: inline-block;
+    }
+
+    .create-subscription-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        color: white;
+        text-decoration: none;
+    }
+
+    .subscription-actions {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        z-index: 10;
+    }
+
+    .edit-btn {
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 5px;
+        padding: 8px 12px;
+        color: #6c757d;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-block;
+    }
+
+    .edit-btn:hover {
+        background: #007bff;
+        color: white;
+        text-decoration: none;
+    }
+
+    .subscription-status {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        margin-bottom: 15px;
+    }
+
+    .subscription-status.active {
+        background: #d4edda;
+        color: #155724;
+    }
+
+    .subscription-status.inactive {
+        background: #f8d7da;
+        color: #721c24;
+    }
+
+    .subscription-buttons {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+
+    .edit-subscription-btn {
+        background: #28a745;
+        text-decoration: none;
+        text-align: center;
+        display: block;
+        width: 100%;
+        padding: 12px;
+        border-radius: 8px;
+        color: white;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: none;
+    }
+
+    .edit-subscription-btn:hover {
+        background: #218838;
+        color: white;
+        text-decoration: none;
+        transform: translateY(-2px);
+    }
+
+    .subscription-meta {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 1px solid #eee;
+        font-size: 12px;
+    }
+
+    .subscription-meta small {
+        color: #6c757d;
+    }
+
+    .block-course {
+        position: relative;
+    }
+
+    /* Адаптивность */
+    @media (max-width: 768px) {
+        .title-wrapper {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        
+        .create-subscription-btn {
+            width: 100%;
+            text-align: center;
+        }
+        
+        .subscription-buttons {
+            flex-direction: column;
+        }
+    }
+
+
+.block-course:hover{
+  box-shadow: 0px 0px 25px 0px rgba(196, 52, 24, 1);
+}
+
+.slides-wrapper{
+    margin: 10px 0px;
+}
+
+.modal-overlay{
+    position: absolute;
+}
+
+.modal{
+    max-width: 955px;
+    padding: 30px 0px;
+    border-radius: 20px;
+    height: auto;
+    top: 87px;
+    margin: 0% 5%;
+}
+
+.slides-container {
+width: 87%;
+
+}
+
+.modal h3{
+font-family: "Manrope";
+    font-weight: 500;
+    font-size: 23px;
+    line-height: 26px;
+    margin: 10px;
+    color: #000000;
+}
+
+.modal .slide{
+    flex-direction: row;
+    gap:20px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.modal .slide h2{
+    font-family: "Roboto";
+    font-weight: 700;
+    font-style: Bold;
+    font-size: 43px;
+    line-height: 90%;
+    letter-spacing: 0%;
+    color: #FF8C76;
+    margin: 10px;
+}
+
+.modal .slider-content {
+    padding: 0px 64px;
+    justify-content: start;
+    height: 100%;
+
+
+}
+
+
+
+.red-dots-list {
+  list-style: none;
+  padding-left: 0;
+  min-height: 180px;
+}
+
+.red-dots-list li {
+position: relative;
+    padding-left: 23px;
+    margin-bottom: 10px;
+    line-height: 1.5;
+    font-family: "Manrope";
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 140%;
+    letter-spacing: 0%;
+    color: #000000;
+    text-align: left;
+
+}
+
+.red-dots-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 10px;
+    transform: translateY(-50%);
+    width: 10px;
+    height: 10px;
+    background-color: #FF8C76;
+    border-radius: 50%;
+}
+
+.block-course .slider-content img{
+    margin: 0px 0px 20px 0px;
+}
+
+.modal .cost-before{
+    font-family: "Manrope";
+    font-weight: 500;
+    font-size: 23px;
+    line-height: 26px;
+    text-decoration: line-through;
+    color: #DADADA;
+    width: 250px;
+    text-align: end;
+    margin: 0px 0px 18px 0px;
+}
+
+.cost-after span{
+    font-family: "Manrope";
+    font-weight: 700;
+    font-style: Bold;
+    font-size: 49px;
+    line-height: 26px;
+    letter-spacing: 0%;
+    color: rgba(196, 50, 26, 1);
+    margin: 0px 0px 20px 0px;
+
+}
+
+.slider-content .cost-after{
+    font-family: "Manrope";
+    font-weight: 700;
+    font-style: Bold;
+    font-size: 14px;
+    line-height: 26px;
+    letter-spacing: 0%;
+    color: rgba(196, 50, 26, 1);
+
+}
+
+.modal .profile__btn{
+    font-family: "Manrope";
+    font-weight: 500;
+    font-size: 23px;
+    line-height: 26px;
+    letter-spacing: 0%;
+    padding: 10px 20px;
+
+}
+
+.modal .slider-content .footer-text{
+    font-family: "Manrope";
+    font-weight: 300;
+    font-size: 12px;
+    line-height: 140%;
+    letter-spacing: 0%;
+    margin-top: 30px;
+}
+
+
+@media (max-width: 768px) {
+    .arrows{
+        display: none;
+    }
+}
+
+/* Планшеты */
+@media (min-width: 768px) {
+  .modal {
+    padding: 5px 0;
+    margin: 0 5%;
+    top: 10px;
+  }
+    .modal .slider-content{
+    width: 100%;
+  }
+  
+  .modal-content {
+    padding: 0 64px;
+  }
+  
+  .slide {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .block-course {
+    width: calc(50% - 10px);
+    height: auto;
+    min-height: 0px;
+  }
+
+  /* .block-course-one{
+      width: calc(50% - 10px);
+    height: auto;
+    min-height: 449px;
+  } */
+  
+  .block-course h2 {
+    font-size: 43px;
+  }
+  
+  .red-dots-list {
+    min-height: 180px;
+  }
+  
+  .red-dots-list li {
+    padding-left: 23px;
+    font-size: 14px;
+  }
+  
+  .red-dots-list li::before {
+    width: 10px;
+    height: 10px;
+    top: 10px;
+  }
+  
+  .block-course .course-content img {
+    padding: 50px 0 30px 0;
+  }
+  
+  .cost-before {
+    font-size: 23px;
+  }
+  
+  .cost-after {
+    font-size: 49px;
+  }
+  
+  
+  .footer-text {
+    font-size: 12px;
+    margin-top: 30px;
+  }
+}
+
+/* Десктоп */
+@media (min-width: 1024px) {
+  
+  
+  .arrows {
+    padding: 0 23px;
+  }
+
+
+}
+
+/* Маленькие мобильные (320px - 374px) */
+@media (max-width: 374px) {
+
+
+
+.modal {
+    width: 95%;
+}
+
+.error-payment{
+  width: 80%;
+}
+
+.modal .slider-content {
+    width: 95%;
+}
+  
+  .modal {
+    padding: 15px 0;
+  }
+  
+  .modal-content {
+    padding: 0 10px;
+  }
+  
+  .modal h3 {
+    font-size: 18px;
+    margin: 15px 0;
+  }
+  
+  .block-course {
+    padding: 15px;
+  }
+  
+  .block-course h2 {
+    font-size: 28px;
+    margin-bottom: 15px;
+  }
+  
+  .red-dots-list li {
+    font-size: 13px;
+    padding-left: 18px;
+    margin-bottom: 10px;
+  }
+  
+  .red-dots-list li::before {
+    width: 6px;
+    height: 6px;
+    top: 7px;
+  }
+  
+  .block-course .course-content img {
+    max-width: 150px;
+    padding: 20px 0;
+  }
+  
+  .cost-before {
+    font-size: 16px;
+  }
+  
+  .cost-after {
+    font-size: 32px;
+  }
+  
+  
+  .footer-text {
+    font-size: 10px;
+    margin-top: 15px;
+  }
+}
+
+/* Скрытие стрелок на мобильных */
+@media (max-width: 767px) {
+  .arrows {
+    display: none;
+  }
+
+  .modal .slider-content {
+    padding: 0px 0px;
+
+}
+}
+
+@media (max-width: 1365px) {
+    /* .modal {
+        padding: 30px 0;
+        margin: 0 5%;
+        max-width: 660px;
+    } */
+}
+
+@media (max-width: 1300px) {
+  .modal .slider-content {
+    padding: 0px 35px;
+    justify-content: start;
+    height: 100%;
+  }
+
+  .slides-container {
+    width: 95%;
+    overflow: hidden;
+    position: relative;
+    margin: 0 auto;
+  }
+
+  .arrows {
+      display: none;
+  }
+}
+
+
+.block-flex-many {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    gap: 40px;
+    align-items: flex-start;
+}
+
+.block-flex-many h2{
+  margin-top: 0px;
+  font-family: "Roboto";
+  font-weight: 700;
+  font-style: Bold;
+  font-size: 35px;
+  line-height: 90%;
+  text-align: start;
+color: rgba(255, 140, 118, 1);
+
+}
+
+.block-flex-many .red-dots-list li{
+  font-family: "Manrope";
+  font-weight: 300;
+  font-size: 14px;
+  line-height: 140%;
+
+}
+
+.block-flex-many .cost-after{
+  font-family: "Manrope";
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 26px;
+  color: rgba(196, 50, 26, 1);
+    margin: 0px;
+
+}
+
+
+.block-flex-many .payment-method-btn{
+      font-family: "Manrope";
+    font-weight: 300;
+    font-size: 25px;
+    line-height: 140%;
+    margin-bottom: 0px;
+    min-width: 259px;
+}
+
+.yellow-dots-list li::before {
+  background: rgba(245, 205, 80, 1);
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 10px;
+    transform: translateY(-50%);
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.content-mobile .block-course-many_yellow {
+  position: relative;
+    background: #ffffff;
+    flex-direction: column;
+    max-height: 380px;
+    border-radius: 20px;
+    opacity: 1;
+    border-width: 1px;
+    border: 1px solid rgba(229, 179, 26, 1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+    margin: 45px;
+}
+
+
+.block-course-many_yellow h2{
+  color:rgba(245, 205, 80, 1);
+}
+
+.block-course-many_yellow .red-dots-list li::before{
+  background:rgba(245, 205, 80, 1);
+} 
+
+.block-course-many_yellow .block-flex-many .cost-after{
+    color:rgba(245, 205, 80, 1);
+}
+
+
+.block-course-many_yellow .block-flex-many .cost-after span{ 
+    color: rgba(229, 179, 26, 1);
+}
+
+.block-course-many_yellow .block-flex-many .payment-method-btn{
+    background:rgba(196, 50, 26, 1);
+}
+
+.block-course-many_yellow .block-flex-many .payment-method-btn:hover{
+    background:rgba(196, 50, 26, 1);
+}
+
+.block-course-many_yellow .block-flex-many .payment-method-btn:click{
+    background:rgba(196, 50, 26, 1);
+}
+
+
+.block-course-many .block-flex-many .payment-method-btn{
+    background:rgba(196, 50, 26, 1);
+}
+
+.block-course-many .block-flex-many .payment-method-btn:hover{
+    background:rgba(196, 50, 26, 1);
+}
+
+.block-course-many .block-flex-many .payment-method-btn:click{
+    background:rgba(196, 50, 26, 1);
+}
+
+
+
+
+.block-flex-many .cost-after span{
+  font-family: "Manrope";
+  font-weight: 700;
+  font-size: 49px;
+  line-height: 26px;
+  margin-bottom: 0px;
+}
+
+
+.block-flex-many .cost-before{
+    font-family: "Manrope";
+    font-weight: 500;
+    font-size: 23px;
+    line-height: 26px;
+    text-decoration: line-through;
+    color: rgba(218, 218, 218, 1);
+    margin: 30px 0px 15px 0px;
+    display: flex;
+    justify-content: end;
+    width: 100%;
+
+}
+
+.content-mobile .block-course-many {
+    position: relative;
+    background: #ffffff;
+    flex-direction: column;
+    max-height: 380px;
+    border-radius: 20px;
+    opacity: 1;
+    border-width: 1px;
+    border: 1px solid #C43418;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+    margin: 45px;
+}
+
+    .block-flex-many img {
+        width: 277px;
+      border-radius: 5px;
+      max-height: 100px;
+      object-fit: cover;
+    }
+
+
+
+@media (max-width: 650px) {
+  .block-flex-many h2 {
+font-family: "Roboto";
+font-weight: 700;
+font-size: 20px;
+line-height: 90%;
+text-align: center;
+
+}
+
+.block-flex-many .red-dots-list li {
+    font-family: "Manrope";
+    font-weight: 300;
+    font-size: 10px;
+    line-height: 140%;
+    letter-spacing: 0%;
+}
+
+.block-flex-many .cost-after {
+  font-family: "Manrope";
+  font-weight: 300;
+  font-size: 10px;
+  line-height: 140%;
+
+}
+
+.block-flex-many .cost-after span{
+  font-family: "Manrope";
+  font-weight: 700;
+  font-size: 23.26px;
+  line-height: 12.34px;
+}
+
+.block-flex-many img{
+  width: 120px;
+}
+
+.block-flex-many .cost-before {
+  font-family: "Manrope";
+  font-weight: 300;
+  font-size: 10px;
+  line-height: 140%;
+
+
+}
+
+.block-flex-many .payment-method-btn {
+  font-family: "Manrope";
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 120%;
+  border-radius: 4.75px;
+  padding-top: 5px;
+  padding-right: 10px;
+  padding-bottom: 5px;
+  padding-left: 10px;
+
+}
+
+.content-mobile .block-course-many {
+    padding: 20px;
+        margin: 0px 0px 10px 0px;
+}
+.content-mobile .block-course-many_yellow {
+  padding: 20px;
+        margin: 0px 0px 10px 0px;
+}
+
+.block-flex-many {
+    gap: 15px;
+}
+
+    .block-flex-many .payment-method-btn {
+        max-width: 130px;
+        min-width: 130px;
+
+}
+
+}
+
+
+
+.modal-black{
+position: fixed;
+    background: rgba(17, 4, 1, 1);
+    border-radius: 12px;
+    padding: 30px;
+    width: 90%;
+    max-width: 964px;
+    min-height: 650px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    padding: 0px 0px;
+    border-radius: 20px;
+    height: auto;
+    top: 15px;
+    margin: 0% 5%;
+    box-shadow: 0px 0px 40px 0px rgba(255, 255, 255, 1);
+
+}
+
+.modal-black .slider-content{
+    min-height: 640px;
+    justify-content: space-between;
+}
+
+.content-mobile .slider-content{
+  min-height: 860px;
+  justify-content: space-between;
+  min-height: 690px;
+}
+
+.modal-black .modal-close{
+    color: #ffffff;
+    background-color: #000000;
+}
+
+.modal-black .modal-close::before, .modal-black  .modal-close::after {
+    background: #ffffff;
+}
+
+/* При наведении меняем цвет крестика на красный */
+.modal-black .modal-close:hover::before,
+.modal-black .modal-close:hover::after {
+    background: #C4321A; /* Красный цвет при наведении */
+}
+
+.modal-black h3{
+  font-family: "Manrope";
+  font-weight: 500;
+  font-size: 23px;
+  line-height: 26px;
+  letter-spacing: 0%;
+  margin-bottom: 0px;
+
+}
+
+.modal-black .block-text{
+  width: 100%;
+  text-align: left;
+}
+
+.modal-black h2{
+  font-family: "Roboto";
+  font-weight: 700;
+  font-style: Bold;
+  font-size: 43px;
+  line-height: 90%;
+  letter-spacing: 0%;
+  margin: 20px 0px 10px 0px;
+
+}
+
+.modal-black .block-cost{
+  display: flex;
+  justify-content: space-between;
+}
+
+.modal-black hr{
+  border: solid 1px rgba(68, 68, 68, 1);
+  margin: 5px 0px 20px 0px;
+}
+
+.modal-black .modal-checkbox span{
+  font-family: "Manrope";
+  font-weight: 300;
+  font-size: 12px;
+  line-height: 140%;
+  letter-spacing: 0%;
+  vertical-align: middle; 
+  color: rgba(255, 255, 255, 1);
+  padding-top: 4px;
+}
+
+.modal-black .checkbox-custom {
+    border: 1px solid #ffffff;
+    background: #000000;
+}
+
+.modal-black .modal-checkbox input:checked + .checkbox-custom {
+    border-color: #ffffff;
+}
+
+
+.bottom-sheet-black .modal-close{
+    color: #ffffff;
+    background-color: #000000;
+}
+
+.bottom-sheet-error .bear-img{
+position: absolute;
+    bottom: 0px;
+    width: 100%;
+    min-height: 400px;
+    max-height: 500px;
+    max-width: 600px;
+    align-items: center;
+    z-index: 2;
+    object-fit: cover;
+}
+
+.bottom-sheet-error .ornament-img{
+position: absolute;
+    bottom: 0px;
+    width: 100%;
+    height: 300px;
+}
+
+.bottom-sheet-error .ornament-women-img {
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+    height: 180px;
+}
+
+.bottom-sheet-error .women-img{
+    position: absolute;
+    bottom: 0px;
+    z-index: 10;
+    max-height: 450px;
+        margin-right: 30px;
+}
+
+.bottom-sheet-error .fon-img{
+    position: absolute;
+    bottom: 180px;
+    width: 100%;
+}
+
+.bottom-sheet-error .profile__btn {
+  position: relative;
+    font-family: "Manrope";
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 120%;
+    letter-spacing: 0%;
+    opacity: 1;
+    border-radius: 10px;
+    padding-top: 10px;
+    padding-right: 20px;
+    padding-bottom: 10px;
+    padding-left: 20px;
+    gap: 10px;
+    z-index: 10;
+    width: auto;
+
+}
+
+
+.bottom-sheet-error .content {
+     padding: 0px;
+    max-height: calc(100vh - 50px);
+    overflow-y: none;
+}
+
+
+.bottom-sheet-error .content-error {
+    height: 500px;
+}
+
+.bottom-sheet-error .content-error h2 {
+    font-family: "Manrope";
+    font-weight: 400;
+    font-style: Regular;
+    font-size: 14px;
+    line-height: 140%;
+}
+
+.bottom-sheet-error .content-error p {
+  font-family: "Manrope";
+  font-weight: 300;
+  font-size: 10px;
+  line-height: 140%;
+
+}
+
+
+.bottom-sheet-black .modal-close::before, .bottom-sheet-black  .modal-close::after {
+    background: #ffffff;
+}
+
+/* При наведении меняем цвет крестика на красный */
+.bottom-sheet-black .modal-close:hover::before,
+.bottom-sheet-black .modal-close:hover::after {
+    background: #C4321A; /* Красный цвет при наведении */
+}
+
+.bottom-sheet-black h3{
+  font-family: "Manrope";
+  font-weight: 500;
+  font-size: 23px;
+  line-height: 26px;
+  letter-spacing: 0%;
+  margin-bottom: 0px;
+
+}
+
+.bottom-sheet-black .block-text{
+  width: 100%;
+  text-align: left;
+}
+
+.bottom-sheet-black h2{
+  font-family: "Roboto";
+  font-weight: 700;
+  font-style: Bold;
+  font-size: 43px;
+  line-height: 90%;
+  letter-spacing: 0%;
+  margin: 20px 0px 10px 0px;
+
+}
+
+.bottom-sheet-black .block-cost{
+  display: flex;
+  justify-content: space-between;
+}
+
+.bottom-sheet-black hr{
+  border: solid 1px rgba(68, 68, 68, 1);
+  margin: 5px 0px 20px 0px;
+}
+
+.bottom-sheet-black .modal-checkbox span{
+  font-family: "Manrope";
+  font-weight: 300;
+  font-size: 12px;
+  line-height: 140%;
+  letter-spacing: 0%;
+  vertical-align: middle; 
+  color: rgba(255, 255, 255, 1);
+  padding-top: 4px;
+}
+
+.bottom-sheet-black .checkbox-custom {
+    border: 1px solid #ffffff;
+    background: #000000;
+}
+
+.bottom-sheet-black .modal-checkbox input:checked + .checkbox-custom {
+    border-color: #ffffff;
+}
+
+.checkbox-custom::after {
+    content: '';
+    position: absolute;
+    left: 2px;
+    top: 0px;
+    width: 6px;
+    height: 8px;
+    border: solid rgba(229, 179, 26, 1);
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+    opacity: 0;
+    transition: opacity 0.3s 
+ease;
+}
+
+.modal-black .block-text p{
+      text-align: start;
+    max-width: 484px;
+    font-family: "Manrope";
+    font-weight: 300;
+    font-style: Light;
+    font-size: 14px;
+    line-height: 140%;
+    letter-spacing: 0%;
+    margin: 0px 0px 20px 0px;
+}
+
+.bottom-sheet-black .container-text span{
+  font-family: "Manrope";
+  font-weight: 500;
+  font-size: 23px;
+  line-height: 26px;
+  letter-spacing: 0%;
+}
+
+
+.modal-black .block-text a{
+    color: rgba(229, 179, 26, 1);
+}
+
+.bottom-sheet-black .block-text p{
+      text-align: start;
+    max-width: 484px;
+    font-family: "Manrope";
+    font-weight: 300;
+    font-style: Light;
+    font-size: 14px;
+    line-height: 140%;
+    letter-spacing: 0%;
+    margin: 0px 0px 20px 0px;
+}
+
+
+.bottom-sheet-black .block-text a{
+    color: rgba(229, 179, 26, 1);
+}
+
+.buttons-block{
+    justify-content: flex-start;
+    display: flex;
+    gap: 35px;
+    margin: 40px 0px;
+}
+
+.modal .profile__btn{
+    border-radius: 10px;
+        margin-top: 0px;
+     margin-bottom: 0px;
+}
+
+.modal-black .profile__btn{
+    padding: 10px 20px;
+    font-family: "Manrope";
+    font-weight: 500;
+    font-style: Medium;
+    font-size: 14px;
+    line-height: 27px;
+    letter-spacing: 0%;
+    width: auto;
+    border-radius: 10px;
+}
+
+.bottom-sheet-black .profile__btn{
+    padding: 10px 20px;
+    font-family: "Manrope";
+    font-weight: 500;
+    font-style: Medium;
+    font-size: 14px;
+    line-height: 27px;
+    letter-spacing: 0%;
+    width: auto;
+    border-radius: 10px;
+}
+
+.modal .profile__btn:hover{
+    background: #E5B31A;
+    border-color: #E5B31A;
+
+}
+
+.modal-black .profile__btn:hover{
+    background: #E5B31A;
+    border-color: #E5B31A;
+
+}
+
+.modal-black .profile__btn:active {
+    background: #000000;
+    border-color: #000000;
+
+}
+
+.bottom-sheet-black .profile__btn:hover{
+    background: #E5B31A;
+    border-color: #E5B31A;
+
+}
+
+.bottom-sheet-black .profile__btn:active {
+    background: #000000;
+    border-color: #000000;
+
+}
+
+.modal .profile__btn:active {
+    background: #000000;
+    border-color: #000000;
+
+}
+
+.profile__btn-gray{
+    background: rgba(150, 150, 150, 1);
+    border: none;
+    padding: 10px 20px;
+    font-family: "Manrope";
+    font-weight: 500;
+    font-style: Medium;
+    font-size: 14px;
+    line-height: 27px;
+    letter-spacing: 0%;
+    width: auto;
+    border-radius: 10px;
+}
+
+.profile__btn-gray:hover{
+    background: rgba(210, 210, 210, 1);
+    border-color: rgba(210, 210, 210, 1);
+
+}
+
+.profile__btn-gray:active {
+    background: rgba(92, 92, 92, 1);
+    border-color: rgba(92, 92, 92, 1);
+}
+
+.modal-black .text-block-top{
+  width: 100%;
+}
+
+.bottom-sheet-black .text-block-top{
+  width: 100%;
+}
+
+.bottom-sheet-black .slider-content{
+  width: 90%;
+padding: 5%;
+}
+
+
+@media (max-width: 468px) {
+  .modal-black .block-cost {
+    flex-direction: column;
+  }
+
+
+  .modal-black h2 {
+    line-height: 120%;
+  }
+}
+
+
+.block-month{
+  width: 100%;
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.block-month .active{
+  background: rgba(229, 179, 26, 1);;
+
+}
+
+.container-text{
+    background: rgba(92, 92, 92, 1);
+    border: 1px solid rgba(255, 255, 255, 1);
+    max-height: 111px;
+    width: 156px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 15px;
+    gap: 20px;
+    border-width: 1px;
+    padding-top: 15px;
+    padding-right: 23px;
+    padding-bottom: 30px;
+    padding-left: 15px;
+    color: rgba(255, 255, 255, 1);
+}
+
+.modal-black .container-text p{
+  font-family: "Manrope";
+  font-weight: 300;
+  font-size: 14px;
+  line-height: 140%;
+  margin: 0px 0px 0px 0px;
+}
+
+.modal-black .container-text span{
+  font-family: "Manrope";
+  font-weight: 500;
+  font-size: 23px;
+  line-height: 26px;
+  letter-spacing: 0%;
+}
+
+
+.container-text:hover{
+  box-shadow: 0px 0px 25px 0px rgba(229, 179, 26, 1);
+}
+
+.container-text:active{
+  background: rgba(229, 179, 26, 1);
+}
+
+
+.block-course-one{
+    position: relative;
+    background: #ffffff;
+    gap: 20px;
+    flex-direction: column;
+    min-height: 449px;
+    padding: 20px 0px;
+}
+
+.subscriptions__grid{
+  display: flex
+;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.block-course-one h2{
+    font-family: "Roboto";
+    font-weight: 700;
+    font-style: Bold;
+    font-size: 43px;
+    line-height: 90%;
+    letter-spacing: 0%;
+    color: #FF8C76;
+    padding-bottom: 30px;
+}
+
+.block-course-one .cost-before{
+      font-family: "Manrope";
+    font-weight: 500;
+    font-size: 23px;
+    line-height: 26px;
+    text-decoration: line-through;
+    color: #DADADA;
+    width: 250px;
+    text-align: end;
+    margin: 0px 0px 18px 0px;
+}
+
+.block-flex-one{
+display: flex
+;
+    flex-direction: column;
+}
+
+.information-cost{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.payment-method-btn{
+background: rgba(196, 50, 26, 1);
+    width: 100%;
+    height: 47px;
+    border-radius: 8px;
+    padding-top: 10px;
+    padding-right: 20px;
+    padding-bottom: 10px;
+    padding-left: 20px;
+    gap: 10px;
+    display: flex;
+    justify-content: center;
+    font-family: "Manrope";
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 27px;
+    text-align: center;
+    color: #ffffff;
+    margin: 20px 0px;
+}
+
+.payment-method-btn:hover{
+      background: #E5B31A;
+    border-color: #E5B31A;
+}
+
+.payment-method-btn:active{
+    background: #000000;
+    border-color: #000000;
+}
+
+
+.block-course .slider-content .information-cost img {
+    padding: 20px 0px 30px 0px;
+    width: 300px;
+}
+
+@media (max-width: 1100px) {
+
+  .block-flex-one {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+}
+
+.error-payment {
+  position: fixed;
+    min-height: 400px;
+    max-width: 579px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal .bear-img{
+    position: absolute;
+    bottom: 0;
+    display: flex;
+    z-index: 2;
+    align-items: center;
+    width: 579px;
+    justify-content: center;
+}
+
+.content-error{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 400px;
+    z-index: 8;
+}
+
+.content-error .margin-head-bear-pc{
+        margin: 20px 0px 0px 0px;
+}
+
+.content-error h2{
+  font-family: "Manrope";
+  font-weight: 500;
+  font-size: 23px;
+  line-height: 26px;
+  letter-spacing: 0%;
+  margin: 0px;
+      margin: 20px 0px 0px 0px;
+    text-align: center;
+
+}
+
+.modal .payment-error-btn {
+    padding: 10px 20px;
+    font-family: "Manrope";
+    width: auto;
+    border-radius: 10px;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 27px;
+    letter-spacing: 0%;
+    margin-bottom: 50px;
+}
+
+.modal .women-img {
+    position: absolute;
+    bottom: 0;
+    display: flex;
+    z-index: 2;
+    align-items: center;
+    width: 435px;
+    justify-content: center;
+}
+
+@media (max-width: 374px) {
+
+
+.error-payment{
+  width: 80%;
+}
+
+.block-course .slider-content .information-cost img {
+    padding: 20px 0px 30px 0px;
+    width: 100%;
+}
+
+}
+
+
+@media (max-width: 1140px) {
+.container-text {
+
+    gap: 0px;
+    border-width: 1px;
+
+}
+
+
+
+}
+
+
+@media (max-width: 400px) {
+  .bottom-sheet-black .modal-close{
+    color: #ffffff;
+    background-color: #000000;
+}
+
+.bottom-sheet-black .modal-close::before, .bottom-sheet-black  .modal-close::after {
+    background: #ffffff;
+}
+
+/* При наведении меняем цвет крестика на красный */
+.bottom-sheet-black .modal-close:hover::before,
+.bottom-sheet-black .modal-close:hover::after {
+    background: #C4321A; /* Красный цвет при наведении */
+}
+
+.bottom-sheet-black h3{
+  font-family: Manrope;
+  font-weight: 400;
+  font-style: Regular;
+  font-size: 14px;
+  line-height: 140%;
+}
+
+.bottom-sheet-black .block-text{
+  width: 100%;
+  text-align: left;
+}
+
+.bottom-sheet-black h2{
+  font-family: "Roboto";
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 90%;
+
+
+}
+
+.bottom-sheet-black .block-cost{
+  display: flex;
+  justify-content: space-between;
+}
+
+.bottom-sheet-black hr{
+  border: solid 1px rgba(68, 68, 68, 1);
+  margin: 5px 0px 20px 0px;
+}
+
+.bottom-sheet-black .modal-checkbox span{
+  font-family: "Manrope";
+  font-weight: 300;
+  font-size: 12px;
+  line-height: 140%;
+  letter-spacing: 0%;
+  vertical-align: middle; 
+  color: rgba(255, 255, 255, 1);
+  padding-top: 4px;
+}
+
+.bottom-sheet-black .checkbox-custom {
+    border: 1px solid #ffffff;
+    background: #000000;
+}
+
+.bottom-sheet-black .modal-checkbox input:checked + .checkbox-custom {
+    border-color: #ffffff;
+}
+
+.bottom-sheet-black .container-text span{
+font-weight: 300;
+font-size: 14px;
+line-height: 140%;
+
+}
+
+.bottom-sheet-black .modal-checkbox span {
+    font-family: "Manrope";
+    font-weight: 300;
+    font-size: 10px;
+    line-height: 140%;
+    letter-spacing: 0%;
+  }
+
+  .container-text {
+    width: 73px;
+}
+
+.bottom-sheet-black .block-text p{
+    font-size: 10px;
+    margin: 0px 0px 10px 0px;
+}
+
+
+.bottom-sheet-black .block-text a{
+    color: rgba(229, 179, 26, 1);
+}
+
+.bottom-sheet-black .profile__btn{
+font-weight: 500;
+        font-size: 12px;
+        line-height: 120%;
+        letter-spacing: 0%;
+        opacity: 1;
+        border-radius: 4.74px;
+        padding-top: 5px;
+        padding-right: 15px;
+        padding-bottom: 5px;
+        padding-left: 15px;
+}
+
+.bottom-sheet-black .profile__btn-gray {
+  font-weight: 500;
+        font-size: 12px;
+        line-height: 120%;
+        letter-spacing: 0%;
+        opacity: 1;
+        border-radius: 4.74px;
+        padding-top: 5px;
+        padding-right: 15px;
+        padding-bottom: 5px;
+        padding-left: 15px;
+}
+
+.bottom-sheet-black .slider-content {
+    width: 100%;
+    padding: 0px 0px;
+}
+
+
+.content-mobile .slider-content {
+    min-height: 0px;
+        padding: 0px 5px;
+}
+
+}
+
+.content-mobile .margin-bear-head{
+      margin-top: 55px;
+}
+
+
