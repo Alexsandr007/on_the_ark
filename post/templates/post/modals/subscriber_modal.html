@@ -1,0 +1,28 @@
+{% load static %}
+<!-- Скрытый контейнер с данными всех подписок -->
+<div id="subscriptionsData" style="display: flex;">
+    {% for subscription in available_subscriptions %}
+    <div class="subscription-data" data-id="{{ subscription.id }}" data-name="{{ subscription.name }}"
+        data-description='{{ subscription.description_lines|join:"||" }}' data-price="{{ subscription.price }}"
+        data-final-price="{{ subscription.final_price }}"
+        data-image="{% if subscription.image %}{{ subscription.image.url }}{% else %}{% static 'images/subscription/default-subscription.png' %}{% endif %}"
+        data-has-discount="{{ subscription.is_discount_active|yesno:'true,false' }}"
+        data-discount-percent="{{ subscription.discount_percent }}"
+        data-has-trial="{{ subscription.has_trial_period|yesno:'true,false' }}"
+        data-trial-days="{{ subscription.trial_days }}"
+        data-is-limited="{{ subscription.is_limited_subscribers|yesno:'true,false' }}"
+        data-max-subscribers="{{ subscription.max_subscribers }}">
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Модальное окно -->
+<div class="modal-overlay subscription-modal" id="subscriptionModal" style="display: none;">
+    <div class="modal subscription-modal-content">
+        <div class="modal-content-wrapper">
+            <div id="subscriptionContent">
+                <!-- Контент будет заполняться динамически -->
+            </div>
+        </div>
+    </div>
+</div>

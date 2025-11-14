@@ -26,7 +26,7 @@ function toggleComments(postId) {
     const commentsSection = document.getElementById(`comments-section-${postId}`);
     const commentBtn = document.querySelector(`.comment-btn[data-post-id="${postId}"]`);
     
-    if (commentsSection.style.display === 'none') {
+    if (commentsSection.style.display === 'none' || !commentsSection.style.display) {
         commentsSection.style.display = 'block';
         commentBtn.classList.add('active');
     } else {
@@ -37,6 +37,11 @@ function toggleComments(postId) {
 
 function submitComment(postId) {
     const form = document.querySelector(`.comment-form[data-post-id="${postId}"]`);
+    if (!form) {
+        console.error('Форма комментария не найдена для поста:', postId);
+        return;
+    }
+    
     const textarea = form.querySelector('.comment-input');
     const commentText = textarea.value.trim();
     
@@ -50,13 +55,17 @@ function submitComment(postId) {
     submitBtn.innerHTML = '<div class="loading-spinner"></div>';
     submitBtn.disabled = true;
     
+    // Создаем FormData для правильной отправки
+    const formData = new FormData();
+    formData.append('content', commentText);
+    formData.append('csrfmiddlewaretoken', getCsrfToken());
+    
     fetch(`/post/${postId}/comment/`, {
         method: 'POST',
         headers: {
-            'X-CSRFToken': getCsrfToken(),
-            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-Requested-With': 'XMLHttpRequest',
         },
-        body: `content=${encodeURIComponent(commentText)}&csrfmiddlewaretoken=${getCsrfToken()}`
+        body: formData
     })
     .then(response => {
         if (!response.ok) {
@@ -68,16 +77,23 @@ function submitComment(postId) {
         if (data.success) {
             textarea.value = '';
             
-            const commentsCount = document.querySelector(`.comment-btn[data-post-id="${postId}"] .comments-count`);
-            commentsCount.textContent = data.comments_count;
+            // Обновляем счетчик комментариев
+            const commentsCountElement = document.querySelector(`.comment-btn[data-post-id="${postId}"] p`);
+            if (commentsCountElement) {
+                commentsCountElement.textContent = data.comments_count;
+            }
             
+            // Добавляем комментарий в UI
             addCommentToUI(postId, data.comment);
+            
+            console.log('Комментарий успешно добавлен');
         } else {
+            console.error('Ошибка от сервера:', data.error);
             alert('Ошибка при отправке комментария: ' + data.error);
         }
     })
     .catch(error => {
-        console.error('Ошибка:', error);
+        console.error('Ошибка сети:', error);
         alert('Произошла ошибка при отправке комментария');
     })
     .finally(() => {
@@ -88,22 +104,32 @@ function submitComment(postId) {
 
 function addCommentToUI(postId, commentData) {
     const commentsList = document.querySelector(`#comments-section-${postId} .comments-list`);
+    if (!commentsList) {
+        console.error('Список комментариев не найден для поста:', postId);
+        return;
+    }
     
     const noComments = commentsList.querySelector('.no-comments');
     if (noComments) {
         noComments.remove();
     }
     
+    // Используем фото из данных или дефолтное
+    const photoUrl = commentData.author_photo_url || '/static/images/profile/profile_default.png';
+    
     const commentHTML = `
         <div class="comment-item">
             <div class="comment-author">
+                <img src="${photoUrl}" 
+                     alt="${commentData.author_name}" 
+                     class="comment-author-avatar">
                 <strong>${commentData.author_name}</strong>
             </div>
             <div class="comment-content">
                 ${commentData.content}
             </div>
             <div class="comment-date">
-                Только что
+                ${commentData.created_at}
             </div>
         </div>
     `;
@@ -111,7 +137,9 @@ function addCommentToUI(postId, commentData) {
     commentsList.insertAdjacentHTML('afterbegin', commentHTML);
 }
 
+// Инициализация после загрузки DOM
 document.addEventListener('DOMContentLoaded', function() {
+    // Обработчики для кнопок комментариев
     const commentButtons = document.querySelectorAll('.comment-btn');
     commentButtons.forEach(button => {
         button.addEventListener('click', function() {
@@ -120,6 +148,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
+    // Обработчики для форм комментариев
     const commentForms = document.querySelectorAll('.comment-form');
     commentForms.forEach(form => {
         form.addEventListener('submit', function(e) {
@@ -129,6 +158,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
+    // Обработчики Enter для текстовых полей
     const commentInputs = document.querySelectorAll('.comment-input');
     commentInputs.forEach(input => {
         input.addEventListener('keydown', function(e) {
@@ -138,5 +168,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 submitComment(postId);
             }
         });
+        
+        // Автоматическое увеличение высоты текстового поля
+        input.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
     });
 });
+
+// Глобальная функция для отладки
+window.debugComments = function(postId) {
+    console.log('Отладка комментариев для поста:', postId);
+    const commentsSection = document.getElementById(`comments-section-${postId}`);
+    const form = document.querySelector(`.comment-form[data-post-id="${postId}"]`);
+    console.log('Секция комментариев:', commentsSection);
+    console.log('Форма:', form);
+};

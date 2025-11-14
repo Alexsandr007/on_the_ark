@@ -48,6 +48,33 @@ class Post(models.Model):
         if self.scheduled_at and self.scheduled_at <= timezone.now():
             self.published_at = timezone.now()
             self.save()
+    
+    def is_accessible_by_user(self, user):
+        """Проверяет, доступен ли пост пользователю"""
+        if not self.subscription:
+            return True
+        
+        if not user.is_authenticated:
+            return False
+            
+        return user.user_subscriptions.filter(
+            subscription=self.subscription,
+            is_active=True,
+            expires_at__gt=timezone.now()
+        ).exists()
+    
+    def get_media_type_display(self):
+        """Возвращает тип медиа для отображения в шаблоне"""
+        if self.media.exists():
+            return self.media.first().media_type
+        return 'text'
+    
+    @property
+    def short_content(self):
+        """Сокращенный контент для превью"""
+        if self.content and len(self.content) > 150:
+            return self.content[:150] + '...'
+        return self.content
 
 class Media(models.Model):
     MEDIA_TYPES = [

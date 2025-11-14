@@ -1,0 +1,51 @@
+.button {
+    font-family: "Manmore";
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 27px;
+
+    padding: 10px 20px;
+    background-color: #C4321A;
+    color: var(--color-white);
+    border-radius: 10px;
+    text-align: center;
+    text-decoration: none;
+    align-content: center;
+    cursor: pointer;
+    -webkit-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+}
+
+.button:hover {
+    background-color: #E5B31A;
+}
+
+.button:active {
+    background-color: #110401;
+}
+
+.button--icon {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.button--warning {
+    background-color: var(--color-warning);
+}
+
+@media (max-width: 1140px) {
+    .button {
+        padding: 10px 20px;
+        font-weight: 500;
+        font-size: 12px;
+        line-height: 120%;
+    }
+}

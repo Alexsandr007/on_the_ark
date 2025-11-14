@@ -1,0 +1,419 @@
+@font-face {
+    font-family: "Manrope";
+    src: url("../../../fonts/Manrope.ttf") format('woff2');  /* .ttf -> truetype */
+    src: url("../../../fonts/Manrope.ttf") format('woff');  /* .ttf -> truetype */
+    src: url("../../../fonts/Manrope.ttf") format('truetype');  /* .ttf -> truetype */
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Manmore";  /* Опечатка? Manrope? */
+    src: url("../../../fonts/Manrope.ttf") format('woff2');
+    src: url("../../../fonts/Manrope.ttf") format('woff');
+    src: url("../../../fonts/Manrope.ttf") format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Roboto";
+    src: url("../../../fonts/Roboto.ttf") format('woff2');
+    src: url("../../../fonts/Roboto.ttf") format('woff');
+    src: url("../../../fonts/Roboto.ttf") format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Helvetica-Bold";
+    src: url("../../../fonts/Helvetica-Bold.ttf") format('woff2');
+    src: url("../../../fonts/Helvetica-Bold.ttf") format('woff');
+    src: url("../../../fonts/Helvetica-Bold.ttf") format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Helvetica-Light";
+    src: url("../../../fonts/helvetica-light.otf") format('woff2');
+    src: url("../../../fonts/helvetica-light.otf") format('woff');
+    src: url("../../../fonts/helvetica-light.otf") format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Manmore-ExtraLight";
+    src: url("../../../fonts/manrope-extralight.ttf") format('woff2');
+    src: url("../../../fonts/manrope-extralight.ttf") format('woff');
+    src: url("../../../fonts/manrope-extralight.ttf") format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+/* Стили для модального окна подписок */
+.modal-overlay.subscription-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-overlay.subscription-modal.active {
+    display: flex;
+}
+
+.modal.subscription-modal-content {
+    position: fixed;
+    background: white;
+    border-radius: 12px;
+    padding: 30px 0;
+    width: 90%;
+    max-width: 955px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    margin: 0% 5%;
+}
+
+/* Контент модального окна */
+.modal-content-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+/* Блок подписки */
+.block-course.block-course-one {
+    position: relative;
+    background: #ffffff;
+    flex-direction: column;
+    width: 100%;
+    min-height: 449px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+}
+
+/* Кнопка закрытия */
+.subscription-modal .modal-close {
+    position: absolute;
+    top: 24px;
+    right: 34px;
+    width: 20px;
+    border: none;
+    font-size: 40px;
+    color: #000000;
+    background-color: #ffff;
+    height: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+}
+
+.subscription-modal .modal-close::before,
+.subscription-modal .modal-close::after {
+    content: '';
+    position: absolute;
+    width: 26px;
+    height: 2px;
+    background: #000000;
+    transition: all 0.3s ease;
+}
+
+.subscription-modal .modal-close::before {
+    transform: rotate(45deg);
+}
+
+.subscription-modal .modal-close::after {
+    transform: rotate(-45deg);
+}
+
+.subscription-modal .modal-close:hover::before,
+.subscription-modal .modal-close:hover::after {
+    background: #C4321A;
+}
+
+.subscription-modal .modal-close:hover {
+    background: rgba(255, 0, 0, 0.1);
+}
+
+/* Контент слайдера */
+.slider-content {
+    position: relative;
+    z-index: 3;
+    color: white;
+    text-align: center;
+    width: 80%;
+    height: 95%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    gap: 20px;
+}
+
+.block-course-one h2 {
+    font-family: "Roboto";
+    font-weight: 700;
+    font-style: Bold;
+    font-size: 43px;
+    line-height: 90%;
+    letter-spacing: 0%;
+    color: #FF8C76;
+    margin: 10px;
+    text-align: center;
+}
+
+/* Flex контейнер */
+.block-flex-one {
+    display: flex;
+    gap: 100px;
+    margin-bottom: 25px;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+.block-flex-one .red-dots-list {
+    flex: 1;
+    list-style: none;
+    padding-left: 0;
+    min-height: 180px;
+}
+
+.block-flex-one .red-dots-list li {
+    position: relative;
+    padding-left: 23px;
+    margin-bottom: 15px;
+    line-height: 1.5;
+    font-family: "Manrope";
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 140%;
+    letter-spacing: 0%;
+    color: #000000;
+    text-align: left;
+}
+
+.block-flex-one .red-dots-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 10px;
+    transform: translateY(-50%);
+    width: 10px;
+    height: 10px;
+    background-color: #FF8C76;
+    border-radius: 50%;
+}
+
+/* Блок с ценой */
+.information-cost {
+    flex: 0 0 200px;
+    text-align: center;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.information-cost img {
+    width: 300px;
+    height: auto;
+    margin-bottom: 15px;
+}
+
+.block-course .slider-content .information-cost img {
+    padding: 20px 0px 30px 0px;
+}
+
+.cost-before {
+    font-family: "Manrope";
+    font-weight: 500;
+    font-size: 23px;
+    line-height: 26px;
+    text-decoration: line-through;
+    color: #DADADA;
+    width: 250px;
+    text-align: end;
+    margin: 0px 0px 18px 0px;
+}
+
+.cost-after {
+    font-family: "Manrope";
+    font-weight: 700;
+    font-style: Bold;
+    font-size: 14px;
+    line-height: 26px;
+    letter-spacing: 0%;
+    color: rgba(196, 50, 26, 1);
+    margin: 10px 0;
+}
+
+.cost-after span {
+    font-family: "Manrope";
+    font-weight: 700;
+    font-style: Bold;
+    font-size: 49px;
+    line-height: 26px;
+    letter-spacing: 0%;
+    color: rgba(196, 50, 26, 1);
+    margin: 0px 0px 20px 0px;
+}
+
+/* Кнопка подписки */
+.subscription-modal .payment-method-btn {
+    background: rgba(196, 50, 26, 1);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: "Manrope";
+    font-weight: 500;
+    font-size: 23px;
+    line-height: 26px;
+    letter-spacing: 0%;
+    width: auto;
+    margin-top: 30px;
+    margin-bottom: 40px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    transition: all 0.3s ease;
+}
+
+.subscription-modal .payment-method-btn:hover {
+    background: #E5B31A;
+    border-color: #E5B31A;
+    transform: translateY(-2px);
+}
+
+.subscription-modal .payment-method-btn:active {
+    background: #000000;
+    border-color: #000000;
+    transform: translateY(0);
+}
+
+/* Пробный период и футер */
+.trial-text {
+    color: #27ae60;
+    font-size: 14px;
+    margin: 15px 0;
+    font-weight: bold;
+    text-align: center;
+}
+
+.modal .slider-content .footer-text {
+    font-family: "Manrope";
+    font-weight: 300;
+    font-size: 12px;
+    line-height: 140%;
+    letter-spacing: 0%;
+    margin-top: 30px;
+    text-align: center;
+    color: #666;
+}
+
+/* Адаптивность */
+@media (max-width: 1100px) {
+    .block-course-one {
+        width: 80%;
+    }
+    
+    .block-flex-one {
+        flex-direction: column;
+        gap: 30px;
+    }
+    
+    .information-cost {
+        flex: none;
+        width: 100%;
+        max-width: 250px;
+        margin: 0 auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .modal.subscription-modal-content {
+        padding: 20px 0;
+        margin: 0 2%;
+        width: 96%;
+        top: 50px;
+    }
+    
+    .slider-content {
+        padding: 0px 35px;
+    }
+    
+    .block-course-one {
+        width: 100%;
+        min-height: auto;
+        padding: 20px 0;
+    }
+    
+    .block-course-one h2 {
+        font-size: 32px;
+    }
+    
+    .subscription-modal .payment-method-btn {
+        font-size: 18px;
+        padding: 12px 25px;
+    }
+}
+
+@media (max-width: 480px) {
+    .modal.subscription-modal-content {
+        padding: 15px 0;
+        top: 30px;
+    }
+    
+    .slider-content {
+        padding: 0px 20px;
+    }
+    
+    .block-course-one h2 {
+        font-size: 24px;
+    }
+    
+    .block-flex-one .red-dots-list li {
+        font-size: 13px;
+        padding-left: 18px;
+    }
+    
+    .cost-after span {
+        font-size: 36px;
+    }
+    
+    .subscription-modal .payment-method-btn {
+        font-size: 16px;
+        padding: 10px 20px;
+    }
+    
+    .subscription-modal .modal-close {
+        top: 15px;
+        right: 15px;
+    }
+}
+
+/* Убираем конфликтующие стили */
+.modal-overlay {
+    position: fixed;
+}
+
+.modal {
+    position: relative;
+    top: auto;
+}

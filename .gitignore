@@ -50,3 +50,5 @@ venv.bak/
 /mediafiles/
 /media/
 /temp_media/
+
+nginx.conf

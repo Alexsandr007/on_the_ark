@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/style-reset.css">
+    <link rel="stylesheet" href="css/global-colors.css">
+    <link rel="stylesheet" href="css/global-fonts.css">
+    <link rel="stylesheet" href="css/global-typography.css">
+    <link rel="stylesheet" href="css/buttons.css">
+    <link rel="stylesheet" href="elements/header/css/header.css">
+    <link rel="stylesheet" href="elements/footer/css/footer.css">
+    <link rel="stylesheet" href="css/page.css">
+    <link rel="stylesheet" href="css/style-333.css">
+    <link rel="stylesheet" href="css/style.css">
+
+    <script src="elements/header/js/navMenuMobile.js"></script>
+    <script src="js/scriptFilter.js"></script>
+</head>
+
+<body>
+    <!-- @import "../elements/header/header" -->
+
+    <div class="page-overlay"></div>
+    <main class="profile__articles">
+        <div class="container">
+            <div class="articles__topbar">
+                <h1 class="articles__title">Новости авторов</h1>
+                <div class="articles__filter filter _hidden" id="filter">
+                    <button type="button" class="filter__button" id="filter__button">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="#000" id="filter__button-icon">
+                            <path
+                                d="M6.55556 8.32353C6.55556 7.30017 7.41367 6.47059 8.47222 6.47059C9.53077 6.47059 10.3889 7.30017 10.3889 8.32353C10.3889 9.34688 9.53077 10.1765 8.47222 10.1765C7.41367 10.1765 6.55556 9.34688 6.55556 8.32353ZM8.47222 4C6.00228 4 4 5.93571 4 8.32353C4 10.7114 6.00228 12.6471 8.47222 12.6471C10.9422 12.6471 12.9444 10.7114 12.9444 8.32353C12.9444 5.93571 10.9422 4 8.47222 4ZM15.5 9.55882H25.7222V7.08824H15.5V9.55882ZM20.6111 20.6765C20.6111 19.6532 21.4693 18.8235 22.5278 18.8235C23.5863 18.8235 24.4444 19.6532 24.4444 20.6765C24.4444 21.6998 23.5863 22.5294 22.5278 22.5294C21.4693 22.5294 20.6111 21.6998 20.6111 20.6765ZM22.5278 16.3529C20.0578 16.3529 18.0556 18.2886 18.0556 20.6765C18.0556 23.0643 20.0578 25 22.5278 25C24.9977 25 27 23.0643 27 20.6765C27 18.2886 24.9977 16.3529 22.5278 16.3529ZM5.27778 19.4412V21.9118H15.5V19.4412H5.27778Z"
+                                fill="black" />
+                        </svg>
+                    </button>
+                    <ul class="filter__select _hidden" id="filter__select">
+                        <li class="filter__option"><input class="filter__option-checkbox" type="checkbox" name="new-authors" id="new-authors"><label class="filter__option-label" for="new-authors">Новые
+                                авторы</label></li>
+                        <li class="filter__option"><input class="filter__option-checkbox" type="checkbox" name="new-posts" id="new-posts"><label class="filter__option-label" for="new-posts">Свежие
+                                посты</label></li>
+                        <li class="filter__option"><input class="filter__option-checkbox" type="checkbox" name="my-subscriptions" id="my-subscriptions"><label class="filter__option-label"
+                                for="my-subscriptions">Мои подписки</label></li>
+                        <li class="filter__option"><input class="filter__option-checkbox" type="checkbox" name="paid" id="paid"><label class="filter__option-label" for="paid">Только
+                                купленные</label></li>
+                        <li class="filter__option"><input class="filter__option-checkbox" type="checkbox" name="free" id="free"><label class="filter__option-label" for="free">Бесплатный
+                                контент</label></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="profile__articles--container">
+                <div class="profile__articles--item">
+                    <div class="profile__article-card">
+                        <div class="profile__article-card--body">
+                            <div class="profile__article-card--body-header">
+                                <div class="article__details">
+                                    <div class="author-img"><img src="src/images/authors/author-1.png" alt="Валерий Косулин"></div>
+                                    <div class="details-info">
+                                        <p class="author-name">Валерий Косулин</p>
+                                        <span class="date-of-publication">03 мая. 2024 16:28</span>
+                                    </div>
+                                </div>
+                                <img class="article__share-icon" src="src/images/icon-share.png">
+                            </div>
+                            <div class="article__media article__media--video">
+                                <img src="src/images/article2.png">
+                                <button type="button" class="button playback-button"><img class="playback-button__icon" src="src/images/playback-icon.svg"></button>
+                            </div>
+                            <p class="article__description">Вчера было очень поэтичное настроение. Решил сыграть на гитаре на природе. Кстати, отрывок из
+                                нового альбома. Как вам?</p>
+                            <div class="profile__article--buttons">
+                                <div class="profile__article--btn">
+                                    <div class="profile__article--btn">
+                                        <img src="src/images/comments.png">
+                                        <p>12</p>
+                                    </div>
+                                    <div class="profile__article--btn">
+                                        <img src="src/images/like.png">
+                                        <p>87</p>
+                                    </div>
+                                </div>
+                                <button class="button button--warning">Оплатить</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="profile__articles--item">
+                    <div class="profile__article-card">
+                        <div class="profile__article-card--body">
+                            <div class="profile__article-card--body-header">
+                                <div class="article__details">
+                                    <div class="author-img"><img src="src/images/authors/author-2.png" alt="Валерий Косулин"></div>
+                                    <div class="details-info">
+                                        <p class="author-name">Юлия Сёмина</p>
+                                        <span class="date-of-publication">29 апреля. 2024 10:11</span>
+                                    </div>
+                                </div>
+                                <img class="article__share-icon" src="src/images/icon-share.png" alt="">
+                            </div>
+                            <div class="article__media article__media--paid-content">
+                                <p class="paid-content__title">Рассказываю про выкройки<br>нового костюма</p>
+                                <img src="src/images/paid-content-icon-lock.svg" alt="">
+                                <div class="paid-content__important">
+                                    <p>Доступно только тарифу «Хранитель»</p>
+                                    <div class="paid-content__actions">
+                                        <a href="#" class="button button--icon">
+                                            <img src="src/images/sub-btn-icon.svg" alt="">
+                                            <span>Подписаться</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="profile__article--buttons">
+                                <div class="profile__article--btn">
+                                    <div class="profile__article--btn">
+                                        <img src="src/images/comments.png">
+                                        <p>12</p>
+                                    </div>
+                                    <div class="profile__article--btn">
+                                        <img src="src/images/like.png">
+                                        <p>87</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="profile__articles--item">
+                    <div class="profile__article-card">
+                        <div class="profile__article-card--body">
+                            <div class="profile__article-card--body-header">
+                                <div class="article__details">
+                                    <div class="author-img"><img src="src/images/authors/author-3.png" alt="Валерий Косулин"></div>
+                                    <div class="details-info">
+                                        <p class="author-name">Глеб Южный</p>
+                                        <span class="date-of-publication">16 апреля. 2024 19:08</span>
+                                    </div>
+                                </div>
+                                <img class="article__share-icon" src="src/images/icon-share.png" alt="">
+                            </div>
+                            <div class="article__media article__media--paid-content article__media--paid-content--v2">
+                                <p class="paid-content__title">Новый кавер</p>
+                                <img src="src/images/paid-content-icon-lock.svg" alt="">
+                                <div class="paid-content__important">
+                                    <p>Доступно только тарифу «СкаЗодчий»</p>
+                                    <div class="paid-content__actions">
+                                        <a href="#" class="button button--icon">
+                                            <img src="src/images/sub-btn-icon.svg" alt="">
+                                            <span>Подписаться</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="profile__article--buttons">
+                                <div class="profile__article--btn">
+                                    <div class="profile__article--btn">
+                                        <img src="src/images/comments.png">
+                                        <p>12</p>
+                                    </div>
+                                    <div class="profile__article--btn">
+                                        <img src="src/images/like.png">
+                                        <p>87</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- @import "../elements/footer/footer" -->
+</body>
+
+</html>

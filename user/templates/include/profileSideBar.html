@@ -22,8 +22,10 @@
                 class="nav__text">Мои тарифы</span></a>
         <a href="" class="nav__link"><img src="{% static 'images/profile/sidebar-icons/tarrif.svg' %}" class="nav__icon" style="width: 20px;"><span
                 class="nav__text">Контент</span></a>
-        <a href="#" class="nav__link"><img src="{% static 'images/profile/sidebar-icons/icon-notifications.svg' %}" class="nav__icon"><span
+        <a href="" class="nav__link"><img src="{% static 'images/profile/sidebar-icons/icon-notifications.svg' %}" class="nav__icon"><span
                 class="nav__text">Уведомления</span></a>
+        <a href="{% url 'feed' %}" class="nav__link"><img src="{% static 'images/profile/sidebar-icons/icon-notifications.svg' %}" class="nav__icon"><span
+                class="nav__text">Лента новостей</span></a>
         <a href="{% url 'change_profile' %}" class="nav__link"><img src="{% static 'images/profile/sidebar-icons/icon-settings.svg' %}" class="nav__icon"><span
                 class="nav__text">Редактировать профиль</span></a>
     </nav>

@@ -1,0 +1,337 @@
+    
+@font-face {
+    font-family: "Roboto";
+    src: url("fonts/Roboto.ttf");
+}
+
+@font-face {
+    font-family: "Helvetica-Bold";
+    src: url("fonts/Helvetica-Bold.ttf");
+}
+
+@font-face {
+    font-family: "Helvetica-Light";
+    src: url("fonts/4215-font.otf");
+}
+
+@font-face {
+    font-family: "Manrope";
+    src: url("fonts/Manrope.ttf");
+}
+
+@font-face {
+    font-family: "Manrope-ExtraLight";
+    src: url("fonts/Manrope-light.ttf");
+}
+    
+
+/* Стили для модального окна */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-overlay.active {
+    display: flex;
+}
+
+
+
+.modal {
+    position: fixed;
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    width: 90%;
+    max-width: 580px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.error{
+    min-height: 542px;
+}
+
+
+.modal .girl-img{
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    z-index: 2;
+}
+
+.modal .ornament-img{
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    z-index: 1;
+}
+
+.modal .ornament-img-women {
+    position: absolute;
+    left: 0;
+    bottom: 0px;
+    z-index: 1;
+    width: 100%;
+    bottom: 118px;
+}
+
+.modal .stick-img{
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 3;
+}
+
+.modal .modal-title-Error{
+    position: absolute;
+    right: 20px;
+    bottom: 150px;
+    z-index: 5;
+} 
+
+.modal .modal-title-Error p{
+    font-family: "Manrope";
+    font-weight: 500;
+    font-style: Medium;
+    font-size: 23px;
+    line-height: 26px;
+    letter-spacing: 0%;
+    color: #000;
+    max-width: 262px;
+    text-align: start;
+}
+
+
+
+.modal-close {
+    position: absolute;
+    top: 24px;
+    right: 34px;
+    width: 20px;
+    border: none;
+    font-size: 40px;
+    color: #000000;
+    background-color: #ffff;
+    height: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+}
+
+.modal-close::before,
+.modal-close::after {
+    content: '';
+    position: absolute;
+    width: 26px;
+    height: 2px;
+    background: #000000; /* Исходный цвет крестика */
+    transition: all 0.3s ease;
+}
+
+.modal-close::before {
+    transform: rotate(45deg);
+}
+
+.modal-close::after {
+    transform: rotate(-45deg);
+}
+
+/* При наведении меняем цвет крестика на красный */
+.modal-close:hover::before,
+.modal-close:hover::after {
+    background: #C4321A; /* Красный цвет при наведении */
+}
+
+.modal-close:hover {
+    background: rgba(255, 0, 0, 0.1);
+}
+.modal-title {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #333;
+    font-family: "Manrope";
+    font-weight: 500;
+    font-size: 23px;
+    line-height: 26px;
+}
+
+.modal-input {
+    width: 100%;
+    max-width: 305px;
+    padding: 9px 0px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-sizing: border-box;
+    font-family: "Manrope";
+    text-align: center;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 140%;
+    color: #B7B7B7;
+
+}
+
+.modal-input:focus {
+    outline: none;
+    border-color: #000000;
+}
+
+.modal-divider {
+    height: 1px;
+    background: #eee;
+    margin: 10px 0;
+}
+
+.contener-labels {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    width: 100%;
+    max-width: 305px;
+}
+
+.contener-labels a{
+    font-family: "Manrope";
+    color: black;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 140%;
+    text-decoration: underline;
+    text-decoration-style: solid;
+    text-decoration-thickness: 6%;
+
+}
+
+.contener-labels a:hover{
+    color: #C4321A;
+}
+
+.modal-checkbox {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 15px;
+    font-size: 12px;
+    color: #000000;
+    max-width: 305px;
+    cursor: pointer;
+}
+
+.modal-checkbox input {
+    opacity: 0;
+    position: absolute;
+}
+
+.checkbox-custom {
+    width: 14px;
+    height: 14px;
+    border: 1px solid #000000;
+    background: white;
+    border-radius: 3px;
+    margin-right: 10px;
+    margin-top: 2px;
+    position: relative;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.checkbox-custom::after
+ {
+    content: '';
+    position: absolute;
+    left: 2px;
+    top: 0px;
+    width: 6px;
+    height: 8px;
+    border: solid #C4321A;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+    opacity: 0;
+    transition: opacity 0.3s 
+ease;
+}
+
+/* При наведении */
+.modal-checkbox:hover .checkbox-custom {
+    border-color: #C4321A;
+}
+
+/* Когда чекбокс отмечен */
+.modal-checkbox input:checked + .checkbox-custom {
+    border-color: #000000;
+}
+
+.modal-checkbox input:checked + .checkbox-custom::after {
+    opacity: 1;
+}
+.modal-button {
+    max-width: 305px;
+    padding: 15px 10px;
+    background: #C4321A;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin-top: 15px;
+    font-family: "Manrope";
+    border-radius: 10px;
+    padding-top: 10px;
+    padding-right: 15px;
+    padding-bottom: 10px;
+    padding-left: 15px;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 27px;
+}
+
+.modal-button:hover {
+    background: #E5B31A;
+    border-color: #E5B31A;
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+}
+
+.modal-button:active {
+    background: #000000;
+    border-color: #000000;
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+}
+
+.modal p{
+    font-family: "Manrope";
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 140%;
+    text-align: center;
+    color: #000;
+    margin-bottom: 20px;
+}
+
+
+@media (max-width: 640px) {
+    .modal .girl-img {
+        display: none;
+    }
+}
+
+@media (max-width: 470px) {
+    .modal {
+        padding: 70px 30px;
+    }
+}

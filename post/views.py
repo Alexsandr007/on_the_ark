@@ -1,3 +1,4 @@
+import json
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
@@ -17,6 +18,7 @@ from django.conf import settings
 from django.core.files.uploadedfile import InMemoryUploadedFile
 import io
 import mimetypes
+from django.db.models import Q, Count, Exists, OuterRef
 
 
 @login_required
@@ -581,20 +583,58 @@ def add_comment(request, post_id):
         if not content:
             return JsonResponse({'success': False, 'error': 'Комментарий не может быть пустым'})
         
+        # Проверяем, отключены ли комментарии
+        if post.comments_disabled:
+            return JsonResponse({'success': False, 'error': 'Комментарии отключены для этого поста'})
+        
+        # Проверяем доступность поста
+        # Автор поста всегда имеет доступ к комментированию
+        is_author = post.author == request.user
+        has_access = is_author  # Автор всегда имеет доступ
+        
+        # Если пользователь не автор, проверяем доступ через подписку
+        if not is_author and post.subscription:
+            has_access = request.user.user_subscriptions.filter(
+                subscription=post.subscription, 
+                is_active=True,
+                expires_at__gt=timezone.now()
+            ).exists()
+        elif not is_author and not post.subscription:
+            # Если подписки нет, пост доступен всем
+            has_access = True
+        
+        if not has_access:
+            return JsonResponse({'success': False, 'error': 'У вас нет доступа к этому посту'})
+        
         comment = Comment.objects.create(
             post=post,
             author=request.user,
             content=content
         )
         
+        # Получаем обновленное количество комментариев
+        comments_count = post.comments.count()
+        
+        # Безопасно получаем URL фото пользователя
+        photo_url = ''
+        if request.user.photo:
+            try:
+                photo_url = request.user.photo.url
+            except (ValueError, AttributeError):
+                # Если фото не загружено или произошла ошибка
+                photo_url = ''
+        
         return JsonResponse({
             'success': True,
             'comment': {
+                'id': comment.id,
                 'author_name': request.user.username,
+                'author_photo_url': photo_url,
                 'content': content,
-                'created_at': 'Только что'
+                'created_at': 'Только что',
+                'created_at_formatted': comment.created_at.strftime('%d %b %Y H:%M')
             },
-            'comments_count': post.comments.count()
+            'comments_count': comments_count
         })
         
     except Post.DoesNotExist:
@@ -606,11 +646,19 @@ def add_comment(request, post_id):
 def get_visible_posts(user):
     """Получить посты, доступные пользователю"""
     if user.is_authenticated:
+        # Посты без подписки (доступны всем)
         public_posts = Post.objects.filter(
             published_at__isnull=False,
             subscription__isnull=True
         )
         
+        # Посты пользователя (автор всегда видит свои посты)
+        user_posts = Post.objects.filter(
+            published_at__isnull=False,
+            author=user
+        )
+        
+        # Посты по активным подпискам пользователя
         user_active_subscriptions = UserSubscription.objects.filter(
             user=user, 
             is_active=True
@@ -621,9 +669,121 @@ def get_visible_posts(user):
             subscription_id__in=user_active_subscriptions
         )
         
-        return public_posts.union(subscription_posts).order_by('-published_at')
+        # Объединяем все доступные посты
+        all_posts = public_posts.union(user_posts, subscription_posts).order_by('-published_at')
+        return all_posts
     else:
+        # Для неавторизованных пользователей - только публичные посты
         return Post.objects.filter(
             published_at__isnull=False,
             subscription__isnull=True
         ).order_by('-published_at')
+    
+
+@login_required
+def feed(request):
+    """Лента новостей с постами всех авторов"""
+    # Получаем активные подписки пользователя
+    user_active_subscriptions = request.user.user_subscriptions.filter(
+        is_active=True,
+        expires_at__gt=timezone.now()
+    ).values_list('subscription_id', flat=True)
+    
+    # Получаем все активные подписки для модального окна
+    available_subscriptions = Subscription.objects.filter(is_active=True)
+    
+    # Обрабатываем подписки для отображения
+    processed_subscriptions = []
+    for subscription in available_subscriptions:
+        # Разбиваем описание на список для отображения
+        description_lines = subscription.description.split('\n')
+        
+        processed_subscriptions.append({
+            'id': subscription.id,
+            'name': subscription.name,
+            'description': subscription.description,
+            'description_lines': [line.strip() for line in description_lines if line.strip()],
+            'price': subscription.price,
+            'final_price': subscription.final_price,
+            'image': subscription.image,
+            'is_discount_active': subscription.is_discount_active,
+            'discount_percent': subscription.discount_percent,  # ДОБАВЛЕНО
+            'has_trial_period': subscription.has_trial_period,
+            'trial_days': subscription.trial_days,
+            'is_limited_subscribers': subscription.is_limited_subscribers,  # ДОБАВЛЕНО
+            'max_subscribers': subscription.max_subscribers,  # ДОБАВЛЕНО
+        })
+    
+    # Базовый запрос для опубликованных постов
+    posts = Post.objects.filter(
+        published_at__isnull=False,
+        published_at__lte=timezone.now()
+    ).select_related('author', 'subscription').prefetch_related(
+        'media', 'tags', 'likes', 'comments', 'comments__author'
+    ).order_by('-published_at')
+    
+    # Аннотируем посты информацией о лайках и комментариях
+    posts = posts.annotate(
+        likes_count=Count('likes', distinct=True),
+        comments_count=Count('comments', distinct=True)
+    )
+    
+    # Определяем, доступен ли пост пользователю
+    def is_post_accessible(post):
+        if not post.subscription:
+            return True  # Пост доступен всем
+        return post.subscription.id in user_active_subscriptions
+    
+    # Обрабатываем посты для отображения
+    processed_posts = []
+    for post in posts:
+        # Получаем медиа поста
+        media_list = list(post.media.all())
+        
+        # Получаем комментарии для поста (только для доступных постов)
+        comments = []
+        if is_post_accessible(post):
+            comments = list(post.comments.all().select_related('author')[:5])
+        
+        # Проверяем, лайкнул ли пользователь пост
+        is_liked = post.likes.filter(user=request.user).exists()
+        
+        # Проверяем доступность поста
+        is_accessible = is_post_accessible(post)
+        
+        # Безопасно получаем фото автора
+        author_photo_url = None
+        if post.author.photo:
+            try:
+                author_photo_url = post.author.photo.url
+            except (ValueError, AttributeError):
+                author_photo_url = None
+        
+        processed_posts.append({
+            'id': post.id,
+            'author': post.author,
+            'author_photo_url': author_photo_url,
+            'title': post.title,
+            'author_joined_date': post.author.date_joined,
+            'content': post.content if is_accessible else None,
+            'published_at': post.published_at,
+            'media_list': media_list,
+            'tags': list(post.tags.all()),
+            'likes_count': post.likes_count,
+            'comments_count': post.comments_count,
+            'is_liked': is_liked,
+            'subscription': post.subscription,
+            'is_accessible': is_accessible,
+            'is_ad': post.is_ad,
+            'ad_description': post.ad_description,
+            'comments_disabled': post.comments_disabled,
+            'comments': comments,
+        })
+
+    context = {
+        'posts': processed_posts,
+        'user_subscriptions': user_active_subscriptions,
+        'available_subscriptions': processed_subscriptions,
+    }
+    
+    return render(request, 'post/news_feed.html', context)
