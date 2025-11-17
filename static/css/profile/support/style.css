@@ -674,6 +674,7 @@ body {
     width: 100%;
     z-index: 1;
     position: relative;
+    background-color: white;
 }
 
 .main-block__number {
@@ -727,7 +728,7 @@ body {
 .main-block__items {
     display: flex;
     flex-direction: column;
-    width: 780px;
+    max-width: 780px;
     padding: 60px 0 120px;
 }
 

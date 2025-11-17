@@ -136,7 +136,18 @@
     align-items: center;
 }
 
+
 @media (max-width: 1140px) {
+    .header__buttons{
+        display: none;
+    }
+
+    .open {
+        display: flex!important;
+    }
+
+
+
     .header__burger {
         display: block;
         margin-bottom: 10px;
