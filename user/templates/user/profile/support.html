@@ -3,6 +3,7 @@
 
 {% block extra_head %}
     <link rel="stylesheet" href="{% static 'css/profile/support/style.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/home/styleModals.css' %}" />
     <link rel="stylesheet" href="{% static 'css/profile/support/styleModalsPayment.css' %}" />
 {% endblock %}
 
@@ -15,6 +16,7 @@
 {% endblock %}
 
 {% block content %}
+{% include "user/homeModals/AuthModals.html" %}
 <section class="profile__block">
     <img class="profile__fon" src="{% static 'images/profile/bgMain.png' %}">
     <div class="profile__container">
@@ -254,7 +256,8 @@
 
 
 {% block extra_scripts %}
-    <script src="{% static 'js/header/header.js' %}"></script>
+<script src="{% static 'js/header/header.js' %}"></script>
+<script src="{% static 'js/home/scriptModals.js' %}"></script>
 <script src="{% static 'js/profile/support/faqAccordion.js' %}"></script>
 <script src="{% static 'js/profile/support/scriptModalsPayment.js.js' %}"></script>
 <script src="{% static 'js/profile/scriptPersonalAccountSideBar.js' %}"></script>
