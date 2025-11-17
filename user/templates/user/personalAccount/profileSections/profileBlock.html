@@ -1,0 +1,79 @@
+{% load static %}
+<div class="cover-title__img">     
+
+</div>
+
+
+<section class="profile__block">
+<div class="personal_account__fon" id="backgroundContainer" style="{% if author.background_photo %}background-image: url('{{ author.background_photo.url }}');{% endif %}"></div>    <div class="personal_account__mobile-ornament"></div>
+    <div class="personal_account__beads_mobile"></div>
+    <div class="profile__container">
+
+        <div class="profile__item profile__item--about left">
+            <img src="{% static 'images/profile/personal_account__fon.png' %}" class="personal_account__ornament">
+            <img class="personal_account__item--fon" src="{% static 'images/profile/fon2.png' %}">
+            <div class="profile__card">
+                <div class="profile__card--header">
+                    <h2>Об авторе:</h2>
+                </div>
+                <div class="profile__card--body">
+                    {% if author.about %}
+                        <!-- Если информация о себе есть, показываем её -->
+                        <p>{{ author.about }}</p>
+                    {% else %}
+                        <!-- Если нет, показываем дефолтный текст -->
+                        <p>Информация пока не заполнена</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="profile__item profile__item--block">
+            <div class="profile__content">
+                <div class="content">
+                    <div class="profile__content--image">
+                        <img id="profileImage" src="{% if author.photo %}{{ author.photo.url }}{% else %}{% static 'images/profile/profile_default.png' %}{% endif %}" alt="Фото профиля">
+                    </div>
+                    <div class="content-title">
+                        <h2>{%if author.username %}{{ author.username }}{% else %}{{ author.email }}{% endif %}</h2>
+                        <input id="professionInput" placeholder="{% if author.profession %}{{ author.profession }}{% endif %}">
+                    </div>
+                </div>
+                
+                <div class="content">
+
+                </div>
+            </div>
+            <button class="profile-white__btn aboutBtn border-mobile__btn" id="aboutBtnMobile">Об авторе<img src="{% static 'images/profile/pen-gray.svg' %}"></button>
+            <button class="profile-white__btn targetBtn border-mobile__btn" id="targetBtnMobile">Цель<img src="{% static 'images/profile/pen-gray.svg' %}"></button>
+        </div>
+
+        <div class="profile__item profile__item--destination right">
+            <img class="personal_account__item--fon" src="{% static 'images/profile/fon2.png' %}">
+            <div class="profile__card">
+                <div class="profile__card--header">
+                    {% if author.goal and author.goal.goal_title %}
+                        <h2>{{ author.goal.goal_title }}</h2>
+                    {% else %}
+                        <h2>Цель:</h2>
+                    {% endif %}
+                </div>
+                <div class="profile__card--body">
+                    {% if author.goal and author.goal.goal_title %}
+                        <!-- Если цель есть, показываем её данные -->
+                         <p>{{ author.goal.goal_description }}</p>
+                        <div class="profile__progress">
+                            <h3 id="progress-text">{{ author.goal.current_amount }} из {{ author.goal.goal_amount }}</h3>
+                            <div class="profile__progress--block">
+                                <div class="profile__progress--bar"></div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <!-- Если нет, показываем дефолтный текст -->
+                        <p>Информация пока не заполнена</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

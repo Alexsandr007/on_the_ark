@@ -2,12 +2,13 @@ import json
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.contrib import messages
-from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth import login, authenticate, logout, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.conf import settings
 import random
 import string
+from subscription.models import Subscription
 from user.models import CustomUser
 from post.models import Like, Media, Post
 from .forms import RegisterForm, LoginForm, PasswordResetForm, AboutForm, GoalForm
@@ -240,6 +241,110 @@ def profile(request):
         'posts_count': posts.count(),
     }
     return render(request, 'user/profile/profile.html', context)
+
+
+@login_required
+def personal_account(request, user_id):
+    # Находим пользователя по ID
+    profile_user = get_object_or_404(get_user_model(), id=user_id)
+    
+    # Получаем активные подписки текущего пользователя
+    user_active_subscriptions = request.user.user_subscriptions.filter(
+        is_active=True,
+        expires_at__gt=timezone.now()
+    ).values_list('subscription_id', flat=True)
+    
+    # Получаем посты пользователя (только опубликованные)
+    posts = Post.objects.filter(
+        author=profile_user, 
+        published_at__isnull=False
+    ).prefetch_related(
+        'likes', 'comments', 'media', 'tags', 'subscription'
+    ).order_by('-published_at')
+    
+    # Функция для проверки доступности поста
+    def is_post_accessible(post):
+        if not post.subscription:
+            return True  # Пост доступен всем
+        return post.subscription.id in user_active_subscriptions
+    
+    # Обрабатываем посты
+    processed_posts = []
+    for post in posts:
+        # Получаем медиа поста
+        media_list = list(post.media.all())
+        
+        # Проверяем, лайкнул ли пользователь пост
+        is_liked = post.likes.filter(user=request.user).exists()
+        
+        # Проверяем доступность поста
+        is_accessible = is_post_accessible(post)
+        
+        # Безопасно получаем фото автора
+        author_photo_url = None
+        if post.author.photo:
+            try:
+                author_photo_url = post.author.photo.url
+            except (ValueError, AttributeError):
+                author_photo_url = None
+        
+        # Получаем комментарии только для доступных постов
+        comments = []
+        if is_accessible:
+            comments = list(post.comments.all().select_related('author')[:5])
+        
+        processed_posts.append({
+            'id': post.id,
+            'author': post.author,
+            'author_photo_url': author_photo_url,
+            'author_joined_date': post.author.date_joined,
+            'title': post.title,
+            'content': post.content if is_accessible else None,  # Скрываем контент для недоступных постов
+            'published_at': post.published_at,
+            'media_list': media_list,
+            'tags': list(post.tags.all()),
+            'likes_count': post.likes.count(),
+            'comments_count': post.comments.count(),
+            'is_liked': is_liked,
+            'subscription': post.subscription,
+            'is_accessible': is_accessible,  # Используем реальную проверку доступности
+            'is_ad': post.is_ad,
+            'comments_disabled': post.comments_disabled,
+            'comments': comments,
+        })
+    
+    # Получаем доступные подписки для модального окна
+    available_subscriptions = Subscription.objects.filter(is_active=True)
+    processed_subscriptions = []
+    for subscription in available_subscriptions:
+        description_lines = subscription.description.split('\n')
+        processed_subscriptions.append({
+            'id': subscription.id,
+            'name': subscription.name,
+            'description_lines': [line.strip() for line in description_lines if line.strip()],
+            'price': subscription.price,
+            'final_price': subscription.final_price,
+            'image': subscription.image,
+            'is_discount_active': subscription.is_discount_active,
+            'discount_percent': subscription.discount_percent,
+            'has_trial_period': subscription.has_trial_period,
+            'trial_days': subscription.trial_days,
+            'is_limited_subscribers': subscription.is_limited_subscribers,
+            'max_subscribers': subscription.max_subscribers,
+        })
+    
+    is_own_profile = (profile_user == request.user)
+    
+    context = {
+        'author': profile_user,
+        'posts': processed_posts,
+        'posts_count': posts.count(),  # Добавьте это для отображения количества постов
+        'is_own_profile': is_own_profile,
+        'available_subscriptions': processed_subscriptions,
+    }
+    
+    return render(request, 'user/personalAccount/profile.html', context)
+
 
 def logout_view(request):
     logout(request)

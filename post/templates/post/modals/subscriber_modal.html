@@ -1,6 +1,6 @@
 {% load static %}
 <!-- Скрытый контейнер с данными всех подписок -->
-<div id="subscriptionsData" style="display: flex;">
+<div id="subscriptionsData" style="display: none;">
     {% for subscription in available_subscriptions %}
     <div class="subscription-data" data-id="{{ subscription.id }}" data-name="{{ subscription.name }}"
         data-description='{{ subscription.description_lines|join:"||" }}' data-price="{{ subscription.price }}"

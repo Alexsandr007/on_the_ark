@@ -763,6 +763,7 @@ def feed(request):
             'id': post.id,
             'author': post.author,
             'author_photo_url': author_photo_url,
+            'author_id': post.author.id,
             'title': post.title,
             'author_joined_date': post.author.date_joined,
             'content': post.content if is_accessible else None,

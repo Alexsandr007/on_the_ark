@@ -1,0 +1,86 @@
+.block-course-one{
+    top: 0px;
+    padding: 0px!important;
+}
+
+.modal.subscription-modal-content{
+    padding: 0px;
+}
+
+.modal.subscription-modal-content{
+    border-radius: 20px;
+    border: 1px;
+}
+
+.modal .slider-content {
+    padding: 20px 60px;
+    gap: 0px;
+}
+
+@media (max-width: 1140px) {
+    .personal_account__ornament{
+        display: none;
+    }
+
+    .slider-content{
+        gap: 0px;
+    }
+
+    .subscription-modal .payment-method-btn{
+        margin: 0px;
+    }
+    .block-flex-one{
+        gap: 0px;
+    }
+
+    .block-course{
+        height: auto;
+    }
+
+    .information-cost img{
+            width: 250px;
+    }
+
+    .modal .slider-content {
+        padding: 20px 60px;
+    }
+
+    
+
+    .block-flex-one .red-dots-list{
+        min-height: auto;
+    }
+
+    .personal_account__item--fon{
+        display: none;
+    }
+
+    .profile__item{
+        padding-top: 0px;
+    }
+
+    .profile__item--block .aboutBtn{
+        display: none;
+    }
+
+    .profile__item--block .border-mobile__btn{
+        display: none;
+    }
+
+    .profile__card{
+        margin-top: 60px;
+    }
+
+    .profile__container .left{
+        width: 100%;
+    }
+
+    .profile__container .right{
+        width: 100%;
+    }
+
+    .footer__down{
+        padding: 0px;
+    }
+
+}

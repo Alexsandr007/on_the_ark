@@ -1,0 +1,39 @@
+@media (min-width: 480px) and (max-width: 773px) {
+    .modal .slider-content {
+        padding: 0px 60px;
+        gap: 0px;
+    }
+}
+
+
+@media (max-width: 1140px) {
+
+    .information-cost img{
+            width: 250px;
+    }
+    .slider-content{
+        gap: 0px;
+        padding: 20px 60px;
+    }
+
+    .block-flex-one .red-dots-list{
+        min-height: auto;
+    }
+    
+    .subscription-modal .payment-method-btn{
+        margin: 0px;
+    }
+
+    .block-flex-one{
+        gap: 0px;
+    }
+
+        .block-course{
+        height: auto;
+    }
+
+    .modal.subscription-modal-content{
+        padding: 0px;
+    }
+
+}

@@ -17,6 +17,7 @@ urlpatterns = [
     path('password-reset-ajax/', views.password_reset_ajax, name='password_reset_ajax'),
     path('logout/', views.logout_view, name='logout'),
     path('profile/', views.profile, name='profile'),
+    path('personal-account/<int:user_id>/', views.personal_account, name='personal_account'),
     path('update-about-ajax/', views.update_about_ajax, name='update_about_ajax'),
     path('update-goal-ajax/', views.update_goal_ajax, name='update_goal_ajax'),
     path('update-user-settings-ajax/', views.update_user_settings_ajax, name='update_user_settings_ajax'),

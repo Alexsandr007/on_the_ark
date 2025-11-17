@@ -517,7 +517,6 @@ input:checked + .slider:before {
     height: 240px; /* Задайте желаемую высоту */
     width: 240px;
     overflow: hidden; /* Скрыть переполнение */
-    border-radius: 50%; /* Делаем контейнер круглым */
     display: flex; /* Центрируем изображение */
     justify-content: center; /* Центрируем изображение по горизонтали */
     align-items: center; /* Центрируем изображение по вертикали */
