@@ -1,37 +1,71 @@
+// Функция для проверки состояния формы
+function validateRegisterForm() {
+    const politicCheckbox = document.querySelector('input[name="privacy_policy_agreed"]');
+    const submitButton = document.querySelector('#registerForm .modal-button');
+    
+    if (!politicCheckbox.checked) {
+        submitButton.disabled = true;
+        submitButton.style.opacity = '0.6';
+        submitButton.style.cursor = 'not-allowed';
+    } else {
+        submitButton.disabled = false;
+        submitButton.style.opacity = '1';
+        submitButton.style.cursor = 'pointer';
+    }
+}
 
+// Проверка при загрузке страницы
+document.addEventListener('DOMContentLoaded', function() {
+    validateRegisterForm();
+    
+    // Слушаем изменения чекбокса политики
+    const politicCheckbox = document.querySelector('input[name="privacy_policy_agreed"]');
+    if (politicCheckbox) {
+        politicCheckbox.addEventListener('change', validateRegisterForm);
+    }
+});
 
 // Регистрация
 $('#registerForm').on('submit', function(e) {
-  e.preventDefault();
-  if ($(this).data('submitting')) return;
-  $(this).data('submitting', true);
-  
-  var formData = $(this).serialize();
-  $('#registerMessage').text('');
-  
-  $.ajax({
-    url: '/register-ajax/',
-    type: 'POST',
-    data: formData,
-    headers: {
-      "X-CSRFToken": getCookie("csrftoken")
-    },
-    success: function(data) {
-      if (data.success) {
-        window.location.href = data.redirect;
-      } else {
-        var errorMsg = data.errors ? Object.values(data.errors).join(', ') : 'Ошибка';
-        $('#registerMessage').text('Ошибка: ' + errorMsg);
-      }
-    },
-    error: function(xhr, status, error) {
-      $('#registerMessage').text('Ошибка сети');
-    },
-    complete: function() {
-      $('#registerForm').data('submitting', false);
+    e.preventDefault();
+    
+    // Проверка галочки политики конфиденциальности
+    const politicChecked = $('input[name="privacy_policy_agreed"]').is(':checked');
+    if (!politicChecked) {
+        $('#registerMessage').text('Для регистрации необходимо согласие с политикой конфиденциальности');
+        return false;
     }
-  });
+    
+    if ($(this).data('submitting')) return;
+    $(this).data('submitting', true);
+    
+    var formData = $(this).serialize();
+    $('#registerMessage').text('');
+    
+    $.ajax({
+        url: '/register-ajax/',
+        type: 'POST',
+        data: formData,
+        headers: {
+            "X-CSRFToken": getCookie("csrftoken")
+        },
+        success: function(data) {
+            if (data.success) {
+                window.location.href = data.redirect;
+            } else {
+                var errorMsg = data.errors ? Object.values(data.errors).join(', ') : 'Ошибка';
+                $('#registerMessage').text('Ошибка: ' + errorMsg);
+            }
+        },
+        error: function(xhr, status, error) {
+            $('#registerMessage').text('Ошибка сети');
+        },
+        complete: function() {
+            $('#registerForm').data('submitting', false);
+        }
+    });
 });
+
 
 // Вход
 $('#loginForm').on('submit', function(e) {

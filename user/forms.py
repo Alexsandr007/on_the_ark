@@ -13,17 +13,24 @@ class RegisterForm(forms.ModelForm):
     password_confirm = forms.CharField(widget=forms.PasswordInput, label="Повторите пароль")
     is_author = forms.BooleanField(required=False, label="Стать автором")
     newsletter = forms.BooleanField(required=False, label="Получать рассылку")
+    privacy_policy_agreed = forms.BooleanField(required=False, label="Согласие с политикой конфиденциальности")
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'password', 'password_confirm', 'is_author', 'newsletter']
+        fields = ['username', 'email', 'password', 'password_confirm', 'privacy_policy_agreed', 'is_author', 'newsletter']
 
     def clean(self):
         cleaned_data = super().clean()
+        
         password = cleaned_data.get('password')
         password_confirm = cleaned_data.get('password_confirm')
         if password != password_confirm:
             raise ValidationError("Пароли не совпадают")
+        
+        privacy_policy_agreed = cleaned_data.get('privacy_policy_agreed')
+        if not privacy_policy_agreed:
+            raise ValidationError("Для регистрации необходимо согласие с политикой конфиденциальности")
+        
         return cleaned_data
 
     def save(self, commit=True):
