@@ -89,7 +89,14 @@
                             {% for comment in post.comments.all|slice:":5" %}
                             <div class="comment-item">
                                 <div class="comment-author">
-                                    <strong>{{ comment.author.username }}</strong>
+                                    {% if comment.author.photo %}
+                                    <img src="{{ comment.author.photo.url }}" alt="{{ comment.author.username }}"
+                                        class="comment-author-avatar">
+                                    {% else %}
+                                    <img src="{% static 'images/profile/profile_default.png' %}"
+                                        alt="{{ comment.author.username }}" class="comment-author-avatar">
+                                    {% endif %}
+                                    <strong>{{ comment.author.get_display_name }}</strong>
                                 </div>
                                 <div class="comment-content">
                                     {{ comment.content }}
@@ -109,7 +116,7 @@
                                 <textarea class="comment-input" placeholder="Напишите комментарий..." rows="2"
                                     required></textarea>
                                 <button type="submit" class="comment-submit-btn">
-                                    <img src="{% static 'images/post/send.svg' %}" alt="Отправить">
+                                    <img src="{% static 'images/profile/pen.png' %}" alt="Отправить"> <a>Отправить</a>
                                 </button>
                             </div>
                         </form>

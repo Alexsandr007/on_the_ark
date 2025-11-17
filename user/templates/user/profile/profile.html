@@ -51,23 +51,72 @@
 document.addEventListener('DOMContentLoaded', function() {
     const filterButtons = document.querySelectorAll('.profile__articles--btn button[data-filter]');
     const posts = document.querySelectorAll('.profile__articles--item');
+    const postsContainer = document.querySelector('.profile__articles--container');
 
+    // Функция для показа/скрытия сообщения "нет постов"
+    function toggleNoPostsMessage(show) {
+        let noPostsMessage = document.querySelector('.no-posts-message');
+        
+        if (show && !noPostsMessage) {
+            // Создаем сообщение если его нет
+            noPostsMessage = document.createElement('div');
+            noPostsMessage.className = 'profile__articles--item no-posts-message';
+            noPostsMessage.innerHTML = `
+                <h2>У вас пока нет постов..(</h2>
+                <img src="{% static 'images/profile/sad_men.png' %}" alt="Грустный смайл">
+            `;
+            postsContainer.appendChild(noPostsMessage);
+        } else if (!show && noPostsMessage) {
+            // Удаляем сообщение если оно есть
+            noPostsMessage.remove();
+        }
+    }
+
+    // Функция для проверки видимых постов
+    function checkVisiblePosts() {
+        const visiblePosts = Array.from(posts).filter(post => 
+            post.style.display !== 'none' && 
+            !post.classList.contains('no-posts-message')
+        );
+        return visiblePosts.length > 0;
+    }
+
+    // Обработчики для кнопок фильтрации
     filterButtons.forEach(button => {
         button.addEventListener('click', function() {
+            // Убираем активный класс у всех кнопок
             filterButtons.forEach(btn => btn.classList.remove('active'));
+            // Добавляем активный класс текущей кнопке
             this.classList.add('active');
 
             const filter = this.getAttribute('data-filter');
+            let hasVisiblePosts = false;
 
+            // Фильтруем посты
             posts.forEach(post => {
+                // Пропускаем сообщение "нет постов"
+                if (post.classList.contains('no-posts-message')) {
+                    return;
+                }
+
                 if (filter === 'all' || post.getAttribute('data-type') === filter) {
                     post.style.display = 'flex';
+                    hasVisiblePosts = true;
                 } else {
                     post.style.display = 'none';
                 }
             });
+
+            // Показываем/скрываем сообщение "нет постов"
+            toggleNoPostsMessage(!hasVisiblePosts);
         });
     });
+
+    // Инициализация - проверяем есть ли посты при загрузке
+    const hasPostsInitially = posts.length > 0;
+    if (!hasPostsInitially) {
+        toggleNoPostsMessage(true);
+    }
 });
 </script>
 {% endblock %}

@@ -78,7 +78,7 @@ function submitComment(postId) {
             textarea.value = '';
             
             // Обновляем счетчик комментариев
-            const commentsCountElement = document.querySelector(`.comment-btn[data-post-id="${postId}"] p`);
+            const commentsCountElement = document.querySelector(`.comment-btn[data-post-id="${postId}"] .comments-count`);
             if (commentsCountElement) {
                 commentsCountElement.textContent = data.comments_count;
             }
@@ -88,8 +88,24 @@ function submitComment(postId) {
             
             console.log('Комментарий успешно добавлен');
         } else {
+            // Показываем ошибку, включая ошибку нецензурной лексики
             console.error('Ошибка от сервера:', data.error);
-            alert('Ошибка при отправке комментария: ' + data.error);
+            
+            // Специальная обработка для ошибки нецензурной лексики
+            if (data.error && data.error.includes('нецензурную лексику')) {
+                // Выделяем поле ввода
+                textarea.style.border = '2px solid #ff4444';
+                textarea.style.backgroundColor = '#fff5f5';
+                setTimeout(() => {
+                    textarea.style.border = '';
+                    textarea.style.backgroundColor = '';
+                }, 3000);
+                
+                // Показываем сообщение об ошибке
+                showCommentError(data.error);
+            } else {
+                alert('Ошибка при отправке комментария: ' + data.error);
+            }
         }
     })
     .catch(error => {
@@ -102,6 +118,50 @@ function submitComment(postId) {
     });
 }
 
+// Функция для показа ошибки комментария
+function showCommentError(message) {
+    // Создаем или находим элемент для показа ошибок
+    let errorElement = document.querySelector('.comment-error-message');
+    
+    if (!errorElement) {
+        errorElement = document.createElement('div');
+        errorElement.className = 'comment-error-message';
+        errorElement.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgb(229 179 26);;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            z-index: 10000;
+            max-width: 400px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            animation: slideIn 0.3s ease-out;
+        `;
+        document.body.appendChild(errorElement);
+        
+        // Добавляем CSS анимацию
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+    
+    errorElement.textContent = message;
+    errorElement.style.display = 'block';
+    
+    // Автоматически скрываем через 5 секунд
+    setTimeout(() => {
+        errorElement.style.display = 'none';
+    }, 5000);
+}
+
+// Обновите функцию addCommentToUI для использования правильного формата даты
 function addCommentToUI(postId, commentData) {
     const commentsList = document.querySelector(`#comments-section-${postId} .comments-list`);
     if (!commentsList) {
@@ -116,6 +176,8 @@ function addCommentToUI(postId, commentData) {
     
     // Используем фото из данных или дефолтное
     const photoUrl = commentData.author_photo_url || '/static/images/profile/profile_default.png';
+    // Используем форматированную дату или стандартную
+    const createdAt = commentData.created_at_formatted || commentData.created_at;
     
     const commentHTML = `
         <div class="comment-item">
@@ -129,7 +191,7 @@ function addCommentToUI(postId, commentData) {
                 ${commentData.content}
             </div>
             <div class="comment-date">
-                ${commentData.created_at}
+                ${createdAt}
             </div>
         </div>
     `;

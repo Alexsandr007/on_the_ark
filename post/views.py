@@ -573,6 +573,7 @@ def like_post(request, post_id):
         }, status=500)
     
 
+
 @login_required
 @require_POST
 def add_comment(request, post_id):
@@ -582,6 +583,13 @@ def add_comment(request, post_id):
         
         if not content:
             return JsonResponse({'success': False, 'error': 'Комментарий не может быть пустым'})
+        
+        # Проверка на нецензурную лексику
+        if profanity_filter.contains_profanity(content):
+            return JsonResponse({
+                'success': False, 
+                'error': 'Комментарий содержит нецензурную лексику. Пожалуйста, отредактируйте текст.'
+            })
         
         # Проверяем, отключены ли комментарии
         if post.comments_disabled:
@@ -632,7 +640,7 @@ def add_comment(request, post_id):
                 'author_photo_url': photo_url,
                 'content': content,
                 'created_at': 'Только что',
-                'created_at_formatted': comment.created_at.strftime('%d %b %Y H:%M')
+                'created_at_formatted': comment.created_at.strftime('%d %b %Y %H:%M')
             },
             'comments_count': comments_count
         })
