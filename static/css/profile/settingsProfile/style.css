@@ -35,6 +35,18 @@ body {
 }
 
 
+.prof__header a {
+    position: absolute;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 27px;
+    letter-spacing: 0%;
+    color: #000;
+    text-decoration: none;
+    left: 132px;
+    top: 300px;
+}
+
 .header {
     position: absolute;
     display: flex;
