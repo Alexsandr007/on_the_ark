@@ -41,7 +41,7 @@
 .profile__articles--container {
     display: flex;
     flex-direction: column;
-    gap: 0px;
+    gap: 10px;
 }
 
 .profile__article--btn {

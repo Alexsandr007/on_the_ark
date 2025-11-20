@@ -796,3 +796,60 @@ def feed(request):
     }
     
     return render(request, 'post/news_feed.html', context)
+
+
+# views.py
+def public_feed(request):
+    """Публичная лента новостей для неавторизованных пользователей"""
+    # Получаем только бесплатные посты или посты без подписки
+    posts = Post.objects.filter(
+        published_at__isnull=False,
+        published_at__lte=timezone.now(),
+        subscription__isnull=True  # Только бесплатные посты
+    ).select_related('author').prefetch_related(
+        'media', 'tags', 'likes', 'comments'
+    ).order_by('-published_at')
+    
+    # Аннотируем посты информацией о лайках и комментариях
+    posts = posts.annotate(
+        likes_count=Count('likes', distinct=True),
+        comments_count=Count('comments', distinct=True)
+    )
+    
+    # Обрабатываем посты для отображения
+    processed_posts = []
+    for post in posts:
+        # Получаем медиа поста
+        media_list = list(post.media.all())
+        
+        # Безопасно получаем фото автора
+        author_photo_url = None
+        if post.author.photo:
+            try:
+                author_photo_url = post.author.photo.url
+            except (ValueError, AttributeError):
+                author_photo_url = None
+        
+        processed_posts.append({
+            'id': post.id,
+            'author': post.author,
+            'author_photo_url': author_photo_url,
+            'author_id': post.author.id,
+            'title': post.title,
+            'content': post.content,  # Всегда доступно, так как только бесплатные посты
+            'published_at': post.published_at,
+            'media_list': media_list,
+            'tags': list(post.tags.all()),
+            'likes_count': post.likes_count,
+            'comments_count': post.comments_count,
+            'is_accessible': True,  # Все посты доступны в публичной ленте
+            'is_ad': post.is_ad,
+            'subscription': None,  # В публичной ленте нет платного контента
+            'comments_disabled': post.comments_disabled,
+        })
+
+    context = {
+        'posts': processed_posts,
+    }
+    
+    return render(request, 'post/news_feed_public.html', context)

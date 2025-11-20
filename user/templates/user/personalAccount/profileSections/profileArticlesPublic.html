@@ -1,0 +1,138 @@
+{% load static %}
+<section class="profile__articles">
+    <div class="profile__articles--block">
+        <div class="profile__articles--text">
+            <h2>Публикации</h2>
+            <p>{{ posts_count }} записей</p>
+            <p class="articles__subtitle">Для полного доступа войдите или зарегистрируйтесь</p>
+        </div>
+    </div>
+    <div class="profile__articles--container">
+        <div class="profile__articles--header">
+            <div class="profile__articles--btn">
+                <button class="active" data-filter="all">Все посты
+                    <p>{% if author.username %}{{ author.username }}{% endif %}<p/>
+                </button>
+            </div>
+            <div class="profile__articles--split">|</div>
+            <div class="profile__articles--btn">
+                <button data-filter="video">Видео</button>
+            </div>
+            <div class="profile__articles--split">|</div>
+            <div class="profile__articles--btn">
+                <button data-filter="image">Изображения</button>
+            </div>
+        </div>
+
+        {% if posts %}
+        {% for post in posts %}
+        <div class="profile__articles--item" data-post-id="{{ post.id }}"
+                data-published-date="{{ post.published_at|date:'c' }}" data-author-id="{{ post.author.id }}">
+                <div class="profile__article-card">
+                    <div class="profile__article-card--body">
+                        <div class="profile__article-card--body-header">
+                            <div class="profile__articles--text">
+                                <p>{{ post.published_at|date:"d M Y H:i" }}</p>
+                            </div>
+                        </div>
+
+                        {% if not post.is_accessible %}
+                        {# Заблокированный контент для платных подписок #}
+                        <div class="article__media article__media--paid-content">
+                            <p class="paid-content__title">
+                                {% if post.title %}
+                                {{ post.title }}
+                                {% else %}
+                                Эксклюзивный контент
+                                {% endif %}
+                            </p>
+                            <img src="{% static 'images/post/feed/src/images/paid-content-icon-lock.svg' %}"
+                                alt="Заблокировано">
+                            <div class="paid-content__important">
+                                <p>Доступно только подписчикам</p>
+                                <div class="paid-content__actions">
+                                    <a href="#" class="button button--icon open-auth-modal">
+                                        <img src="{% static 'images/post/feed/src/images/sub-btn-icon.svg' %}" alt="">
+                                        <span>Войти</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        {% else %}
+                        {# Доступный контент #}
+                        {% if post.media_list %}
+                        {% for media in post.media_list %}
+                        {% if media.media_type == 'photo' %}
+                        <div class="profile__article--main">
+                            <img class="profile__article--main" src="{{ media.file.url }}" alt="Изображение поста">
+                        </div>
+                        {% elif media.media_type == 'video' %}
+                        <video class="profile__article--main" controls>
+                            <source class="profile__article--main" src="{{ media.file.url }}" type="video/mp4">
+                        </video>
+                        {% elif media.media_type == 'audio' %}
+                        <div class="profile__article--main">
+                            <audio controls style="width: 100%;">
+                                <source class="profile__article--main" src="{{ media.file.url }}" type="audio/mpeg">
+                                Ваш браузер не поддерживает аудио элементы.
+                            </audio>
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                        {% endif %}
+
+                        {% if post.content %}
+                        <p class="article__description">{{ post.content }}</p>
+                        {% endif %}
+
+                        {% if post.tags %}
+                        <div class="article__tags">
+                            {% for tag in post.tags %}
+                            <span class="tag">#{{ tag.name }}</span>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        {% endif %}
+
+                        <div class="profile__article--buttons">
+                            <div class="profile__article--btn">
+                                <div class="profile__article--btn comment-btn open-auth-modal">
+                                    <img src="{% static 'images/post/feed/src/images/comments.png' %}"
+                                        alt="Комментарии">
+                                    <span class="comments-count">{{ post.comments_count }}</span>
+                                </div>
+                                <div class="profile__article--btn like-btn open-auth-modal">
+                                    <img src="{% static 'images/post/feed/src/images/like.png' %}" alt="Лайки"
+                                        class="like-icon">
+                                    <span class="likes-count">{{ post.likes_count }}</span>
+                                </div>
+                            </div>
+
+                            {% if not post.is_accessible %}
+                            <a href="#" class="button button--warning open-auth-modal">
+                                Войти для доступа
+                            </a>
+                            {% elif post.is_ad %}
+                            <button class="button button--info">Реклама</button>
+                            {% endif %}
+                        </div>
+
+                        {# Секция комментариев - скрыта для неавторизованных #}
+                        <div class="comments-section" style="display: none;">
+                            <div class="login-to-comment">
+                                <p>Для просмотра комментариев <a href="#" class="open-auth-modal">войдите</a> или <a href="#" class="open-register-modal">зарегистрируйтесь</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        {% else %}
+        <div class="profile__articles--item">
+            <h2>У автора пока нет публикаций</h2>
+            <p>Следите за обновлениями!</p>
+            <img src="{% static 'images/profile/sad_men.png' %}">
+        </div>
+        {% endif %}
+    </div>
+</section>

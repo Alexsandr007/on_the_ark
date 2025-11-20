@@ -529,6 +529,18 @@ input:checked + .slider:before {
 }
 
 
+.open {
+    display: none;
+}
+
+
+@media (max-width: 1140px) {
+    .open{
+        display: flex;
+    }
+}
+
+
 .profile__content p {
     margin: 0;
     font-weight: 300;
@@ -750,6 +762,7 @@ background: #110401;
 
 .profile__content--image {
     width: 100%;
+    border-radius: 50%;
 }
 
 
@@ -1824,5 +1837,16 @@ position: absolute;
         font-size: 10px;
         line-height: 140%;
         min-width: 140px;
+    }
+}
+
+@media (max-width: 450px) {
+    .profile__card--body {
+        padding: 20px 40px;
+        min-height: 130px;
+        width: auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
     }
 }

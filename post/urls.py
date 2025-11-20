@@ -11,4 +11,5 @@ urlpatterns = [
     path('like/<int:post_id>/', views.like_post, name='like_post'),
     path('<int:post_id>/comment/', views.add_comment, name='add_comment'),
     path('feed/', views.feed, name='feed'), 
+    path('public/feed/', views.public_feed, name='public_feed'),
 ]

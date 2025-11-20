@@ -5,74 +5,93 @@
 
 
 {% block extra_head %}
-    <link rel="stylesheet" href="{% static 'css/profile/stylePersonalAccount.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/profile/styleModalsPayment.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/profile/stylePersonalAccount.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/profile/stylePersonalAccountSideBar.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/post/like.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/post/comments.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/post/modals/styleModalsPayment.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/post/feed/style.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/post/feed/buttons.css' %}" />
+<link rel="stylesheet" href="{% static 'css/profile/stylePersonalAccount.css' %}" />
+<link rel="stylesheet" href="{% static 'css/profile/styleModalsPayment.css' %}" />
+<link rel="stylesheet" href="{% static 'css/profile/stylePersonalAccount.css' %}" />
+<link rel="stylesheet" href="{% static 'css/profile/stylePersonalAccountSideBar.css' %}" />
+<link rel="stylesheet" href="{% static 'css/post/like.css' %}" />
+<link rel="stylesheet" href="{% static 'css/post/comments.css' %}" />
+<link rel="stylesheet" href="{% static 'css/post/modals/styleModalsPayment.css' %}" />
+<link rel="stylesheet" href="{% static 'css/post/feed/style.css' %}" />
+<link rel="stylesheet" href="{% static 'css/post/feed/buttons.css' %}" />
 <link rel="stylesheet" href="{% static 'css/post/feed/page.css' %}" />
 <link rel="stylesheet" href="{% static 'css/personalAccount/personalAccount.css' %}" />
+<link rel="stylesheet" href="{% static 'css/home/styleModals.css' %}" />
 {% endblock %}
 
 
 {% block header %}
-   {% include "include/profileHeader.html" %}
+{% if is_authenticated and is_own_profile %}
+{% include "include/profileHeader.html" %}
+{% else %}
+{% include "include/baseHeader.html" %}
+{% endif %}
 {% endblock %}
 
-
 {% block content %}
-    {% include "post/modals/subscriber_modal.html" %}
-    {% include "user/personalAccount/profileSections/profileBlock.html" %}
-    {% include "user/personalAccount/profileSections/profileSearch.html" %}
-    {% include "user/personalAccount/profileSections/profileArticles.html" %}
+    {% if is_authenticated %}
+        {# Для авторизованных пользователей #}
+        {% include "post/modals/subscriber_modal.html" %}
+        {% include "user/personalAccount/profileSections/profileBlock.html" %}
+        {% include "user/personalAccount/profileSections/profileSearch.html" %}
+        {% include "user/personalAccount/profileSections/profileArticles.html" %}
+    {% else %}
+        {# Для неавторизованных пользователей #}
+        {% include "user/homeModals/AuthModals.html" %}
+        {% include "user/personalAccount/profileSections/profileBlock.html" %}
+        {% include "user/personalAccount/profileSections/profileSearch.html" %}
+        {% include "user/personalAccount/profileSections/profileArticlesPublic.html" %}
+    {% endif %}
 {% endblock %}
 
 {% block footer %}
-   {% include "include/profileFooter.html" %}
+{% include "include/profileFooter.html" %}
 {% endblock %}
 
 {% block extra_scripts %}
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="{% static 'js/header/header.js' %}"></script>
-<script src="{% static 'js/profile/scriptModalsPersonalAccount.js' %}"></script>
-<script src="{% static 'js/profile/scriptModalsMobilePersonalAccount.js' %}"></script>
-<script src="{% static 'js/profile/scriptPersonalAccountCheckBox.js' %}"></script>
-<script src="{% static 'js/profile/scriptPersonalAccountInput.js' %}"></script>
-<script src="{% static 'js/profile/scriptPersonalAccountPhoto.js' %}"></script>
-<script src="{% static 'js/profile/scriptPersonalAccountBackgroundPhoto.js' %}"></script>
-<script src="{% static 'js/profile/scriptProgressBar.js' %}"></script>
-<script src="{% static 'js/profile/scriptPersonalAccountSideBar.js' %}"></script>
-<script src="{% static 'js/profile/scriptDotsPostDropDown.js' %}"></script>
-<script src="{% static 'js/post/like.js' %}"></script>
-<script src="{% static 'js/post/comments.js' %}"></script>
-<script src="{% static 'js/post/modals/modalPaymentDesktop.js' %}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{% static 'js/header/header.js' %}"></script>
+    <script src="{% static 'js/profile/scriptProgressBar.js' %}"></script>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const filterButtons = document.querySelectorAll('.profile__articles--btn button[data-filter]');
-    const posts = document.querySelectorAll('.profile__articles--item');
+{% if is_authenticated %}
+    <script src="{% static 'js/profile/scriptModalsPersonalAccount.js' %}"></script>
+    <script src="{% static 'js/profile/scriptModalsMobilePersonalAccount.js' %}"></script>
+    <script src="{% static 'js/profile/scriptPersonalAccountCheckBox.js' %}"></script>
+    <script src="{% static 'js/profile/scriptPersonalAccountInput.js' %}"></script>
+    <script src="{% static 'js/profile/scriptPersonalAccountPhoto.js' %}"></script>
+    <script src="{% static 'js/profile/scriptPersonalAccountBackgroundPhoto.js' %}"></script>
+    <script src="{% static 'js/profile/scriptPersonalAccountSideBar.js' %}"></script>
+    <script src="{% static 'js/profile/scriptDotsPostDropDown.js' %}"></script>
+    <script src="{% static 'js/post/like.js' %}"></script>
+    <script src="{% static 'js/post/comments.js' %}"></script>
+    <script src="{% static 'js/post/modals/modalPaymentDesktop.js' %}"></script>
+{% else %}
 
-    filterButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            filterButtons.forEach(btn => btn.classList.remove('active'));
-            this.classList.add('active');
+    <script src="{% static 'js/post/feed/scriptModalsAuth.js' %}"></script>
+    <script src="{% static 'js/home/scriptModals.js' %}"></script>
+    <script src="{% static 'js/home/script.js' %}"></script>
+{% endif %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const filterButtons = document.querySelectorAll('.profile__articles--btn button[data-filter]');
+            const posts = document.querySelectorAll('.profile__articles--item');
 
-            const filter = this.getAttribute('data-filter');
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
 
-            posts.forEach(post => {
-                if (filter === 'all' || post.getAttribute('data-type') === filter) {
-                    post.style.display = 'flex';
-                } else {
-                    post.style.display = 'none';
-                }
+                    const filter = this.getAttribute('data-filter');
+
+                    posts.forEach(post => {
+                        if (filter === 'all' || post.getAttribute('data-type') === filter) {
+                            post.style.display = 'flex';
+                        } else {
+                            post.style.display = 'none';
+                        }
+                    });
+                });
             });
         });
-    });
-});
-</script>
+    </script>
 {% endblock %}
-

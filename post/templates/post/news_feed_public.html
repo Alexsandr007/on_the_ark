@@ -1,0 +1,176 @@
+{% extends "user/base.html" %}
+{% load static %}
+
+{% block title %}На ковчеге - Публичная лента новостей{% endblock %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'css/post/feed/style.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/post/feed/style-reset.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/post/feed/global-colors.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/post/feed/global-fonts.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/post/feed/global-typography.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/post/feed/buttons.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/post/feed/page.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/post/feed/style-333.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/post/feed/feedModals.css' %}" />
+    
+    
+    {# Стили для модальных окон #}
+    <link rel="stylesheet" href="{% static 'css/home/style.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/home/styleModals.css' %}" />
+{% endblock %}
+
+{% block header %}
+{% include "include/baseHeader.html" %}
+{% endblock %}
+
+{% block content %}
+{% include "user/homeModals/AuthModals.html" %}
+    {% include "user/homeModals/AuthModals.html" %}
+    {% include "user/homeSections/first-section.html" %}
+<main class="profile__articles">
+    <div class="container">
+        <div class="articles__topbar">
+            <h1 class="articles__title">Лента новостей</h1>
+            <p class="articles__subtitle">Для полного доступа войдите или зарегистрируйтесь</p>
+        </div>
+
+        <div class="profile__articles--container">
+            {% for post in posts %}
+            <div class="profile__articles--item" data-post-id="{{ post.id }}"
+                data-published-date="{{ post.published_at|date:'c' }}" data-author-id="{{ post.author.id }}">
+                <div class="profile__article-card">
+                    <div class="profile__article-card--body">
+                        <div class="profile__article-card--body-header">
+                            <div class="article__details">
+                                <div class="author-img">
+                                    {% if post.author_photo_url %}
+                                    <img src="{{ post.author_photo_url }}" alt="{{ post.author.username }}">
+                                    {% else %}
+                                    <img src="{% static 'images/profile/profile_default.png' %}"
+                                        alt="{{ post.author.username }}">
+                                    {% endif %}
+                                </div>
+                                <div class="details-info">
+                                    <p class="author-name">{{ post.author.username }}</p>
+                                    <span class="date-of-publication">{{ post.published_at|date:"d M Y H:i" }}</span>
+                                </div>
+                            </div>
+                            <img class="article__share-icon"
+                                src="{% static 'images/post/feed/src/images/icon-share.png' %}" alt="Поделиться"  onclick="window.location.href='{% url 'personal_account' post.author_id %}'">
+                        </div>
+
+                        {% if not post.is_accessible %}
+                        {# Заблокированный контент для платных подписок #}
+                        <div class="article__media article__media--paid-content">
+                            <p class="paid-content__title">
+                                {% if post.title %}
+                                {{ post.title }}
+                                {% else %}
+                                Эксклюзивный контент
+                                {% endif %}
+                            </p>
+                            <img src="{% static 'images/post/feed/src/images/paid-content-icon-lock.svg' %}"
+                                alt="Заблокировано">
+                            <div class="paid-content__important">
+                                <p>Доступно только тарифу «{{ post.subscription.name }}»</p>
+                                <div class="paid-content__actions">
+                                    <a href="#" class="button button--icon open-auth-modal">
+                                        <img src="{% static 'images/post/feed/src/images/sub-btn-icon.svg' %}" alt="">
+                                        <span>Войти для подписки</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        {% else %}
+                        {# Доступный контент #}
+                        {% if post.media_list %}
+                        {% for media in post.media_list %}
+                        {% if media.media_type == 'photo' %}
+                        <div class="article__media article__media--image">
+                            <img src="{{ media.file.url }}" alt="Изображение поста">
+                        </div>
+                        {% elif media.media_type == 'video' %}
+                        <video class="profile__article--main" controls>
+                            <source src="{{ media.file.url }}" type="video/mp4">
+                        </video>
+                        {% elif media.media_type == 'audio' %}
+                        <div class="article__media article__media--audio">
+                            <audio controls style="width: 100%;">
+                                <source src="{{ media.file.url }}" type="audio/mpeg">
+                                Ваш браузер не поддерживает аудио элементы.
+                            </audio>
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                        {% endif %}
+
+                        {% if post.content %}
+                        <p class="article__description">{{ post.content }}</p>
+                        {% endif %}
+
+                        {% if post.tags %}
+                        <div class="article__tags">
+                            {% for tag in post.tags %}
+                            <span class="tag">#{{ tag.name }}</span>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        {% endif %}
+
+                        <div class="profile__article--buttons">
+                            <div class="profile__article--btn">
+                                <div class="profile__article--btn comment-btn open-auth-modal">
+                                    <img src="{% static 'images/post/feed/src/images/comments.png' %}"
+                                        alt="Комментарии">
+                                    <span class="comments-count">{{ post.comments_count }}</span>
+                                </div>
+                                <div class="profile__article--btn like-btn open-auth-modal">
+                                    <img src="{% static 'images/post/feed/src/images/like.png' %}" alt="Лайки"
+                                        class="like-icon">
+                                    <span class="likes-count">{{ post.likes_count }}</span>
+                                </div>
+                            </div>
+
+                            {% if not post.is_accessible %}
+                            <a href="#" class="button button--warning open-auth-modal">
+                                Войти для доступа
+                            </a>
+                            {% elif post.is_ad %}
+                            <button class="button button--info">Реклама</button>
+                            {% endif %}
+                        </div>
+
+                        {# Секция комментариев - скрыта для неавторизованных #}
+                        <div class="comments-section" style="display: none;">
+                            <div class="login-to-comment">
+                                <p>Для просмотра комментариев <a href="#" class="open-auth-modal">войдите</a> или <a href="#" class="open-register-modal">зарегистрируйтесь</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="no-posts">
+                <h2>В ленте пока нет постов</h2>
+                <p>Присоединяйтесь к сообществу!</p>
+            </div>
+            {% endfor %}
+        </div>
+
+    </div>
+</main>
+{% endblock %}
+
+{% block footer %}
+{% include "include/baseFooter.html" %}
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{% static 'js/header/header.js' %}"></script>
+<script src="{% static 'js/home/scriptModals.js' %}"></script>
+<script src="{% static 'js/home/script.js' %}"></script>
+<script src="{% static 'js/post/feed/scriptModalsAuth.js' %}"></script>
+{% endblock %}
