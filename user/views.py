@@ -15,6 +15,8 @@ from .forms import RegisterForm, LoginForm, PasswordResetForm, AboutForm, GoalFo
 from .models import CustomUser, UserGoal, UserSocialLinks, UserSession
 from django.core.files.storage import default_storage
 from django.contrib.sessions.models import Session
+from django.core.mail import send_mail
+from django.utils.crypto import get_random_string
 from django.utils import timezone
 from django.db.models import Count
 
@@ -152,12 +154,114 @@ def register_ajax(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            login(request, user)
-            return JsonResponse({'success': True, 'redirect': '/profile/'})
+            # Создаем пользователя, но не логиним
+            user = form.save(commit=False)
+            user.is_active = True
+            user.email_verified = False
+            user.verification_token = get_random_string(50)
+            user.verification_sent_at = timezone.now()
+            user.save()
+            
+            # Отправляем email с ссылкой для подтверждения
+            verification_url = f"{request.scheme}://{request.get_host()}/verify-email/{user.verification_token}/"
+            
+            try:
+                send_mail(
+                    'Подтверждение email для Ковчега',
+                    f'Для завершения регистрации перейдите по ссылке: {verification_url}',
+                    'noreply@kovcheg.com',
+                    [user.email],
+                    fail_silently=False,
+                )
+                
+                # Сохраняем user_id в сессии для повторной отправки
+                request.session['pending_verification_user_id'] = user.id
+                request.session['pending_verification_email'] = user.email
+                
+                return JsonResponse({
+                    'success': True, 
+                    'message': 'show_verification_step',  # Специальный сигнал для JS
+                    'user_id': user.id,
+                    'email': user.email
+                })
+                
+            except Exception as e:
+                # Если отправка не удалась, удаляем пользователя
+                user.delete()
+                return JsonResponse({
+                    'success': False, 
+                    'errors': {'__all__': ['Ошибка отправки email. Попробуйте позже.']}
+                })
         else:
             return JsonResponse({'success': False, 'errors': form.errors})
     return JsonResponse({'success': False})
+
+def verify_email(request, token):
+    """Подтверждение email по токену с немедленным логином и редиректом в ЛК"""
+    try:
+        user = CustomUser.objects.get(verification_token=token)
+        
+        # Проверяем, не истекла ли ссылка (24 часа)
+        if timezone.now() > user.verification_sent_at + timezone.timedelta(hours=24):
+            return render(request, 'verification_expired.html')
+        
+        # Активируем email и логиним пользователя
+        user.email_verified = True
+        user.verification_token = ''
+        user.save()
+        
+        # Логиним пользователя
+        login(request, user)
+        
+        # Очищаем сессию
+        if 'pending_verification_user_id' in request.session:
+            del request.session['pending_verification_user_id']
+            del request.session['pending_verification_email']
+        
+        # Редирект в ЛК
+        return redirect('/profile/')
+        
+    except CustomUser.DoesNotExist:
+        return render(request, 'verification_failed.html')
+
+def resend_verification_ajax(request):
+    """Повторная отправка verification email для обоих сценариев"""
+    if request.method == 'POST':
+        # Пробуем получить user_id из сессии (для обоих сценариев)
+        user_id = request.session.get('pending_verification_user_id')
+        email = request.session.get('pending_verification_email')
+        
+        if not user_id or not email:
+            return JsonResponse({'success': False, 'message': 'Сессия истекла'})
+        
+        try:
+            user = CustomUser.objects.get(id=user_id, email=email)
+            
+            # Обновляем токен и время
+            user.verification_token = get_random_string(50)
+            user.verification_sent_at = timezone.now()
+            user.save()
+            
+            # Отправляем email
+            verification_url = f"{request.scheme}://{request.get_host()}/verify-email/{user.verification_token}/"
+            
+            send_mail(
+                'Подтверждение email для Ковчега',
+                f'Для завершения регистрации перейдите по ссылке: {verification_url}',
+                'noreply@kovcheg.com',
+                [user.email],
+                fail_silently=False,
+            )
+            
+            return JsonResponse({
+                'success': True, 
+                'message': 'Письмо отправлено повторно! Проверьте вашу почту.'
+            })
+            
+        except CustomUser.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'Пользователь не найден'})
+    
+    return JsonResponse({'success': False, 'message': 'Ошибка запроса'})
 
 def login_ajax(request):
     if request.method == 'POST':
@@ -165,8 +269,37 @@ def login_ajax(request):
         if form.is_valid():
             user = authenticate(email=form.cleaned_data['username'], password=form.cleaned_data['password'])
             if user:
-                login(request, user)
-                return JsonResponse({'success': True, 'redirect': '/profile/'})
+                if user.email_verified:
+                    # Если email подтвержден - логиним и редиректим в ЛК
+                    login(request, user)
+                    return JsonResponse({'success': True, 'redirect': '/profile/'})
+                else:
+                    # Если email не подтвержден - сохраняем в сессии и просим подтвердить
+                    request.session['pending_verification_user_id'] = user.id
+                    request.session['pending_verification_email'] = user.email
+                    
+                    # Отправляем письмо подтверждения (если еще не отправляли)
+                    if not user.verification_token:
+                        user.verification_token = get_random_string(50)
+                        user.verification_sent_at = timezone.now()
+                        user.save()
+                        
+                        verification_url = f"{request.scheme}://{request.get_host()}/verify-email/{user.verification_token}/"
+                        send_mail(
+                            'Подтверждение email для Ковчега',
+                            f'Для завершения регистрации перейдите по ссылке: {verification_url}',
+                            'noreply@kovcheg.com',
+                            [user.email],
+                            fail_silently=False,
+                        )
+                    
+                    return JsonResponse({
+                        'success': False, 
+                        'email_not_verified': True,
+                        'email': user.email,
+                        'message': 'Подтвердите ваш email для входа'
+                    })
+        
         return JsonResponse({'success': False, 'errors': {'__all__': ['Неверный email или пароль']}})
     return JsonResponse({'success': False})
 

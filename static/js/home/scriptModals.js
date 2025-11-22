@@ -26,6 +26,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Регистрация
+// Регистрация
 $('#registerForm').on('submit', function(e) {
     e.preventDefault();
     
@@ -51,14 +52,20 @@ $('#registerForm').on('submit', function(e) {
         },
         success: function(data) {
             if (data.success) {
-                window.location.href = data.redirect;
+                if (data.message === 'show_verification_step') {
+                    // Показываем шаг подтверждения email
+                    showVerificationStep(data.email);
+                } else {
+                    // Старая логика (на всякий случай)
+                    window.location.href = data.redirect;
+                }
             } else {
                 var errorMsg = data.errors ? Object.values(data.errors).join(', ') : 'Ошибка';
-                $('#registerMessage').text('Ошибка: ' + errorMsg);
+                $('#registerMessage').css('color', 'red').text('Ошибка: ' + errorMsg);
             }
         },
         error: function(xhr, status, error) {
-            $('#registerMessage').text('Ошибка сети');
+            $('#registerMessage').css('color', 'red').text('Ошибка сети');
         },
         complete: function() {
             $('#registerForm').data('submitting', false);
@@ -66,8 +73,69 @@ $('#registerForm').on('submit', function(e) {
     });
 });
 
+// Функция показа шага подтверждения email
+function showVerificationStep(email) {
+    $('#registerFormContainer').hide();
+    $('#verificationStep').show();
+    $('#userEmail').text(email);
+}
+
+// Функция повторной отправки verification email
+function resendVerificationEmail() {
+    $('#resendMessage').text('Отправка...').css('color', '#666');
+    
+    $.ajax({
+        url: '/resend-verification-ajax/',
+        type: 'POST',
+        headers: {
+            "X-CSRFToken": getCookie("csrftoken")
+        },
+        success: function(data) {
+            if (data.success) {
+                $('#resendMessage').css('color', 'green').text(data.message);
+            } else {
+                $('#resendMessage').css('color', 'red').text(data.message);
+            }
+        },
+        error: function() {
+            $('#resendMessage').css('color', 'red').text('Ошибка сети');
+        }
+    });
+}
+
+// Функция закрытия модального окна
+function closeModal() {
+    $('#modalOverlay').removeClass('active');
+    // Сбрасываем форму при закрытии
+    setTimeout(function() {
+        $('#registerFormContainer').show();
+        $('#verificationStep').hide();
+        $('#registerForm')[0].reset();
+        $('#resendMessage').text('');
+    }, 50);
+}
+
+
+function showVerificationStep() {
+    $('#registerForm').hide();
+    $('#verificationStep').show();
+}
+
+function closeModalAndRedirect() {
+    $('#modalOverlay').removeClass('active');
+    window.location.href = '/profile/';
+}
+
+// Проверяем верификацию при загрузке страницы
+$(document).ready(function() {
+    if (window.location.pathname === '/profile/') {
+        checkEmailVerification();
+    }
+});
+
 
 // Вход
+// Авторизация
 $('#loginForm').on('submit', function(e) {
   e.preventDefault();
   if ($(this).data('submitting')) return;
@@ -85,10 +153,17 @@ $('#loginForm').on('submit', function(e) {
     },
     success: function(data) {
       if (data.success) {
+        // Успешная авторизация - редирект в ЛК
         window.location.href = data.redirect;
       } else {
-        var errorMsg = data.errors ? Object.values(data.errors).join(', ') : 'Ошибка';
-        $('#loginMessage').text('Ошибка: ' + errorMsg);
+        if (data.email_not_verified) {
+          // Показываем шаг подтверждения email
+          showLoginVerificationStep(data.email);
+        } else {
+          // Обычная ошибка авторизации
+          var errorMsg = data.errors ? Object.values(data.errors).join(', ') : 'Ошибка';
+          $('#loginMessage').text('Ошибка: ' + errorMsg);
+        }
       }
     },
     error: function(xhr, status, error) {
@@ -99,6 +174,49 @@ $('#loginForm').on('submit', function(e) {
     }
   });
 });
+
+// Функция показа шага подтверждения email при авторизации
+function showLoginVerificationStep(email) {
+  $('#loginFormContainer').hide();
+  $('#loginVerificationStep').show();
+  $('#loginUserEmail').text(email);
+}
+
+// Функция повторной отправки verification email из окна авторизации
+function resendVerificationEmailFromLogin() {
+  $('#loginResendMessage').text('Отправка...').css('color', '#666');
+  
+  $.ajax({
+    url: '/resend-verification-ajax/',
+    type: 'POST',
+    headers: {
+      "X-CSRFToken": getCookie("csrftoken")
+    },
+    success: function(data) {
+      if (data.success) {
+        $('#loginResendMessage').css('color', 'green').text(data.message);
+      } else {
+        $('#loginResendMessage').css('color', 'red').text(data.message);
+      }
+    },
+    error: function() {
+      $('#loginResendMessage').css('color', 'red').text('Ошибка сети');
+    }
+  });
+}
+
+// Функция закрытия модального окна авторизации
+function closeAuthModal() {
+  $('#modalOverlayAuth').removeClass('active');
+  // Сбрасываем форму при закрытии
+  setTimeout(function() {
+    $('#loginFormContainer').show();
+    $('#loginVerificationStep').hide();
+    $('#loginForm')[0].reset();
+    $('#loginResendMessage').text('');
+    $('#loginMessage').text('');
+  }, 50);
+}
 
 // Забыл пароль: закрыть модал входа и открыть восстановление
 $('#recoveryBtn').on('click', function(e) {
@@ -129,7 +247,7 @@ $('#resetForm').on('submit', function(e) {
         setTimeout(() => {
           $('#modalOverlayRecovery').removeClass('active');
           $('#resetForm')[0].reset();
-        }, 2000);
+        }, 50);
       } else {
         var errorMsg = data.errors ? Object.values(data.errors).join(', ') : 'Ошибка';
         $('#resetMessage').text('Ошибка: ' + errorMsg).css('color', 'red');
@@ -174,7 +292,7 @@ document.addEventListener('DOMContentLoaded', function() {
       if (firstInput) {
         firstInput.focus();
       }
-    }, 150); // Увеличиваем задержку для надежности
+    }, 50); // Увеличиваем задержку для надежности
   }
 
   // Функция открытия модального окна как автор
@@ -195,12 +313,18 @@ document.addEventListener('DOMContentLoaded', function() {
       if (firstInput) {
         firstInput.focus();
       }
-    }, 150); // Увеличиваем задержку для надежности
+    }, 50); // Увеличиваем задержку для надежности
   }
 
   // Функция закрытия модального окна
   function closeModal() {
     modalOverlay.classList.remove('active');
+    setTimeout(function() {
+            $('#registerFormContainer').show();
+            $('#verificationStep').hide();
+            $('#registerForm')[0].reset();
+            $('#resendMessage').text('');
+        }, 50);
   }
 
   // Обработчики для кнопок регистрации
@@ -253,9 +377,9 @@ document.addEventListener('DOMContentLoaded', function() {
 // JavaScript для модального окна авторизации
 document.addEventListener('DOMContentLoaded', function() {
   const modalOverlay = document.getElementById('modalOverlayAuth');
-  const registerBtn = document.getElementById('authBtn');
+  const authBtn = document.getElementById('authBtn');
   const modalClose = document.getElementById('modalCloseAuth');
-  const registerBtnBurger = document.getElementById('authBtnBurger');
+  const authBtnBurger = document.getElementById('authBtnBurger');
   
   function getFirstInput() {
     return document.querySelector('#loginForm input:not([type="hidden"])');
@@ -263,37 +387,51 @@ document.addEventListener('DOMContentLoaded', function() {
 
   function openModal() {
     modalOverlay.classList.add('active');
-      // Автофокус на поле email
+    // Автофокус на поле email
     setTimeout(() => {
       const firstInput = getFirstInput();
       if (firstInput) {
         firstInput.focus();
       }
-    }, 150); // Увеличиваем задержку для надежности
+    }, 50);
+    
+    // Сбрасываем состояние формы при открытии
+    setTimeout(function() {
+      $('#loginFormContainer').show();
+      $('#loginVerificationStep').hide();
+      $('#loginForm')[0].reset();
+      $('#loginResendMessage').text('');
+      $('#loginMessage').text('');
+    }, 50);
   }
-  const openButtons = [registerBtn, registerBtnBurger];
+
+  const openButtons = [authBtn, authBtnBurger];
 
   openButtons.forEach(button => {
-    button.addEventListener('click', openModal);
-  });
-
-  modalClose.addEventListener('click', function() {
-    modalOverlay.classList.remove('active');
-  });
-
-  modalOverlay.addEventListener('click', function(event) {
-    if (event.target === modalOverlay) {
-      modalOverlay.classList.remove('active');
+    if (button) {
+      button.addEventListener('click', openModal);
     }
   });
+
+  if (modalClose) {
+    modalClose.addEventListener('click', function() {
+      closeAuthModal();
+    });
+  }
+
+  if (modalOverlay) {
+    modalOverlay.addEventListener('click', function(event) {
+      if (event.target === modalOverlay) {
+        closeAuthModal();
+      }
+    });
+  }
 
   document.addEventListener('keydown', function(event) {
-    if (event.key === 'Escape' && modalOverlay.classList.contains('active')) {
-      modalOverlay.classList.remove('active');
+    if (event.key === 'Escape' && modalOverlay && modalOverlay.classList.contains('active')) {
+      closeAuthModal();
     }
   });
-
-
 });
 
 // JavaScript для модального окна восстановления
@@ -314,7 +452,7 @@ document.addEventListener('DOMContentLoaded', function() {
       if (firstInput) {
         firstInput.focus();
       }
-    }, 150); // Увеличиваем задержку для надежности
+    }, 50); // Увеличиваем задержку для надежности
   });
 
   modalClose.addEventListener('click', function() {

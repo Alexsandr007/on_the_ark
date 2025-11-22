@@ -23,6 +23,9 @@ class CustomUser(AbstractUser):
     date_updated = models.DateTimeField(auto_now=True)
     talk_link = models.URLField(max_length=100, blank=True, null=True)
     privacy_policy_agreed = models.BooleanField(default=False, verbose_name="Согласие с политикой конфиденциальности")
+    email_verified = models.BooleanField(default=False)
+    verification_token = models.CharField(max_length=100, blank=True)
+    verification_sent_at = models.DateTimeField(null=True, blank=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
