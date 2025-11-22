@@ -2,6 +2,7 @@
   max-width: 1440px;
   margin: 0 auto;
   padding: 0 140px;
+  margin-top: calc(60px + 220px);
 }
 
 @media (max-width: 1140px) {
@@ -10,6 +11,7 @@
     margin: 0 auto;
     padding: 0 0px;
     width: 90%;
+      margin-top: calc(60px + 220px);
   }
 }
 /*# sourceMappingURL=page.css.map */

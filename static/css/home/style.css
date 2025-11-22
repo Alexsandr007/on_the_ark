@@ -1253,8 +1253,13 @@ main {
     justify-content: space-between;
 }
 
+.footer .block-row img{
+    height: 33px;
+
+}
+
 .footer__item--btb {
-    height: 23px;
+    height: 53px;
 }
 
 .footer__item--header {
@@ -1283,7 +1288,7 @@ main {
 
 
 .footer__logo {
-    height: 16px;
+    height: 20px;
     width: 100%;
 }
 
@@ -1296,7 +1301,7 @@ main {
     line-height: 100%;
     letter-spacing: -3%;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     flex-direction: row;
 }
 

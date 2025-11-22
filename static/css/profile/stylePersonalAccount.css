@@ -1432,8 +1432,12 @@ background: #110401;
     justify-content: space-between;
 }
 
+.footer .block-row img{
+    height: 33px;
+}
+
 .footer__item--btb {
-    height: 23px;
+    height: 53px;
 }
 
 .footer__item--header {
@@ -1462,7 +1466,7 @@ background: #110401;
 
 
 .footer__logo {
-    height: 16px;
+    height: 20px;
     width: 100%;
 }
 
@@ -1474,7 +1478,7 @@ background: #110401;
     line-height: 100%;
     letter-spacing: -3%;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     flex-direction: row;
 }
 

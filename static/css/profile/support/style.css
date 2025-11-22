@@ -658,14 +658,23 @@ body {
     position: relative;
 }
 .main-block__fon {
-    padding: 0 33px;
     position: absolute;
     top: 0;
-    width: calc(100% - 66px);
+    width: 100%;
     display: flex;
     justify-content: center;
     background-repeat: no-repeat;
     z-index: 0;
+}
+
+.main-block__fon img{
+    width: 100%;
+}
+
+.main-block__inner{
+    position: relative;
+    z-index: 10;
+    margin-top: 70px;
 }
 
 .main-block__devider {
@@ -1035,6 +1044,12 @@ body {
 @media (max-width: 1340px) {
     :root {
         --padding: 50px;
+    }
+
+    .main-block__inner {
+        position: relative;
+        z-index: 10;
+        margin-top: 0px;
     }
 }
 

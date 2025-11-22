@@ -27,7 +27,18 @@
 {% block content %}
 {% include "user/homeModals/AuthModals.html" %}
     {% include "user/homeModals/AuthModals.html" %}
-    {% include "user/homeSections/first-section.html" %}
+<section class="profile__block">
+    <img class="profile__fon" src="{% static 'images/profile/bgMain.png' %}">
+    <div class="profile__container">
+    </div>
+</section>
+
+<section class="main-block">
+    {% comment %} <div class="main-block__devider"></div> {% endcomment %}
+    <div class="main-block__fon">
+        <img class="" src="{% static 'images/profile/Бусы3.svg' %}" alt="">
+    </div>
+</section>
 <main class="profile__articles">
     <div class="container">
         <div class="articles__topbar">
