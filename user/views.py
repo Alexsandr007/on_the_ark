@@ -150,6 +150,12 @@ def update_social_links(request):
     }, status=405)
 
 
+import logging
+from smtplib import SMTPException
+from django.core.mail import BadHeaderError
+
+# Настройка логгера
+logger = logging.getLogger(__name__)
 def register_ajax(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
@@ -169,7 +175,7 @@ def register_ajax(request):
                 send_mail(
                     'Подтверждение email для Ковчега',
                     f'Для завершения регистрации перейдите по ссылке: {verification_url}',
-                    'noreply@kovcheg.com',
+                    settings.DEFAULT_FROM_EMAIL,  # ← ИСПОЛЬЗУЙТЕ НАСТРОЙКИ ИЗ settings.py
                     [user.email],
                     fail_silently=False,
                 )
@@ -178,20 +184,25 @@ def register_ajax(request):
                 request.session['pending_verification_user_id'] = user.id
                 request.session['pending_verification_email'] = user.email
                 
+                logger.info(f"Verification email sent successfully to {user.email}")
+                
                 return JsonResponse({
                     'success': True, 
-                    'message': 'show_verification_step',  # Специальный сигнал для JS
+                    'message': 'show_verification_step',
                     'user_id': user.id,
                     'email': user.email
                 })
                 
             except Exception as e:
-                # Если отправка не удалась, удаляем пользователя
+                # Все остальные ошибки
+                error_type = type(e).__name__
+                logger.error(f"Unexpected error ({error_type}) when sending email to {user.email}: {str(e)}")
                 user.delete()
                 return JsonResponse({
                     'success': False, 
-                    'errors': {'__all__': ['Ошибка отправки email. Попробуйте позже.']}
+                    'errors': {'__all__': [f'Ошибка отправки email. Попробуйте позже.']}
                 })
+                
         else:
             return JsonResponse({'success': False, 'errors': form.errors})
     return JsonResponse({'success': False})
@@ -248,7 +259,7 @@ def resend_verification_ajax(request):
             send_mail(
                 'Подтверждение email для Ковчега',
                 f'Для завершения регистрации перейдите по ссылке: {verification_url}',
-                'noreply@kovcheg.com',
+                settings.DEFAULT_FROM_EMAIL,
                 [user.email],
                 fail_silently=False,
             )
@@ -288,7 +299,7 @@ def login_ajax(request):
                         send_mail(
                             'Подтверждение email для Ковчега',
                             f'Для завершения регистрации перейдите по ссылке: {verification_url}',
-                            'noreply@kovcheg.com',
+                            settings.DEFAULT_FROM_EMAIL,
                             [user.email],
                             fail_silently=False,
                         )
