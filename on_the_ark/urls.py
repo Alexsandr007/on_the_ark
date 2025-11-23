@@ -7,7 +7,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('user.urls')),
     path('post/', include('post.urls')),
-    path('subscriptions/', include('subscription.urls')),
+    path('subscription/', include('subscription.urls')),
     path('wallet/', include('wallet.urls')),
 ]
 

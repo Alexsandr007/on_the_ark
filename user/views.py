@@ -388,7 +388,6 @@ def profile(request):
     return render(request, 'user/profile/profile.html', context)
 
 
-
 def personal_account(request, user_id):
     # Находим пользователя по ID
     profile_user = get_object_or_404(get_user_model(), id=user_id)
@@ -404,6 +403,35 @@ def personal_account(request, user_id):
             is_active=True,
             expires_at__gt=timezone.now()
         ).values_list('subscription_id', flat=True))
+    
+    # Считаем количество подписчиков и подписок
+    from subscription.models import UserSubscription
+    
+    # Количество подписчиков (сколько людей подписано на БЕСПЛАТНУЮ подписку этого автора)
+    subscribers_count = UserSubscription.objects.filter(
+        subscription__creator=profile_user,
+        subscription__price=0,  # Только бесплатная подписка
+        is_active=True,
+        expires_at__gt=timezone.now()
+    ).count()
+    
+    # Количество подписок (на сколько подписок подписан этот пользователь)
+    subscriptions_count = UserSubscription.objects.filter(
+        user=profile_user,
+        is_active=True,
+        expires_at__gt=timezone.now()
+    ).count()
+    
+    # Проверяем, подписан ли текущий пользователь на БЕСПЛАТНУЮ подписку этого автора
+    is_subscribed = False
+    if is_authenticated and not is_own_profile:
+        is_subscribed = UserSubscription.objects.filter(
+            user=request.user,
+            subscription__creator=profile_user,
+            subscription__price=0,  # Только бесплатная подписка
+            is_active=True,
+            expires_at__gt=timezone.now()
+        ).exists()
     
     # Получаем посты пользователя (только опубликованные)
     posts = Post.objects.filter(
@@ -430,7 +458,19 @@ def personal_account(request, user_id):
         if not post.subscription:
             return True  # Пост доступен всем
         
-        return post.subscription.id in user_active_subscriptions or is_own_profile
+        # Если у поста есть подписка, проверяем:
+        # - Это собственная подписка пользователя
+        # - ИЛИ пользователь подписан на эту конкретную подписку
+        # - ИЛИ пользователь подписан на бесплатную подписку автора (для бесплатных постов)
+        if post.subscription.price == 0:
+            # Для бесплатных постов - проверяем подписку на бесплатную подписку автора
+            return (post.subscription.id in user_active_subscriptions or 
+                    is_own_profile or 
+                    is_subscribed)
+        else:
+            # Для платных постов - проверяем подписку именно на эту платную подписку
+            return (post.subscription.id in user_active_subscriptions or 
+                    is_own_profile)
     
     # Обрабатываем посты
     processed_posts = []
@@ -479,36 +519,15 @@ def personal_account(request, user_id):
             'comments': comments,
         })
     
-    # Получаем доступные подписки для модального окна (только для авторизованных)
-    available_subscriptions = []
-    if is_authenticated:
-        subscriptions = Subscription.objects.filter(is_active=True)
-        processed_subscriptions = []
-        for subscription in subscriptions:
-            description_lines = subscription.description.split('\n')
-            processed_subscriptions.append({
-                'id': subscription.id,
-                'name': subscription.name,
-                'description_lines': [line.strip() for line in description_lines if line.strip()],
-                'price': subscription.price,
-                'final_price': subscription.final_price,
-                'image': subscription.image,
-                'is_discount_active': subscription.is_discount_active,
-                'discount_percent': subscription.discount_percent,
-                'has_trial_period': subscription.has_trial_period,
-                'trial_days': subscription.trial_days,
-                'is_limited_subscribers': subscription.is_limited_subscribers,
-                'max_subscribers': subscription.max_subscribers,
-            })
-        available_subscriptions = processed_subscriptions
-    
     context = {
         'author': profile_user,
         'posts': processed_posts,
         'posts_count': posts.count(),
         'is_own_profile': is_own_profile,
         'is_authenticated': is_authenticated,
-        'available_subscriptions': available_subscriptions,
+        'is_subscribed': is_subscribed,
+        'subscribers_count': subscribers_count,
+        'subscriptions_count': subscriptions_count,
     }
     
     return render(request, 'user/personalAccount/profile.html', context)

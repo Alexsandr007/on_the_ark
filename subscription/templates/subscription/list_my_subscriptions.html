@@ -45,25 +45,32 @@
                                         <div class="advert__prof">
                                             <div>
                                                 {% if sub_data.creator.avatar %}
-                                                    <img src="{{ sub_data.creator.avatar.url }}" alt="{{ sub_data.creator.get_full_name }}">
+                                                <img src="{{ sub_data.creator.avatar.url }}"
+                                                    alt="{{ sub_data.creator.get_full_name }}">
                                                 {% else %}
-                                                    <img src="{% static 'images/subscription/list_my_subscriptions/default-avatar.png' %}" alt="Аватар">
+                                                <img src="{% static 'images/profile/profile_default.png' %}"
+                                                    alt="Аватар">
                                                 {% endif %}
-                                                <p>{{ sub_data.creator.get_full_name|default:sub_data.creator.username }}</p>
+                                                <p>{{ sub_data.creator.get_full_name|default:sub_data.creator.username }}
+                                                </p>
                                             </div>
                                             <h2>{{ sub_data.subscription.name }}</h2>
                                         </div>
                                         <div class="advert__footer">
                                             <p>{{ sub_data.price }} ₽<span>/ месяц</span></p>
-                                            <p><img src="{% static 'images/subscription/list_my_subscriptions/warn.png' %}"><span>Осталось {{ sub_data.days_left }} дней</span></p>
+                                            <p><img
+                                                    src="{% static 'images/subscription/list_my_subscriptions/warn.png' %}"><span>Осталось
+                                                    {{ sub_data.days_left }} дней</span></p>
                                         </div>
                                         <button class="tip tip--left" type="button">
-                                            <img src="{% static 'images/subscription/list_my_subscriptions/clock.png' %}" alt="">
+                                            <img src="{% static 'images/subscription/list_my_subscriptions/clock.png' %}"
+                                                alt="">
                                             <span>Напомнить о продлении за 10 дней</span>
                                         </button>
 
                                         <button class="tip tip--right" type="button">
-                                            <img src="{% static 'images/subscription/list_my_subscriptions/block.png' %}" alt="">
+                                            <img src="{% static 'images/subscription/list_my_subscriptions/block.png' %}"
+                                                alt="">
                                             <span>Отменить подписку</span>
                                         </button>
                                     </div>
@@ -86,24 +93,29 @@
                             {% if has_free_subscriptions %}
                             <div class="advert__sessions--container">
                                 {% for sub_data in free_subscriptions %}
-                                <a href="#">
-                                    <div class="advert__sessions--item">
-                                        <div class="advert__sessions--block">
-                                            {% if sub_data.creator.avatar %}
-                                                <img src="{{ sub_data.creator.avatar.url }}" alt="{{ sub_data.creator.get_full_name }}">
-                                            {% else %}
-                                                <img src="{% static 'images/subscription/list_my_subscriptions/default-avatar.png' %}" alt="Аватар">
-                                            {% endif %}
-                                            <div class="advert__sessions--info">
-                                                <p>{{ sub_data.creator.get_full_name|default:sub_data.creator.username }}</p>
-                                                <span>{{ sub_data.subscription.name }}</span>
-                                            </div>
-                                        </div>
-                                        <div class="advert__sessions--date">
-                                            <button>Отменить подписку</button>
+                                <div class="advert__sessions--item"
+                                    id="subscription-{{ sub_data.user_subscription_id }}">
+                                    <div class="advert__sessions--block">
+                                        {% if sub_data.creator.photo %}
+                                        <img src="{{ sub_data.creator.photo.url }}"
+                                            alt="{{ sub_data.creator.get_full_name }}">
+                                        {% else %}
+                                        <img src="{% static 'images/profile/profile_default.png' %}"
+                                            alt="Аватар">
+                                        {% endif %}
+                                        <div class="advert__sessions--info">
+                                            <p>{{ sub_data.creator.get_full_name|default:sub_data.creator.username }}
+                                            </p>
+                                            <span>{{ sub_data.subscription.name }}</span>
                                         </div>
                                     </div>
-                                </a>
+                                    <div class="advert__sessions--date">
+                                        <button class="cancel-subscription-btn"
+                                            data-user-subscription-id="{{ sub_data.user_subscription_id }}">
+                                            Отменить подписку
+                                        </button>
+                                    </div>
+                                </div>
                                 {% endfor %}
                             </div>
                             {% else %}
@@ -119,6 +131,7 @@
             </div>
         </div>
     </div>
+    </div>
 </section>
 {% endblock %}
 
@@ -130,6 +143,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="{% static 'js/header/header.js' %}"></script>
 <script src="{% static 'js/subscription/list_my_subscriptions/edit.js' %}"></script>
+<script src="{% static 'js/subscription/list_my_subscriptions/unsubscribe.js' %}"></script>
 <script src="{% static 'js/subscription/list_my_subscriptions/scriptModalsPayment.js' %}"></script>
 <script src="{% static 'js/profile/scriptPersonalAccountSideBar.js' %}"></script>
 
@@ -140,13 +154,13 @@
         document.querySelectorAll('.advert__content--item').forEach(item => {
             item.classList.remove('active');
         });
-        
+
         // Показать выбранную вкладку
         const targetTab = document.getElementById(tabName);
         if (targetTab) {
             targetTab.classList.add('active');
         }
-        
+
         // Обновить активный элемент сайдбара
         document.querySelectorAll('.advert__sidebar--item').forEach(item => {
             item.classList.remove('active');
@@ -156,7 +170,7 @@
 
     // Инициализация переключения вкладок
     document.querySelectorAll('.advert__sidebar--item').forEach(item => {
-        item.addEventListener('click', function() {
+        item.addEventListener('click', function () {
             const tabName = this.getAttribute('data-tab');
             switchTab(tabName);
         });
@@ -194,11 +208,13 @@
     const img = but.querySelector('img');
 
     but.addEventListener('mouseenter', () => {
-        img.src = '{% static 'images/subscription/list_my_subscriptions/wallet-white.png' %}';
+        img.src = '{% static '
+        images / subscription / list_my_subscriptions / wallet - white.png ' %}';
     });
 
     but.addEventListener('mouseleave', () => {
-        img.src = '{% static 'images/subscription/list_my_subscriptions/walletbtn.png' %}';
+        img.src = '{% static '
+        images / subscription / list_my_subscriptions / walletbtn.png ' %}';
     });
 </script>
 {% endblock %}

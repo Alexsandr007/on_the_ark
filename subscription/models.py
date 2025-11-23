@@ -77,13 +77,27 @@ class Subscription(models.Model):
             raise ValidationError({'price': 'Стоимость не может превышать 100 000₽'})
         
 
-
 class UserSubscription(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='user_subscriptions')
-    subscription = models.ForeignKey(Subscription, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        CustomUser, 
+        on_delete=models.CASCADE, 
+        related_name='user_subscriptions'
+    )
+    subscription = models.ForeignKey(
+        Subscription, 
+        on_delete=models.CASCADE,
+        related_name='user_subscriptions'
+    )
     subscribed_at = models.DateTimeField(auto_now_add=True)
     expires_at = models.DateTimeField()
     is_active = models.BooleanField(default=True)
     
     class Meta:
         unique_together = ['user', 'subscription']
+        verbose_name = "Подписка пользователя"
+        verbose_name_plural = "Подписки пользователей"
+    
+    def __str__(self):
+        return f"{self.user.username} - {self.subscription.name}"
+    
+    # УБЕРИТЕ метод save - он не нужен

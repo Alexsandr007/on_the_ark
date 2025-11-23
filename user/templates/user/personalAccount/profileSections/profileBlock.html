@@ -1,11 +1,14 @@
 {% load static %}
-<div class="cover-title__img">     
+<div class="cover-title__img">
 
 </div>
 
 
 <section class="profile__block">
-<div class="personal_account__fon" id="backgroundContainer" style="{% if author.background_photo %}background-image: url('{{ author.background_photo.url }}');{% endif %}"></div>    <div class="personal_account__mobile-ornament"></div>
+    <div class="personal_account__fon" id="backgroundContainer"
+        style="{% if author.background_photo %}background-image: url('{{ author.background_photo.url }}');{% endif %}">
+    </div>
+    <div class="personal_account__mobile-ornament"></div>
     <div class="personal_account__beads_mobile"></div>
     <div class="profile__container">
 
@@ -18,11 +21,11 @@
                 </div>
                 <div class="profile__card--body">
                     {% if author.about %}
-                        <!-- Если информация о себе есть, показываем её -->
-                        <p>{{ author.about }}</p>
+                    <!-- Если информация о себе есть, показываем её -->
+                    <p>{{ author.about }}</p>
                     {% else %}
-                        <!-- Если нет, показываем дефолтный текст -->
-                        <p>Информация пока не заполнена</p>
+                    <!-- Если нет, показываем дефолтный текст -->
+                    <p>Информация пока не заполнена</p>
                     {% endif %}
                 </div>
             </div>
@@ -32,20 +35,54 @@
             <div class="profile__content">
                 <div class="content">
                     <div class="profile__content--image">
-                        <img id="profileImage" src="{% if author.photo %}{{ author.photo.url }}{% else %}{% static 'images/profile/profile_default.png' %}{% endif %}" alt="Фото профиля">
+                        <img id="profileImage"
+                            src="{% if author.photo %}{{ author.photo.url }}{% else %}{% static 'images/profile/profile_default.png' %}{% endif %}"
+                            alt="Фото профиля">
                     </div>
                     <div class="content-title">
                         <h2>{%if author.username %}{{ author.username }}{% else %}{{ author.email }}{% endif %}</h2>
-                        <input id="professionInput" placeholder="{% if author.profession %}{{ author.profession }}{% endif %}">
+                        <input id="professionInput"
+                            placeholder="{% if author.profession %}{{ author.profession }}{% endif %}">
+                    </div>
+                    <div class="profile__links">
+                        <img src="{% static 'images/profile/vk.png' %}">
+                        <img src="{% static 'images/profile/telegram.png' %}">
+                        <img src="{% static 'images/profile/youtube.png' %}">
+                        <img src="{% static 'images/profile/twitter.png' %}">
                     </div>
                 </div>
-                
+
+                <div class="profile__buttons">
+                    {% if not is_own_profile and is_authenticated %}
+                    <button id="subscriptionToggleBtn" class="profile__plus {% if is_subscribed %}subscribed{% endif %}"
+                        data-author-id="{{ author.id }}">
+                        <img src="{% static 'images/profile/plus.png' %}">
+                        <span id="subscriptionText">
+                            {% if is_subscribed %}Отписаться{% else %}Подписаться{% endif %}
+                        </span>
+                    </button>
+                    <button id="paymentBtn" class="profile__rub">
+                        <img src="{% static 'images/profile/rub.png' %}">
+                    </button>
+                    {% endif %}
+                </div>
+                <div class="profile__info">
+                    <p id="subscribersCount">
+                        {{ subscribers_count }} Подписчиков
+                    </p>
+                    <p id="subscriptionsCount">
+                        {{ subscriptions_count }} Подписок
+                    </p>
+                </div>
+
                 <div class="content">
 
                 </div>
             </div>
-            <button class="profile-white__btn aboutBtn border-mobile__btn" id="aboutBtnMobile">Об авторе<img src="{% static 'images/profile/pen-gray.svg' %}"></button>
-            <button class="profile-white__btn targetBtn border-mobile__btn" id="targetBtnMobile">Цель<img src="{% static 'images/profile/pen-gray.svg' %}"></button>
+            <button class="profile-white__btn aboutBtn border-mobile__btn" id="aboutBtnMobile">Об авторе<img
+                    src="{% static 'images/profile/pen-gray.svg' %}"></button>
+            <button class="profile-white__btn targetBtn border-mobile__btn" id="targetBtnMobile">Цель<img
+                    src="{% static 'images/profile/pen-gray.svg' %}"></button>
         </div>
 
         <div class="profile__item profile__item--destination right">
@@ -53,24 +90,24 @@
             <div class="profile__card">
                 <div class="profile__card--header">
                     {% if author.goal and author.goal.goal_title %}
-                        <h2>{{ author.goal.goal_title }}</h2>
+                    <h2>{{ author.goal.goal_title }}</h2>
                     {% else %}
-                        <h2>Цель:</h2>
+                    <h2>Цель:</h2>
                     {% endif %}
                 </div>
                 <div class="profile__card--body">
                     {% if author.goal and author.goal.goal_title %}
-                        <!-- Если цель есть, показываем её данные -->
-                         <p>{{ author.goal.goal_description }}</p>
-                        <div class="profile__progress">
-                            <h3 id="progress-text">{{ author.goal.current_amount }} из {{ author.goal.goal_amount }}</h3>
-                            <div class="profile__progress--block">
-                                <div class="profile__progress--bar"></div>
-                            </div>
+                    <!-- Если цель есть, показываем её данные -->
+                    <p>{{ author.goal.goal_description }}</p>
+                    <div class="profile__progress">
+                        <h3 id="progress-text">{{ author.goal.current_amount }} из {{ author.goal.goal_amount }}</h3>
+                        <div class="profile__progress--block">
+                            <div class="profile__progress--bar"></div>
                         </div>
+                    </div>
                     {% else %}
-                        <!-- Если нет, показываем дефолтный текст -->
-                        <p>Информация пока не заполнена</p>
+                    <!-- Если нет, показываем дефолтный текст -->
+                    <p>Информация пока не заполнена</p>
                     {% endif %}
                 </div>
             </div>

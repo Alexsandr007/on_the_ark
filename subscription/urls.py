@@ -8,4 +8,6 @@ urlpatterns = [
     path('', views.SubscriptionListView.as_view(), name='subscription_list'),
     path('<int:pk>/edit/', views.SubscriptionUpdateView.as_view(), name='edit_subscription'),
     path('my-subscriptions/', views.UserSubscriptionsListView.as_view(), name='my_subscriptions'),
+    path('toggle-subscription/', views.ToggleSubscriptionView.as_view(), name='toggle_subscription'),
+    path('cancel-subscription/', views.CancelSubscriptionView.as_view(), name='cancel_subscription'),  # Добавьте эту строку
 ]
