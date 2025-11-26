@@ -6,12 +6,8 @@
 
 {% block extra_head %}
 <link rel="stylesheet" href="{% static 'css/post/style.css' %}" />
-<link rel="stylesheet" href="{% static 'css/profile/stylePersonalAccountSideBar.css' %}" />
 {% endblock %}
 
-{% block header %}
-{% include "include/profileHeader.html" %}
-{% endblock %}
 
 {% block content %}
 <!-- Добавляем проверку на режим редактирования -->
@@ -243,9 +239,6 @@
 </form>
 {% endblock %}
 
-{% block footer %}
-{% include "include/baseFooter.html" %}
-{% endblock %}
 
 {% block extra_scripts %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -258,8 +251,6 @@
 <script src="{% static 'js/post/charCounter.js' %}"></script>
 <script src="{% static 'js/post/menu.js' %}"></script>
 <script src="{% static 'js/post/editPost.js' %}"></script>
-<script src="{% static 'js/profile/scriptPersonalAccountSideBar.js' %}"></script>
-
 <!-- JS для поповера и календаря (без дублирования) -->
 <script>
   (() => {

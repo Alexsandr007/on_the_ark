@@ -7,13 +7,6 @@
     <link rel="stylesheet" href="{% static 'css/profile/support/styleModalsPayment.css' %}" />
 {% endblock %}
 
-{% block header %}
-{% if user.is_authenticated %}
-{% include "include/profileHeader.html" %}
-{% else %}
-{% include "include/baseHeader.html" %}
-{% endif %}
-{% endblock %}
 
 {% block content %}
 {% include "user/homeModals/AuthModals.html" %}
@@ -247,11 +240,6 @@
 
     </div>
 </section>
-{% endblock %}
-
-
-{% block footer %}
-{% include "include/profileFooter.html" %}
 {% endblock %}
 
 

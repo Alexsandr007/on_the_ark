@@ -21,13 +21,7 @@
 {% endblock %}
 
 
-{% block header %}
-{% if is_authenticated and is_own_profile %}
-{% include "include/profileHeader.html" %}
-{% else %}
-{% include "include/baseHeader.html" %}
-{% endif %}
-{% endblock %}
+
 
 {% block content %}
     {% if is_authenticated %}
@@ -45,9 +39,6 @@
     {% endif %}
 {% endblock %}
 
-{% block footer %}
-{% include "include/profileFooter.html" %}
-{% endblock %}
 
 {% block extra_scripts %}
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -62,7 +53,6 @@
     <script src="{% static 'js/profile/scriptPersonalAccountInput.js' %}"></script>
     <script src="{% static 'js/profile/scriptPersonalAccountPhoto.js' %}"></script>
     <script src="{% static 'js/profile/scriptPersonalAccountBackgroundPhoto.js' %}"></script>
-    <script src="{% static 'js/profile/scriptPersonalAccountSideBar.js' %}"></script>
     <script src="{% static 'js/profile/scriptDotsPostDropDown.js' %}"></script>
     <script src="{% static 'js/post/like.js' %}"></script>
     <script src="{% static 'js/post/comments.js' %}"></script>

@@ -11,12 +11,8 @@
 <link rel="stylesheet" href="{% static 'css/subscription/global-colors.css' %}" />
 <link rel="stylesheet" href="{% static 'css/subscription/global-fonts.css' %}" />
 <link rel="stylesheet" href="{% static 'css/subscription/style-reset.css' %}" />
-<link rel="stylesheet" href="{% static 'css/profile/stylePersonalAccountSideBar.css' %}" />
 {% endblock %}
 
-{% block header %}
-{% include "include/profileHeader.html" %}
-{% endblock %}
 
 
 {% block content %}
@@ -203,17 +199,12 @@
 </main>
 {% endblock %}
 
-{% block footer %}
-{% include "include/baseFooter.html" %}
-{% endblock %}
 
 {% block extra_scripts %}
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="{% static 'js/header/header.js' %}"></script>
     <script src="{% static 'js/subscription/navMenuMobile.js' %}"></script>
     <script src="{% static 'js/subscription/newTariffFormMaintenance.js' %}"></script>
-    <script src="{% static 'js/profile/scriptPersonalAccountSideBar.js' %}"></script>
-
 <script>
 // JavaScript для принудительной очистки формы при создании
 document.addEventListener('DOMContentLoaded', function() {

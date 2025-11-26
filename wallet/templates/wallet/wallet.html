@@ -6,11 +6,6 @@
 
 {% block extra_head %}
 <link rel="stylesheet" href="{% static 'css/wallet/style.css' %}" />
-<link rel="stylesheet" href="{% static 'css/profile/stylePersonalAccountSideBar.css' %}" />
-{% endblock %}
-
-{% block header %}
-{% include "include/profileHeader.html" %}
 {% endblock %}
 
 {% block content %}
@@ -345,14 +340,10 @@
 </section>
 {% endblock %}
 
-{% block footer %}
-{% include "include/baseFooter.html" %}
-{% endblock %}
 
 {% block extra_scripts %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="{% static 'js/header/header.js' %}"></script>
-<script src="{% static 'js/profile/scriptPersonalAccountSideBar.js' %}"></script>
 <script src="{% static 'js/wallet/edit.js' %}"></script>
 <script src="{% static 'js/wallet/scriptModalsPayment.js' %}"></script>
 <script>

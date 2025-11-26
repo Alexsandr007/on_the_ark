@@ -52,3 +52,5 @@ venv.bak/
 /temp_media/
 
 nginx.conf
+ecosystem.config.js
+nginx.conf.prod.txt

@@ -5,7 +5,6 @@
 
 {% block extra_head %}
     <link rel="stylesheet" href="{% static 'css/profile/stylePersonalAccount.css' %}" />
-<link rel="stylesheet" href="{% static 'css/profile/stylePersonalAccountSideBar.css' %}" />
 <link rel="stylesheet" href="{% static 'css/post/feed/style.css' %}" />
 <link rel="stylesheet" href="{% static 'css/post/feed/style-reset.css' %}" />
 <link rel="stylesheet" href="{% static 'css/post/feed/global-colors.css' %}" />
@@ -23,9 +22,6 @@
 <link rel="stylesheet" href="{% static 'css/post/modals/styleModals.css' %}" /> {% endcomment %}
 {% endblock %}
 
-{% block header %}
-{% include "include/profileHeader.html" %}
-{% endblock %}
 
 {% block content %}
 {% include "post/modals/subscriber_modal.html" %}
@@ -240,16 +236,12 @@
 </main>
 {% endblock %}
 
-{% block footer %}
-{% include "include/baseFooter.html" %}
-{% endblock %}
 
 {% block extra_scripts %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="{% static 'js/header/header.js' %}"></script>
 <script src="{% static 'js/post/feed/scriptFilter.js' %}"></script>
 <script src="{% static 'js/post/modals/modalPaymentDesktop.js' %}"></script>
-<script src="{% static 'js/profile/scriptPersonalAccountSideBar.js' %}"></script>
 <script src="{% static 'js/post/like.js' %}"></script>
 <script src="{% static 'js/post/comments.js' %}"></script>
 <script src="{% static 'js/post/filter_posts.js' %}"></script>

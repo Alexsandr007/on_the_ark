@@ -7,12 +7,8 @@
 <link rel="stylesheet" href="{% static 'css/subscription/styleModalsPayment.css' %}" />
 <link rel="stylesheet" href="{% static 'css/fonts/addFonts.css' %}">
 <link rel="stylesheet" href="{% static 'css/subscription/list_my_subscriptions/style.css' %}" />
-<link rel="stylesheet" href="{% static 'css/profile/stylePersonalAccountSideBar.css' %}" />
 {% endblock %}
 
-{% block header %}
-{% include "include/profileHeader.html" %}
-{% endblock %}
 
 {% block content %}
 <section class="advert__block">
@@ -135,9 +131,6 @@
 </section>
 {% endblock %}
 
-{% block footer %}
-{% include "include/baseFooter.html" %}
-{% endblock %}
 
 {% block extra_scripts %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -145,7 +138,6 @@
 <script src="{% static 'js/subscription/list_my_subscriptions/edit.js' %}"></script>
 <script src="{% static 'js/subscription/list_my_subscriptions/unsubscribe.js' %}"></script>
 <script src="{% static 'js/subscription/list_my_subscriptions/scriptModalsPayment.js' %}"></script>
-<script src="{% static 'js/profile/scriptPersonalAccountSideBar.js' %}"></script>
 
 <script>
     // Функция для переключения вкладок
