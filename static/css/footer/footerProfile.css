@@ -154,6 +154,7 @@
         position: absolute;
         right: 0;
         transition: transform 0.3s;
+        left: 200px;
     }
 
     .accordion.active .accordion__title::after {

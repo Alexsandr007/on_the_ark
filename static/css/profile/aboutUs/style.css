@@ -120,12 +120,13 @@
         margin: 5px 5px;
     }
 
-    .active {
+    .bottom-button .active {
         background: rgba(196, 50, 26, 1);
         border-color: rgba(196, 50, 26, 1);
         color: white;
         box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
     }
+
 
     .bottom-button {
         margin-top: 20px;
@@ -391,10 +392,6 @@
         color: rgba(229, 179, 26, 1);
     }
 
-    .section-divider-last .divider-image {
-        top: -46px !important;
-    }
-
 
     .pdf-content h2 {
         font-family: "Roboto";
@@ -442,13 +439,17 @@
         z-index: 11;
     }
 
-    .third-section .content {
-        max-width: 780px;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        align-items: center;
+    .third-section .divider-image {
+        width: 90%;
+        height: auto;
+        position: absolute;
+        top: 0px;
+        left: 5%;
+        display: block;
+        object-fit: cover;
+        z-index: 11;
+        top: -25px;
+        max-height: 210px;
     }
 
     .third-section h2 {
@@ -457,7 +458,7 @@
         font-size: 43px;
         font-weight: 700;
         line-height: 50px;
-        margin-top: 85px;
+        margin-top: 60px;
     }
 
     .third-section .buttons-grid {
@@ -534,7 +535,7 @@
     .third-section .offers h2 {
         font-family: "Roboto";
         font-weight: 700;
-        font-size: 43px;
+        font-size: 36px;
         line-height: 90%;
         letter-spacing: 0%;
         color: rgba(0, 0, 0, 1);
@@ -543,7 +544,7 @@
     .offers-text {
         display: flex;
         flex-direction: column;
-        row-gap: 60px;
+        row-gap: 45px;
     }
 
     .block-image {
@@ -619,9 +620,9 @@
         height: 100%;
         background-repeat: no-repeat;
         background-size: cover;
-        background-position: center;
         width: 100%;
         min-height: 506px;
+        margin-top: 30px;
     }
 
     .third-section .block-text h2 {
@@ -1079,108 +1080,6 @@
         height: 520px;
     }
 
-    .footer {
-        position: relative;
-        width: 100%;
-        height: auto;
-        display: flex;
-        background: rgba(17, 4, 1, 1);
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .footer__container {
-        width: 80%;
-        padding: 40px 0px;
-        font-weight: 500;
-        font-size: 14px;
-        letter-spacing: -0.03em;
-        color: #fff;
-        height: auto;
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: start;
-        gap: 50px;
-        line-height: 35px;
-    }
-
-    .down {
-
-        display: flex;
-        flex-direction: row;
-        padding: 15px;
-    }
-
-    .footer__container p {
-        margin: 0;
-    }
-
-    .footer__container h4 {
-        margin: 0;
-    }
-
-    .down h3 {
-        font-weight: 300;
-        font-size: 14px;
-        letter-spacing: -0.03em;
-        color: #000;
-    }
-
-    .footer .block-row {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-between;
-    }
-
-    .footer__item--btb {
-        height: 23px;
-    }
-
-    .footer__item--header {
-        display: flex;
-        gap: 10px;
-    }
-
-    .footer__item--im {
-        width: 20px;
-    }
-
-    .footer__item--a {
-        width: 16px;
-    }
-
-    .footer__item--xalva {
-        height: 12px;
-    }
-
-    .footer__item--container {
-        margin-top: 10px;
-        display: flex;
-        flex-direction: column;
-        gap: 10px
-    }
-
-
-    .footer__logo {
-        height: 16px;
-        width: 100%;
-    }
-
-    .footer__down {
-        background: white;
-        width: 100%;
-        padding: 20px 132px;
-        font-weight: 300;
-        font-size: 14px;
-        line-height: 100%;
-        letter-spacing: -3%;
-        display: flex;
-        justify-content: space-between;
-        flex-direction: row;
-    }
-
     @media (max-width: 1224px) {
 
 
@@ -1248,54 +1147,6 @@
             padding: 20px;
         }
 
-        .footer__container {
-            flex-direction: column;
-            row-gap: 10px;
-        }
-
-        .footer__down {
-            padding: 20px 20px;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .accordion__content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease, padding 0.3s ease;
-        }
-
-        .accordion.active .accordion__content {
-            max-height: 500px;
-            padding: 8px 0;
-        }
-
-        .accordion__title {
-            cursor: pointer;
-            position: relative;
-            padding-right: 20px;
-        }
-
-        footer .active {
-            background: none;
-            border: none;
-            box-shadow: none;
-        }
-
-        .accordion__title::after {
-            content: "▼";
-            position: absolute;
-            right: 0;
-            transition: transform 0.3s;
-        }
-
-        .accordion.active .accordion__title::after {
-            transform: rotate(-180deg);
-        }
-
-
-
-
         .fourth-section {
             position: relative;
             width: 100%;
@@ -1307,6 +1158,19 @@
 
     /* Адаптивность для планшетов */
     @media (max-width: 1024px) {
+
+        .third-section .divider-image {
+            width: 90%;
+            height: auto;
+            position: absolute;
+            top: 0px;
+            left: 5%;
+            display: block;
+            object-fit: cover;
+            z-index: 11;
+            top: -25px;
+            height: 150px;
+        }
 
         .third-section .buttons-grid {
             gap: 40px;
@@ -1378,17 +1242,22 @@
             font-size: 58.51px;
         }
 
+        .third-section .block-image {
+            min-height: 307px;
+            width: 100%;
+        }
+
         .divider-image {
             height: 200px;
         }
 
         .divider-image {
-            top: -65px;
+            top: -74px;
         }
 
         .color-div {
-            height: 60px;
-            font-size: 32px;
+            height: 45px;
+            font-size: 26px;
         }
 
         .bottom-button a {
@@ -1492,13 +1361,7 @@
             width: 100%;
         }
 
-        .third-section .block-image {
-            background: url(img/painter.png);
-            background-size: cover;
-            background-position: center;
-            min-height: 319px;
-            width: 100%;
-        }
+
 
     }
 
@@ -1535,7 +1398,24 @@
 
 
         .pdf-content h2 {
-            font-size: 48px;
+            font-size: 36px;
+        }
+
+        .second-section {
+            height: 650px;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .pdf-content {
+            max-width: 780px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            margin: 0px 0;
+            gap: 0px;
         }
 
         .five-section .content {

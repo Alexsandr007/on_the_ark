@@ -55,7 +55,7 @@
 }
 
 .footer__item--btb {
-    height: 23px;
+    height: 53px;
 }
 
 .footer__item--header {
@@ -119,6 +119,37 @@
         background: none;
         border: none;
         box-shadow: none;
+    }
+
+    .accordion__content {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease, padding 0.3s ease;
+    }
+
+    .accordion.active .accordion__content {
+        max-height: 500px;
+        padding: 8px 0;
+    }
+
+    .accordion__title {
+        cursor: pointer;
+        position: relative;
+        padding-right: 20px;
+    }
+
+
+
+    .accordion__title::after {
+        content: "▼";
+        position: absolute;
+        right: 0;
+        transition: transform 0.3s;
+        left: 200px;
+    }
+
+    .accordion.active .accordion__title::after {
+        transform: rotate(-180deg);
     }
 
 
