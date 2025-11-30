@@ -1,7 +1,4 @@
-:root {
-    --padding: 40px 132px;
-    --padding-wallet: 20px 132px;
-}
+
 
 @font-face {
     font-family: "Manrope";
@@ -1031,11 +1028,6 @@ body {
     justify-content: space-between;
 }
 
-@media (max-width: 1340px) {
-    :root {
-        --padding: 50px;
-    }
-}
 
 /* Базовое состояние на мобильных */
 @media (max-width: 768px) {
@@ -1315,10 +1307,6 @@ body {
         flex-wrap: wrap;
     }
 
-    :root {
-        --padding-wallet: 40px 22px 90px 22px;
-        --padding: 40px 20px;
-    }
 
     .wallet__donate--date {
         font-weight: 300;

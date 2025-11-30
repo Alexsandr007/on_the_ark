@@ -1250,29 +1250,7 @@ main {
         display: block;
     }
 
-    .header__links {
-        display: none;
-        flex-direction: column;
-        background: #fff;
-        position: absolute;
-        top: 60px;
-        left: 0;
-        width: 100%;
-        padding: 20px;
-        row-gap: 14px;
-    }
 
-    .header__links.active {
-        display: flex;
-    }
-
-    .open {
-        display: flex;
-    }
-
-    .header__buttons {
-        display: none;
-    }
 
     .profile__article-card--container {
         flex-direction: column;
@@ -1285,51 +1263,6 @@ main {
 
     .profile__article-card--body {
         padding: 20px;
-    }
-
-    .footer__container {
-        flex-direction: column;
-        row-gap: 10px;
-    }
-
-    .footer__down {
-        padding: 20px 20px;
-        flex-direction: column;
-        gap: 20px;
-    }
-
-    .accordion__content {
-        max-height: 0;
-        overflow: hidden;
-        transition: max-height 0.3s ease, padding 0.3s ease;
-    }
-
-    .accordion.active .accordion__content {
-        max-height: 500px;
-        padding: 8px 0;
-    }
-
-    .accordion__title {
-        cursor: pointer;
-        position: relative;
-        padding-right: 20px;
-    }
-
-    footer .active {
-        background: none;
-        border: none;
-        box-shadow: none;
-    }
-
-    .accordion__title::after {
-        content: "▼";
-        position: absolute;
-        left: 200px;
-        transition: transform 0.3s;
-    }
-
-    .accordion.active .accordion__title::after {
-        transform: rotate(-180deg);
     }
 
 

@@ -112,7 +112,7 @@ body {
     position: absolute;
     display: block;
     width: 100%;
-    height: 264px;
+    height: 434px;
     margin: 0;
     background: #C43418;
     background-size: cover;
@@ -1410,6 +1410,7 @@ input:checked+.slider:before {
     object-position: center;
     width: 100%;
     border-radius: 18px;
+    max-height: 550px;
     border: 1px rgba(214, 214, 214, 1) solid;
 }
 

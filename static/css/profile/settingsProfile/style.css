@@ -1,5 +1,4 @@
 :root {
-    --padding: 40px 132px;
     --padding-prof-block: 160px 132px;
 }
 
@@ -509,17 +508,3 @@ body {
     min-width: 200px;
 }
 
-
-@media (max-width: 1340px) {
-    :root {
-        --padding: 50px;
-    }
-}
-
-@media (max-width: 1140px) {
-
-
-    :root {
-        --padding: 40px 20px;
-    }
-}

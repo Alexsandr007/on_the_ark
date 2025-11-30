@@ -11,7 +11,13 @@
     margin: 0 auto;
     padding: 0 0px;
     width: 90%;
-      margin-top: calc(60px + 220px);
+      margin-top: calc(60px + 140px);
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+      margin-top: calc(60px + 80px);
   }
 }
 /*# sourceMappingURL=page.css.map */

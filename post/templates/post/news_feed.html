@@ -25,8 +25,8 @@
 
 {% block content %}
 {% include "post/modals/subscriber_modal.html" %}
-<div class="personal_account__fon" style="position: relative;" id="backgroundContainer"
-    style="{% if user.background_photo %}background-image: url('{{ user.background_photo.url }}');{% endif %}"></div>
+<div class="personal_account__fon" id="backgroundContainer"
+    style="position: relative;{% if user.background_photo %}background-image: url('{{ user.background_photo.url }}');{% else %}background-image: url('{% static 'images/home/main.png' %}');{% endif %}"></div>
 <div class="personal_account__mobile-ornament"></div>
 <picture style="width:100%;">
     <source media="(max-width: 1140px)" srcset="{% static 'images/post/feed/src/images/mobileFeedOrnament.svg' %}">
