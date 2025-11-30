@@ -19,7 +19,7 @@
     flex-direction: row;
     padding: 10px 100px;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-end;
 }
 
 
@@ -165,6 +165,6 @@
 
     .header__content {
         border-radius: 0;
-        padding: 20px;
+        padding: 20px 20px 10px 20px;
     }
 }

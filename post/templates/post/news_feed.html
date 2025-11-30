@@ -4,7 +4,7 @@
 {% block title %}На ковчеге - Лента новостей{% endblock %}
 
 {% block extra_head %}
-    <link rel="stylesheet" href="{% static 'css/profile/stylePersonalAccount.css' %}" />
+<link rel="stylesheet" href="{% static 'css/profile/stylePersonalAccount.css' %}" />
 <link rel="stylesheet" href="{% static 'css/post/feed/style.css' %}" />
 <link rel="stylesheet" href="{% static 'css/post/feed/style-reset.css' %}" />
 <link rel="stylesheet" href="{% static 'css/post/feed/global-colors.css' %}" />
@@ -25,9 +25,16 @@
 
 {% block content %}
 {% include "post/modals/subscriber_modal.html" %}
-<div class="personal_account__fon" style="position: relative;" id="backgroundContainer" style="{% if user.background_photo %}background-image: url('{{ user.background_photo.url }}');{% endif %}"></div>    <div class="personal_account__mobile-ornament"></div>
-<img src="{% static "images/post/feed/src/images/header-ornament--desctop.svg" %}" style="    position: relative;        height: auto;" class="personal_account__ornament">
-<div class="page-overlay"></div>
+<div class="personal_account__fon" style="position: relative;" id="backgroundContainer"
+    style="{% if user.background_photo %}background-image: url('{{ user.background_photo.url }}');{% endif %}"></div>
+<div class="personal_account__mobile-ornament"></div>
+<picture style="width:100%;">
+    <source media="(max-width: 1140px)" srcset="{% static 'images/post/feed/src/images/mobileFeedOrnament.svg' %}">
+    <source media="(min-width: 1141px)"
+        srcset="{% static 'images/post/feed/src/images/header-ornament--desctop.svg' %}">
+    <img src="{% static 'images/post/feed/src/images/header-ornament--desctop.svg' %}"
+        style="position: relative; height: auto;" class="personal_account__ornament">
+</picture>
 <main class="profile__articles">
     <div class="container">
         <div class="articles__topbar">

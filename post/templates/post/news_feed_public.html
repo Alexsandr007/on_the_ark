@@ -4,26 +4,26 @@
 {% block title %}На ковчеге - Публичная лента новостей{% endblock %}
 
 {% block extra_head %}
-    <link rel="stylesheet" href="{% static 'css/post/feed/style.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/post/feed/style-reset.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/post/feed/global-colors.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/post/feed/global-fonts.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/post/feed/global-typography.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/post/feed/buttons.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/post/feed/page.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/post/feed/style-333.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/post/feed/feedModals.css' %}" />
-    
-    
-    {# Стили для модальных окон #}
-    <link rel="stylesheet" href="{% static 'css/home/style.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/home/styleModals.css' %}" />
+<link rel="stylesheet" href="{% static 'css/post/feed/style.css' %}" />
+<link rel="stylesheet" href="{% static 'css/post/feed/style-reset.css' %}" />
+<link rel="stylesheet" href="{% static 'css/post/feed/global-colors.css' %}" />
+<link rel="stylesheet" href="{% static 'css/post/feed/global-fonts.css' %}" />
+<link rel="stylesheet" href="{% static 'css/post/feed/global-typography.css' %}" />
+<link rel="stylesheet" href="{% static 'css/post/feed/buttons.css' %}" />
+<link rel="stylesheet" href="{% static 'css/post/feed/page.css' %}" />
+<link rel="stylesheet" href="{% static 'css/post/feed/style-333.css' %}" />
+<link rel="stylesheet" href="{% static 'css/post/feed/feedModals.css' %}" />
+
+
+{# Стили для модальных окон #}
+<link rel="stylesheet" href="{% static 'css/home/style.css' %}" />
+<link rel="stylesheet" href="{% static 'css/home/styleModals.css' %}" />
 {% endblock %}
 
 
 {% block content %}
 {% include "user/homeModals/AuthModals.html" %}
-    {% include "user/homeModals/AuthModals.html" %}
+{% include "user/homeModals/AuthModals.html" %}
 <section class="profile__block">
     <img class="profile__fon" src="{% static 'images/profile/bgMain.png' %}">
     <div class="profile__container">
@@ -33,7 +33,14 @@
 <section class="main-block">
     {% comment %} <div class="main-block__devider"></div> {% endcomment %}
     <div class="main-block__fon">
-        <img class="" src="{% static 'images/profile/Бусы3.svg' %}" alt="">
+        <picture style="width:100%;">
+            <source media="(max-width: 1140px)"
+                srcset="{% static 'images/post/feed/src/images/mobileFeedOrnament.svg' %}">
+            <source media="(min-width: 1141px)"
+                srcset="{% static 'images/post/feed/src/images/header-ornament--desctop.svg' %}">
+            <img src="{% static 'images/post/feed/src/images/header-ornament--desctop.svg' %}"
+                style="position: relative; height: auto;" class="personal_account__ornament">
+        </picture>
     </div>
 </section>
 <main class="profile__articles">
@@ -65,7 +72,8 @@
                                 </div>
                             </div>
                             <img class="article__share-icon"
-                                src="{% static 'images/post/feed/src/images/icon-share.png' %}" alt="Поделиться"  onclick="window.location.href='{% url 'personal_account' post.author_id %}'">
+                                src="{% static 'images/post/feed/src/images/icon-share.png' %}" alt="Поделиться"
+                                onclick="window.location.href='{% url 'personal_account' post.author_id %}'">
                         </div>
 
                         {% if not post.is_accessible %}
@@ -152,7 +160,8 @@
                         {# Секция комментариев - скрыта для неавторизованных #}
                         <div class="comments-section" style="display: none;">
                             <div class="login-to-comment">
-                                <p>Для просмотра комментариев <a href="#" class="open-auth-modal">войдите</a> или <a href="#" class="open-register-modal">зарегистрируйтесь</a></p>
+                                <p>Для просмотра комментариев <a href="#" class="open-auth-modal">войдите</a> или <a
+                                        href="#" class="open-register-modal">зарегистрируйтесь</a></p>
                             </div>
                         </div>
                     </div>
