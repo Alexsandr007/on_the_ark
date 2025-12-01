@@ -68,10 +68,13 @@
         <div class="profile__articles--container">
             {% for post in posts %}
             <div class="profile__articles--item" data-post-id="{{ post.id }}"
-                data-published-date="{{ post.published_at|date:'c' }}" data-author-id="{{ post.author.id }}"
+                data-published-date="{{ post.published_at|date:'c' }}" 
+                data-author-id="{{ post.author.id }}"
                 data-is-accessible="{{ post.is_accessible|yesno:'true,false' }}"
-                data-has-subscription="{{ post.subscription|yesno:'true,false' }}"
-                data-author-joined="{{ post.author_joined_date|date:'c' }}">
+                data-has-subscription="{% if post.subscription %}true{% else %}false{% endif %}"
+                data-is-author-subscribed="{{ post.is_author_subscribed|yesno:'true,false' }}"
+                data-subscription-price="{{ post.subscription_price }}"
+                data-author-joined-date="{{ post.author.date_joined|date:'c' }}">
                 <div class="profile__article-card">
                     <div class="profile__article-card--body">
                         <div class="profile__article-card--body-header">

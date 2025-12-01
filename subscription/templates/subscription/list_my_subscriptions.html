@@ -13,7 +13,13 @@
 {% block content %}
 <section class="advert__block">
     <div class="advert__fon"></div>
-    <img class="advert__header--image" src="{% static 'images/subscription/list_my_subscriptions/fon2.png' %}">
+    <picture>
+        <source media="(min-width: 1141px)" srcset="{% static 'images/subscription/list_my_subscriptions/fon2.png' %}">
+        <source media="(max-width: 1140px)" srcset="{% static 'images/subscription/list_my_subscriptions/fon2Mobile.svg' %}">
+        <img class="advert__header--image" 
+             src="{% static 'images/subscription/list_my_subscriptions/fon2.png' %}" 
+             alt="Заголовок">
+    </picture>
     <div class="prof__header">
         <a onclick="window.history.back()">Назад</a>
     </div>
@@ -40,14 +46,23 @@
                                     <div class="advert__pay--item">
                                         <div class="advert__prof">
                                             <div>
+                                                <!-- Ссылка на профиль автора через аватар -->
                                                 {% if sub_data.creator.avatar %}
-                                                <img src="{{ sub_data.creator.avatar.url }}"
-                                                    alt="{{ sub_data.creator.get_full_name }}">
+                                                <img class="avatar-link" 
+                                                     src="{{ sub_data.creator.avatar.url }}"
+                                                     alt="{{ sub_data.creator.get_full_name }}"
+                                                     onclick="window.location.href='{% url 'personal_account' sub_data.creator.id %}'">
                                                 {% else %}
-                                                <img src="{% static 'images/profile/profile_default.png' %}"
-                                                    alt="Аватар">
+                                                <img class="avatar-link"
+                                                     src="{% static 'images/profile/profile_default.png' %}"
+                                                     alt="Аватар"
+                                                     onclick="window.location.href='{% url 'personal_account' sub_data.creator.id %}'">
                                                 {% endif %}
-                                                <p>{{ sub_data.creator.get_full_name|default:sub_data.creator.username }}
+                                                
+                                                <!-- Ссылка на профиль автора через имя -->
+                                                <p class="username-link" 
+                                                   onclick="window.location.href='{% url 'personal_account' sub_data.creator.id %}'">
+                                                   {{ sub_data.creator.get_full_name|default:sub_data.creator.username }}
                                                 </p>
                                             </div>
                                             <h2>{{ sub_data.subscription.name }}</h2>
@@ -92,15 +107,24 @@
                                 <div class="advert__sessions--item"
                                     id="subscription-{{ sub_data.user_subscription_id }}">
                                     <div class="advert__sessions--block">
+                                        <!-- Ссылка на профиль автора через аватар -->
                                         {% if sub_data.creator.photo %}
-                                        <img src="{{ sub_data.creator.photo.url }}"
-                                            alt="{{ sub_data.creator.get_full_name }}">
+                                        <img class="avatar-link"
+                                             src="{{ sub_data.creator.photo.url }}"
+                                             alt="{{ sub_data.creator.get_full_name }}"
+                                             onclick="window.location.href='{% url 'personal_account' sub_data.creator.id %}'">
                                         {% else %}
-                                        <img src="{% static 'images/profile/profile_default.png' %}"
-                                            alt="Аватар">
+                                        <img class="avatar-link"
+                                             src="{% static 'images/profile/profile_default.png' %}"
+                                             alt="Аватар"
+                                             onclick="window.location.href='{% url 'personal_account' sub_data.creator.id %}'">
                                         {% endif %}
+                                        
                                         <div class="advert__sessions--info">
-                                            <p>{{ sub_data.creator.get_full_name|default:sub_data.creator.username }}
+                                            <!-- Ссылка на профиль автора через имя -->
+                                            <p class="username-link" 
+                                               onclick="window.location.href='{% url 'personal_account' sub_data.creator.id %}'">
+                                               {{ sub_data.creator.get_full_name|default:sub_data.creator.username }}
                                             </p>
                                             <span>{{ sub_data.subscription.name }}</span>
                                         </div>
@@ -127,7 +151,6 @@
             </div>
         </div>
     </div>
-    </div>
 </section>
 {% endblock %}
 
@@ -135,7 +158,6 @@
 {% block extra_scripts %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="{% static 'js/header/header.js' %}"></script>
-<script src="{% static 'js/subscription/list_my_subscriptions/edit.js' %}"></script>
 <script src="{% static 'js/subscription/list_my_subscriptions/unsubscribe.js' %}"></script>
 <script src="{% static 'js/subscription/list_my_subscriptions/scriptModalsPayment.js' %}"></script>
 
@@ -165,6 +187,30 @@
         item.addEventListener('click', function () {
             const tabName = this.getAttribute('data-tab');
             switchTab(tabName);
+        });
+    });
+
+    // Добавление обработчиков для ссылок на профиль автора
+    document.addEventListener('DOMContentLoaded', function() {
+        // Обработчик для клика по аватару или имени
+        document.querySelectorAll('.avatar-link, .username-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const url = this.getAttribute('onclick')?.match(/href='([^']+)'/)?.[1];
+                if (url) {
+                    window.location.href = url;
+                }
+            });
+        });
+
+        // Альтернативный вариант: добавление data-атрибутов
+        document.querySelectorAll('[data-author-id]').forEach(element => {
+            element.addEventListener('click', function() {
+                const authorId = this.getAttribute('data-author-id');
+                if (authorId) {
+                    window.location.href = `/profile/${authorId}/`;
+                }
+            });
         });
     });
 
@@ -199,14 +245,14 @@
     const but = document.querySelector('.prof__wallet--btn button');
     const img = but.querySelector('img');
 
-    but.addEventListener('mouseenter', () => {
-        img.src = '{% static '
-        images / subscription / list_my_subscriptions / wallet - white.png ' %}';
-    });
+    if (but && img) {
+        but.addEventListener('mouseenter', () => {
+            img.src = '{% static "images/subscription/list_my_subscriptions/wallet-white.png" %}';
+        });
 
-    but.addEventListener('mouseleave', () => {
-        img.src = '{% static '
-        images / subscription / list_my_subscriptions / walletbtn.png ' %}';
-    });
+        but.addEventListener('mouseleave', () => {
+            img.src = '{% static "images/subscription/list_my_subscriptions/walletbtn.png" %}';
+        });
+    }
 </script>
 {% endblock %}

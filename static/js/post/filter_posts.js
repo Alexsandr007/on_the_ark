@@ -1,4 +1,3 @@
-// Добавьте этот код в ваш extra_scripts блок или в отдельный файл
 document.addEventListener('DOMContentLoaded', function() {
     const filterButton = document.getElementById('filter__button');
     const filterSelect = document.getElementById('filter__select');
@@ -49,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
             filteredPosts = filterNewAuthors(filteredPosts);
         }
 
-        // Фильтр "Мои подписки"
+        // Фильтр "Мои подписки" - ОБНОВЛЕННЫЙ ФИЛЬТР
         if (filters['my-subscriptions']) {
             filteredPosts = filterMySubscriptions(filteredPosts);
         }
@@ -86,7 +85,8 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('Фильтр "Новые авторы": показываем авторов после', oneWeekAgo);
 
         return postsArray.filter(post => {
-            const authorJoinedDate = post.getAttribute('data-author-joined');
+            const authorJoinedDate = post.getAttribute('data-author-joined-date') || 
+                                   post.getAttribute('data-author-joined');
             if (!authorJoinedDate) return false;
 
             const joinedDate = new Date(authorJoinedDate);
@@ -100,12 +100,52 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Функция для фильтра "Мои подписки"
+    // ФУНКЦИЯ ДЛЯ ФИЛЬТРА "МОИ ПОДПИСКИ" - КЛЮЧЕВОЕ ИСПРАВЛЕНИЕ
     function filterMySubscriptions(postsArray) {
         return postsArray.filter(post => {
+            const isAuthorSubscribed = post.getAttribute('data-is-author-subscribed') === 'true';
             const isAccessible = post.getAttribute('data-is-accessible') === 'true';
             const hasSubscription = post.getAttribute('data-has-subscription') === 'true';
-            return isAccessible && hasSubscription;
+            const subscriptionPrice = parseFloat(post.getAttribute('data-subscription-price') || 0);
+            
+            console.log(`Фильтр "Мои подписки": проверка поста`, {
+                author: post.querySelector('.author-name').textContent,
+                isAuthorSubscribed,
+                isAccessible,
+                hasSubscription,
+                subscriptionPrice
+            });
+            
+            // Условия для показа поста:
+            // 1. Пользователь должен быть подписан на автора (через бесплатную или платную подписку) И
+            // 2. Пост должен быть доступен пользователю
+            
+            // Если не подписан на автора - не показываем
+            if (!isAuthorSubscribed) {
+                console.log(`   ❌ Не подписан на автора`);
+                return false;
+            }
+            
+            // Проверяем доступность поста
+            if (!hasSubscription) {
+                // Бесплатный пост (без подписки)
+                // Показываем, если подписан на автора
+                console.log(`   ✅ Бесплатный пост - показываем`);
+                return true;
+            } else {
+                // Пост с подпиской
+                if (subscriptionPrice > 0) {
+                    // Платный пост - показываем только если доступен
+                    const result = isAccessible;
+                    console.log(`   ${result ? '✅' : '❌'} Платный пост - ${result ? 'доступен' : 'не доступен'}`);
+                    return result;
+                } else {
+                    // Бесплатная подписка - показываем если доступен
+                    const result = isAccessible;
+                    console.log(`   ${result ? '✅' : '❌'} Пост с бесплатной подпиской - ${result ? 'доступен' : 'не доступен'}`);
+                    return result;
+                }
+            }
         });
     }
 
@@ -114,15 +154,23 @@ document.addEventListener('DOMContentLoaded', function() {
         return postsArray.filter(post => {
             const hasSubscription = post.getAttribute('data-has-subscription') === 'true';
             const isAccessible = post.getAttribute('data-is-accessible') === 'true';
-            return hasSubscription && isAccessible;
+            const subscriptionPrice = parseFloat(post.getAttribute('data-subscription-price') || 0);
+            
+            // Показываем платные посты (цена > 0), которые доступны пользователю
+            return hasSubscription && subscriptionPrice > 0 && isAccessible;
         });
     }
 
     // Функция для фильтра "Бесплатный контент"
     function filterFreeContent(postsArray) {
         return postsArray.filter(post => {
-            const hasSubscription = post.getAttribute('data-has-subscription') === 'false';
-            return hasSubscription;
+            const hasSubscription = post.getAttribute('data-has-subscription') === 'true';
+            const subscriptionPrice = parseFloat(post.getAttribute('data-subscription-price') || 0);
+            
+            // Показываем:
+            // 1. Посты без подписки (hasSubscription === false) ИЛИ
+            // 2. Посты с бесплатной подпиской (цена = 0)
+            return !hasSubscription || (hasSubscription && subscriptionPrice === 0);
         });
     }
 
@@ -166,13 +214,23 @@ document.addEventListener('DOMContentLoaded', function() {
     function initializeFilters() {
         console.log('Инициализация фильтров. Всего постов:', posts.length);
         
-        // Логируем информацию о авторах для отладки
+        // Логируем информацию о постах для отладки
         posts.forEach((post, index) => {
             const authorName = post.querySelector('.author-name').textContent;
-            const authorJoined = post.getAttribute('data-author-joined');
+            const isAccessible = post.getAttribute('data-is-accessible');
+            const hasSubscription = post.getAttribute('data-has-subscription');
+            const isAuthorSubscribed = post.getAttribute('data-is-author-subscribed');
+            const subscriptionPrice = post.getAttribute('data-subscription-price');
+            const authorJoined = post.getAttribute('data-author-joined-date') || 
+                               post.getAttribute('data-author-joined');
             const joinedDate = authorJoined ? new Date(authorJoined) : 'Нет данных';
             
-            console.log(`Пост ${index + 1}: Автор "${authorName}", зарегистрирован:`, joinedDate);
+            console.log(`Пост ${index + 1}: Автор "${authorName}", ` +
+                       `Доступен: ${isAccessible}, ` +
+                       `Есть подписка: ${hasSubscription}, ` +
+                       `Цена подписки: ${subscriptionPrice}, ` +
+                       `Подписан на автора: ${isAuthorSubscribed}, ` +
+                       `Зарегистрирован:`, joinedDate);
         });
     }
 

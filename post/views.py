@@ -27,7 +27,12 @@ def create_post(request):
     temp_media_url = None
     temp_media_type = None
 
-    user_subscriptions = Subscription.objects.filter(is_active=True)
+    # Исключаем бесплатные подписки (цена = 0) - ИСПРАВЛЕНИЕ
+    user_subscriptions = Subscription.objects.filter(
+        is_active=True, 
+        creator=request.user,
+        price__gt=0  # Только платные подписки
+    )
 
     if request.method == 'POST':
         title = request.POST.get('title', '').strip()
@@ -73,7 +78,8 @@ def create_post(request):
             return render(request, 'post/create_post.html', {
                 'form_data': form_data, 
                 'temp_media_url': temp_media_url, 
-                'temp_media_type': temp_media_type
+                'temp_media_type': temp_media_type,
+                'user_subscriptions': user_subscriptions  # Передаем отфильтрованные подписки
             })
 
         fields_to_check = {
@@ -93,7 +99,8 @@ def create_post(request):
                 return render(request, 'post/create_post.html', {
                     'form_data': form_data, 
                     'temp_media_url': temp_media_url, 
-                    'temp_media_type': temp_media_type
+                    'temp_media_type': temp_media_type,
+                    'user_subscriptions': user_subscriptions  # Передаем отфильтрованные подписки
                 })
 
         scheduled_at = None
@@ -106,16 +113,23 @@ def create_post(request):
                 return render(request, 'post/create_post.html', {
                     'form_data': form_data, 
                     'temp_media_url': temp_media_url, 
-                    'temp_media_type': temp_media_type
+                    'temp_media_type': temp_media_type,
+                    'user_subscriptions': user_subscriptions  # Передаем отфильтрованные подписки
                 })
             
 
         subscription = None
         if visibility and visibility != 'all_users':  
             try:
-                subscription = Subscription.objects.get(id=visibility, is_active=True)  
+                # При создании поста также проверяем, что подписка платная
+                subscription = Subscription.objects.get(
+                    id=visibility, 
+                    is_active=True,
+                    price__gt=0,  # Дополнительная проверка, что подписка платная
+                    creator=request.user  # И что создатель - текущий пользователь
+                )  
             except (Subscription.DoesNotExist, ValueError):
-                messages.error(request, 'Выбранная подписка не найдена')
+                messages.error(request, 'Выбранная подписка не найдена или недоступна')
                 temp_media_url, temp_media_type = save_temp_file()
                 return render(request, 'post/create_post.html', {
                     'form_data': form_data, 
@@ -245,7 +259,7 @@ def edit_post(request, post_id):
     temp_storage = FileSystemStorage(location=settings.TEMP_MEDIA_ROOT, base_url=settings.TEMP_MEDIA_URL)
     temp_media_url = None
     temp_media_type = None
-    user_subscriptions = Subscription.objects.filter(is_active=True)  # ДОБАВИТЬ ЭТУ СТРОКУ
+    user_subscriptions = Subscription.objects.filter(is_active=True, creator=request.user) 
 
     if request.method == 'POST':
         title = request.POST.get('title', '').strip()
@@ -691,11 +705,45 @@ def get_visible_posts(user):
 @login_required
 def feed(request):
     """Лента новостей с постами всех авторов"""
-    # Получаем активные подписки пользователя
-    user_active_subscriptions = request.user.user_subscriptions.filter(
+    user = request.user
+    
+    # 1. Получаем активные платные подписки пользователя
+    user_active_paid_subscriptions = user.user_subscriptions.filter(
         is_active=True,
-        expires_at__gt=timezone.now()
+        expires_at__gt=timezone.now(),
+        subscription__price__gt=0  # Только платные подписки
     ).values_list('subscription_id', flat=True)
+    
+    # 2. Получаем активные БЕСПЛАТНЫЕ подписки пользователя на авторов
+    user_active_free_subscriptions = user.user_subscriptions.filter(
+        is_active=True,
+        expires_at__gt=timezone.now(),
+        subscription__price=0  # Только бесплатные подписки
+    ).values_list('subscription_id', flat=True)
+    
+    # 3. Получаем авторов, на которых пользователь подписан через БЕСПЛАТНЫЕ подписки
+    # Это авторы, которые создали бесплатные подписки, на которые пользователь подписан
+    subscribed_authors_ids = set(
+        Subscription.objects.filter(
+            id__in=user_active_free_subscriptions,
+            price=0  # Бесплатные подписки
+        ).values_list('creator_id', flat=True)
+    )
+    
+    # 4. Получаем авторов, на которых пользователь подписан через ПЛАТНЫЕ подписки
+    # Это авторы, которые создали платные подписки, на которые пользователь подписан
+    subscribed_authors_via_paid = set(
+        Subscription.objects.filter(
+            id__in=user_active_paid_subscriptions,
+            price__gt=0  # Платные подписки
+        ).values_list('creator_id', flat=True)
+    )
+    
+    # 5. Объединяем оба списка авторов
+    # Пользователь считается подписанным на автора, если у него есть:
+    # - Бесплатная подписка на автора ИЛИ
+    # - Платная подписка, созданная этим автором
+    subscribed_authors_ids = subscribed_authors_ids.union(subscribed_authors_via_paid)
     
     # Получаем все активные подписки для модального окна
     available_subscriptions = Subscription.objects.filter(is_active=True)
@@ -703,9 +751,7 @@ def feed(request):
     # Обрабатываем подписки для отображения
     processed_subscriptions = []
     for subscription in available_subscriptions:
-        # Разбиваем описание на список для отображения
         description_lines = subscription.description.split('\n')
-        
         processed_subscriptions.append({
             'id': subscription.id,
             'name': subscription.name,
@@ -715,11 +761,11 @@ def feed(request):
             'final_price': subscription.final_price,
             'image': subscription.image,
             'is_discount_active': subscription.is_discount_active,
-            'discount_percent': subscription.discount_percent,  # ДОБАВЛЕНО
+            'discount_percent': subscription.discount_percent,
             'has_trial_period': subscription.has_trial_period,
             'trial_days': subscription.trial_days,
-            'is_limited_subscribers': subscription.is_limited_subscribers,  # ДОБАВЛЕНО
-            'max_subscribers': subscription.max_subscribers,  # ДОБАВЛЕНО
+            'is_limited_subscribers': subscription.is_limited_subscribers,
+            'max_subscribers': subscription.max_subscribers,
         })
     
     # Базовый запрос для опубликованных постов
@@ -739,8 +785,19 @@ def feed(request):
     # Определяем, доступен ли пост пользователю
     def is_post_accessible(post):
         if not post.subscription:
-            return True  # Пост доступен всем
-        return post.subscription.id in user_active_subscriptions
+            return True  # Пост доступен всем (бесплатный)
+        
+        # Если пост с платной подпиской, проверяем, подписан ли пользователь
+        if post.subscription.price > 0:
+            return post.subscription.id in user_active_paid_subscriptions
+        
+        # Если пост с бесплатной подпиской
+        # Проверяем, подписан ли пользователь на бесплатную подписку автора
+        return post.subscription.id in user_active_free_subscriptions
+    
+    # Определяем, подписан ли пользователь на автора
+    def is_author_subscribed(author_id):
+        return author_id in subscribed_authors_ids
     
     # Обрабатываем посты для отображения
     processed_posts = []
@@ -748,16 +805,19 @@ def feed(request):
         # Получаем медиа поста
         media_list = list(post.media.all())
         
-        # Получаем комментарии для поста (только для доступных постов)
-        comments = []
-        if is_post_accessible(post):
-            comments = list(post.comments.all().select_related('author')[:5])
-        
         # Проверяем, лайкнул ли пользователь пост
-        is_liked = post.likes.filter(user=request.user).exists()
+        is_liked = post.likes.filter(user=user).exists()
         
         # Проверяем доступность поста
         is_accessible = is_post_accessible(post)
+        
+        # Получаем комментарии для поста (только для доступных постов)
+        comments = []
+        if is_accessible:
+            comments = list(post.comments.all().select_related('author')[:5])
+        
+        # Проверяем, подписан ли пользователь на автора
+        is_author_followed = is_author_subscribed(post.author.id)
         
         # Безопасно получаем фото автора
         author_photo_url = None
@@ -782,7 +842,9 @@ def feed(request):
             'comments_count': post.comments_count,
             'is_liked': is_liked,
             'subscription': post.subscription,
+            'subscription_price': post.subscription.price if post.subscription else 0,  # Цена подписки
             'is_accessible': is_accessible,
+            'is_author_subscribed': is_author_followed,
             'is_ad': post.is_ad,
             'ad_description': post.ad_description,
             'comments_disabled': post.comments_disabled,
@@ -791,7 +853,7 @@ def feed(request):
 
     context = {
         'posts': processed_posts,
-        'user_subscriptions': user_active_subscriptions,
+        'user_subscriptions': list(user_active_paid_subscriptions) + list(user_active_free_subscriptions),
         'available_subscriptions': processed_subscriptions,
     }
     

@@ -117,9 +117,12 @@ a {
 .advert__container {
     display: flex;
     flex-direction: column;
-    min-height: 716px;
     max-width: 980px;
     gap: 40px;
+}
+
+.profile__articles--item img{
+    width: 100%;
 }
 
 
@@ -366,6 +369,7 @@ a {
     display: flex;
     flex-direction: column;
     align-items: center;
+    min-height: 330px;
 }
 
 .advert__content--item {
@@ -1201,7 +1205,7 @@ a {
     }
 
     .advert__header--image {
-        margin-top: -17px;
+        margin-top: 0px;
     }
 
     body {
@@ -1279,4 +1283,50 @@ a {
     .advert__container {
         gap: 30px;
     }
+}
+
+
+@media (max-width: 400px) {
+    .advert__sessions--item {
+        flex-direction: column;
+    }
+}
+
+
+.advert__header--image-desktop {
+    display: block;
+}
+
+.advert__header--image-mobile {
+    display: none;
+}
+
+/* На мобильных устройствах показываем мобильную картинку, скрываем десктопную */
+@media (max-width: 1140px) {
+    .advert__header--image-desktop {
+        display: none;
+    }
+    
+    .advert__header--image-mobile {
+        display: block;
+    }
+}
+
+
+.avatar-link, .username-link {
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    transition: opacity 0.2s;
+}
+.avatar-link:hover, .username-link:hover {
+    opacity: 0.8;
+}
+.advert__prof div {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.advert__prof img {
+    cursor: pointer;
 }

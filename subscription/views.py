@@ -56,9 +56,19 @@ class SubscriptionListView(LoginRequiredMixin, ListView):
     paginate_by = 10
     
     def get_queryset(self):
+        # Фильтруем только платные подписки текущего пользователя
         return Subscription.objects.filter(
-            creator=self.request.user
+            creator=self.request.user,
+            price__gt=0  # Только платные подписки (цена > 0)
         ).order_by('-created_at')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Можно добавить информацию о количестве подписок
+        queryset = self.get_queryset()
+        context['subscriptions_count'] = queryset.count()
+        context['has_subscriptions'] = queryset.exists()
+        return context
 
 class SubscriptionUpdateView(LoginRequiredMixin, UpdateView):
     model = Subscription

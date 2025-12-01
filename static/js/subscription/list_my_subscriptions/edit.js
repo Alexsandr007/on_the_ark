@@ -102,16 +102,25 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-document.addEventListener('DOMContentLoaded', () => {
-    const checkbox = document.querySelector('.advert__verification--checkout input[type="checkbox"]');
-    const button = document.querySelector('.advert__verification--button button');
+// document.addEventListener('DOMContentLoaded', () => {
+//     const checkbox = document.querySelector('.advert__verification--checkout input[type="checkbox"]');
+//     const button = document.querySelector('.advert__verification--button button');
 
-    const sync = () => {
-        button.disabled = !checkbox.checked; 
-    };
-    sync();                      
-    checkbox.addEventListener('change', sync);
-});
+//     // Проверяем, существуют ли оба элемента
+//     if (checkbox && button) {
+//         const sync = () => {
+//             button.disabled = !checkbox.checked; 
+//         };
+//         sync();                      
+//         checkbox.addEventListener('change', sync);
+//     } else {
+//         // Для отладки можно добавить console.log
+//         console.log('Элементы не найдены:', {
+//             checkbox: checkbox ? 'найден' : 'не найден',
+//             button: button ? 'найден' : 'не найден'
+//         });
+//     }
+// });
 
 
 document.addEventListener("DOMContentLoaded", () => {
