@@ -10,7 +10,7 @@ import random
 import string
 from subscription.models import Subscription
 from user.models import CustomUser
-from post.models import Like, Media, Post
+from post.models import Like, Media, Post, Comment
 from .forms import RegisterForm, LoginForm, PasswordResetForm, AboutForm, GoalForm
 from .models import CustomUser, UserGoal, UserSocialLinks, UserSession
 from django.core.files.storage import default_storage
@@ -22,7 +22,7 @@ from django.db.models import Count
 from subscription.models import UserSubscription
 from django.views.decorators.http import require_http_methods
 import logging
-
+from django.db.models import Prefetch
 logger = logging.getLogger(__name__)
 
 
@@ -57,9 +57,6 @@ def change_profile(request):
         else:
             user.save()
 
-
-
-        
         return redirect('change_profile')
     user_sessions = UserSession.objects.filter(
     user=request.user
@@ -113,7 +110,6 @@ def agree_privacy_policy(request):
 
 @login_required
 def update_social_links(request):
-    """Обработка AJAX запроса для обновления социальных ссылок"""
     if request.method == 'POST' and request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         try:
             data = json.loads(request.body)
@@ -150,17 +146,10 @@ def update_social_links(request):
     }, status=405)
 
 
-import logging
-from smtplib import SMTPException
-from django.core.mail import BadHeaderError
-
-# Настройка логгера
-logger = logging.getLogger(__name__)
 def register_ajax(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
-            # Создаем пользователя, но не логиним
             user = form.save(commit=False)
             user.is_active = True
             user.email_verified = False
@@ -168,19 +157,17 @@ def register_ajax(request):
             user.verification_sent_at = timezone.now()
             user.save()
             
-            # Отправляем email с ссылкой для подтверждения
             verification_url = f"{request.scheme}://{request.get_host()}/verify-email/{user.verification_token}/"
             
             try:
                 send_mail(
                     'Подтверждение email для Ковчега',
                     f'Для завершения регистрации перейдите по ссылке: {verification_url}',
-                    settings.DEFAULT_FROM_EMAIL,  # ← ИСПОЛЬЗУЙТЕ НАСТРОЙКИ ИЗ settings.py
+                    settings.DEFAULT_FROM_EMAIL,
                     [user.email],
                     fail_silently=False,
                 )
                 
-                # Сохраняем user_id в сессии для повторной отправки
                 request.session['pending_verification_user_id'] = user.id
                 request.session['pending_verification_email'] = user.email
                 
@@ -194,7 +181,6 @@ def register_ajax(request):
                 })
                 
             except Exception as e:
-                # Все остальные ошибки
                 error_type = type(e).__name__
                 logger.error(f"Unexpected error ({error_type}) when sending email to {user.email}: {str(e)}")
                 user.delete()
@@ -208,37 +194,29 @@ def register_ajax(request):
     return JsonResponse({'success': False})
 
 def verify_email(request, token):
-    """Подтверждение email по токену с немедленным логином и редиректом в ЛК"""
     try:
         user = CustomUser.objects.get(verification_token=token)
         
-        # Проверяем, не истекла ли ссылка (24 часа)
         if timezone.now() > user.verification_sent_at + timezone.timedelta(hours=24):
             return render(request, 'verification_expired.html')
         
-        # Активируем email и логиним пользователя
         user.email_verified = True
         user.verification_token = ''
         user.save()
         
-        # Логиним пользователя
         login(request, user)
         
-        # Очищаем сессию
         if 'pending_verification_user_id' in request.session:
             del request.session['pending_verification_user_id']
             del request.session['pending_verification_email']
         
-        # Редирект в ЛК
         return redirect('/profile/')
         
     except CustomUser.DoesNotExist:
         return render(request, 'verification_failed.html')
 
 def resend_verification_ajax(request):
-    """Повторная отправка verification email для обоих сценариев"""
     if request.method == 'POST':
-        # Пробуем получить user_id из сессии (для обоих сценариев)
         user_id = request.session.get('pending_verification_user_id')
         email = request.session.get('pending_verification_email')
         
@@ -248,12 +226,10 @@ def resend_verification_ajax(request):
         try:
             user = CustomUser.objects.get(id=user_id, email=email)
             
-            # Обновляем токен и время
             user.verification_token = get_random_string(50)
             user.verification_sent_at = timezone.now()
             user.save()
             
-            # Отправляем email
             verification_url = f"{request.scheme}://{request.get_host()}/verify-email/{user.verification_token}/"
             
             send_mail(
@@ -281,15 +257,12 @@ def login_ajax(request):
             user = authenticate(email=form.cleaned_data['username'], password=form.cleaned_data['password'])
             if user:
                 if user.email_verified:
-                    # Если email подтвержден - логиним и редиректим в ЛК
                     login(request, user)
                     return JsonResponse({'success': True, 'redirect': '/profile/'})
                 else:
-                    # Если email не подтвержден - сохраняем в сессии и просим подтвердить
                     request.session['pending_verification_user_id'] = user.id
                     request.session['pending_verification_email'] = user.email
                     
-                    # Отправляем письмо подтверждения (если еще не отправляли)
                     if not user.verification_token:
                         user.verification_token = get_random_string(50)
                         user.verification_sent_at = timezone.now()
@@ -355,8 +328,17 @@ def password_reset_ajax(request):
 @login_required
 def profile(request):
     user = request.user
-    posts = Post.objects.filter(author=user, published_at__isnull=False).prefetch_related(
-        'likes', 'comments'
+    
+    posts = Post.objects.filter(
+        author=user, 
+        published_at__isnull=False
+    ).prefetch_related(
+        'likes', 
+        Prefetch(
+            'comments', 
+            queryset=Comment.objects.select_related('author', 'parent__author').order_by('created_at')
+        ),
+        'tags'
     ).order_by('-published_at')
     
     liked_post_ids = Like.objects.filter(
@@ -378,7 +360,17 @@ def profile(request):
     for post in posts:
         post.is_liked_by_current_user = post.id in liked_post_ids_set
         post.media_list = media_dict.get(post.id, [])
-        post.comments_count = post.comments.count()  
+        post.comments_count = post.comments.count()
+        
+        root_comments = []
+        if hasattr(post, '_prefetched_objects_cache') and 'comments' in post._prefetched_objects_cache:
+            for comment in post._prefetched_objects_cache['comments']:
+                if not comment.parent:
+                    root_comments.append(comment)
+        else:
+            root_comments = post.comments.filter(parent__isnull=True).select_related('author')
+        
+        post.root_comments = root_comments
     
     context = {
         'user': user,
@@ -389,14 +381,11 @@ def profile(request):
 
 
 def personal_account(request, user_id):
-    # Находим пользователя по ID
     profile_user = get_object_or_404(get_user_model(), id=user_id)
     
-    # Проверяем, авторизован ли пользователь
     is_authenticated = request.user.is_authenticated
     is_own_profile = is_authenticated and (profile_user == request.user)
     
-    # Получаем активные подписки текущего пользователя (только для авторизованных)
     user_active_subscriptions = []
     if is_authenticated:
         user_active_subscriptions = list(request.user.user_subscriptions.filter(
@@ -404,10 +393,8 @@ def personal_account(request, user_id):
             expires_at__gt=timezone.now()
         ).values_list('subscription_id', flat=True))
     
-    # Получаем все активные подписки для модального окна
     available_subscriptions = Subscription.objects.filter(is_active=True)
     
-    # Обрабатываем подписки для отображения
     processed_subscriptions = []
     for subscription in available_subscriptions:
         description_lines = subscription.description.split('\n')
@@ -428,7 +415,6 @@ def personal_account(request, user_id):
         })
     
     
-    # Количество подписчиков (сколько людей подписано на БЕСПЛАТНУЮ подписку этого автора)
     subscribers_count = UserSubscription.objects.filter(
         subscription__creator=profile_user,
         subscription__price=0,  # Только бесплатная подписка
@@ -436,25 +422,22 @@ def personal_account(request, user_id):
         expires_at__gt=timezone.now()
     ).count()
     
-    # Количество подписок (на сколько подписок подписан этот пользователь)
     subscriptions_count = UserSubscription.objects.filter(
         user=profile_user,
         is_active=True,
         expires_at__gt=timezone.now()
     ).count()
     
-    # Проверяем, подписан ли текущий пользователь на БЕСПЛАТНУЮ подписку этого автора
     is_subscribed = False
     if is_authenticated and not is_own_profile:
         is_subscribed = UserSubscription.objects.filter(
             user=request.user,
             subscription__creator=profile_user,
-            subscription__price=0,  # Только бесплатная подписка
+            subscription__price=0,
             is_active=True,
             expires_at__gt=timezone.now()
         ).exists()
     
-    # Получаем посты пользователя (только опубликованные)
     posts = Post.objects.filter(
         author=profile_user, 
         published_at__isnull=False,
@@ -463,51 +446,36 @@ def personal_account(request, user_id):
         'likes', 'comments', 'media', 'tags', 'subscription'
     ).order_by('-published_at')
     
-    # Аннотируем количество лайков и комментариев
     posts = posts.annotate(
         likes_count=Count('likes', distinct=True),
         comments_count=Count('comments', distinct=True)
     )
     
-    # Функция для проверки доступности поста
     def is_post_accessible(post):
-        # Для неавторизованных пользователей доступны только посты без подписки
         if not is_authenticated:
             return post.subscription is None
         
-        # Для авторизованных пользователей
         if not post.subscription:
-            return True  # Пост доступен всем
+            return True
         
-        # Если у поста есть подписка, проверяем:
-        # - Это собственная подписка пользователя
-        # - ИЛИ пользователь подписан на эту конкретную подписку
-        # - ИЛИ пользователь подписан на бесплатную подписку автора (для бесплатных постов)
         if post.subscription.price == 0:
-            # Для бесплатных постов - проверяем подписку на бесплатную подписку автора
             return (post.subscription.id in user_active_subscriptions or 
                     is_own_profile or 
                     is_subscribed)
         else:
-            # Для платных постов - проверяем подписку именно на эту платную подписку
             return (post.subscription.id in user_active_subscriptions or 
                     is_own_profile)
     
-    # Обрабатываем посты
     processed_posts = []
     for post in posts:
-        # Получаем медиа поста
         media_list = list(post.media.all())
         
-        # Проверяем, лайкнул ли пользователь пост (только для авторизованных)
         is_liked = False
         if is_authenticated:
             is_liked = post.likes.filter(user=request.user).exists()
         
-        # Проверяем доступность поста
         is_accessible = is_post_accessible(post)
         
-        # Безопасно получаем фото автора
         author_photo_url = None
         if post.author.photo:
             try:
@@ -515,7 +483,6 @@ def personal_account(request, user_id):
             except (ValueError, AttributeError):
                 author_photo_url = None
         
-        # Получаем комментарии только для доступных постов
         comments = []
         if is_accessible:
             comments = list(post.comments.all().select_related('author')[:5])

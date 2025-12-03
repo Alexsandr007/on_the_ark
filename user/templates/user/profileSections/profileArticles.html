@@ -85,41 +85,35 @@
 
 
                     <div class="comments-section" id="comments-section-{{ post.id }}" style="display: none;">
-                        <div class="comments-list">
-                            {% for comment in post.comments.all|slice:":5" %}
-                            <div class="comment-item">
-                                <div class="comment-author">
-                                    {% if comment.author.photo %}
-                                    <img src="{{ comment.author.photo.url }}" alt="{{ comment.author.username }}"
-                                        class="comment-author-avatar">
-                                    {% else %}
-                                    <img src="{% static 'images/profile/profile_default.png' %}"
-                                        alt="{{ comment.author.username }}" class="comment-author-avatar">
-                                    {% endif %}
-                                    <strong>{{ comment.author.get_display_name }}</strong>
-                                </div>
-                                <div class="comment-content">
-                                    {{ comment.content }}
-                                </div>
-                                <div class="comment-date">
-                                    {{ comment.created_at|date:"d M Y H:i" }}
-                                </div>
-                            </div>
+                        <div class="comments-tree" id="comments-tree-{{ post.id }}">
+                            {% for comment in post.comments.all %}
+                                {% if not comment.parent %}
+                                    {% include 'user/personalAccount/profileSections/comments/comment_item.html' with comment=comment %}
+                                {% endif %}
                             {% empty %}
-                            <div class="no-comments">Пока нет комментариев</div>
+                                <div class="no-comments">Пока нет комментариев</div>
                             {% endfor %}
                         </div>
 
-                        <form class="comment-form" data-post-id="{{ post.id }}">
+                        {% if not post.comments_disabled and post.is_accessible %}
+                        <form class="comment-form main-form" data-post-id="{{ post.id }}">
                             {% csrf_token %}
                             <div class="comment-input-wrapper">
-                                <textarea class="comment-input" placeholder="Напишите комментарий..." rows="2"
-                                    required></textarea>
+                                <textarea class="comment-input" placeholder="Напишите комментарий..." rows="2" required></textarea>
                                 <button type="submit" class="comment-submit-btn">
-                                    <img src="{% static 'images/profile/pen.png' %}" alt="Отправить"> <a>Отправить</a>
+                                    Отправить
                                 </button>
                             </div>
                         </form>
+                        {% elif post.comments_disabled %}
+                        <div class="comments-disabled">
+                            Комментарии отключены для этого поста
+                        </div>
+                        {% elif not post.is_accessible %}
+                        <div class="comments-disabled">
+                            Для комментирования необходим доступ к посту
+                        </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
