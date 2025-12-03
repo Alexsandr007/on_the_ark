@@ -328,7 +328,7 @@
 }
 
 /* Адаптивность */
-@media (max-width: 1100px) {
+@media (max-width: 768px) {
     .block-course-one {
         width: 80%;
     }
@@ -352,6 +352,23 @@
         margin: 0 2%;
         width: 96%;
         top: 50px;
+    }
+
+    .subscription-modal .payment-method-btn {
+        margin-top: 0px;
+        margin-bottom: 0px;
+    }
+
+    .block-flex-one .red-dots-list{
+        min-height: auto;
+    }
+
+    .cost-after span{
+        font-size: 36px;
+    }
+
+    .modal .slider-content{
+        gap: 20px;
     }
     
     .slider-content {
@@ -416,4 +433,6 @@
 .modal {
     position: relative;
     top: auto;
+    height: auto;
+    left: auto;
 }

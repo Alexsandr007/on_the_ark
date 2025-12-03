@@ -19,7 +19,7 @@ from django.core.mail import send_mail
 from django.utils.crypto import get_random_string
 from django.utils import timezone
 from django.db.models import Count
-
+from subscription.models import UserSubscription
 from django.views.decorators.http import require_http_methods
 import logging
 
@@ -404,8 +404,29 @@ def personal_account(request, user_id):
             expires_at__gt=timezone.now()
         ).values_list('subscription_id', flat=True))
     
-    # Считаем количество подписчиков и подписок
-    from subscription.models import UserSubscription
+    # Получаем все активные подписки для модального окна
+    available_subscriptions = Subscription.objects.filter(is_active=True)
+    
+    # Обрабатываем подписки для отображения
+    processed_subscriptions = []
+    for subscription in available_subscriptions:
+        description_lines = subscription.description.split('\n')
+        processed_subscriptions.append({
+            'id': subscription.id,
+            'name': subscription.name,
+            'description': subscription.description,
+            'description_lines': [line.strip() for line in description_lines if line.strip()],
+            'price': subscription.price,
+            'final_price': subscription.final_price,
+            'image': subscription.image,
+            'is_discount_active': subscription.is_discount_active,
+            'discount_percent': subscription.discount_percent,
+            'has_trial_period': subscription.has_trial_period,
+            'trial_days': subscription.trial_days,
+            'is_limited_subscribers': subscription.is_limited_subscribers,
+            'max_subscribers': subscription.max_subscribers,
+        })
+    
     
     # Количество подписчиков (сколько людей подписано на БЕСПЛАТНУЮ подписку этого автора)
     subscribers_count = UserSubscription.objects.filter(
@@ -528,6 +549,7 @@ def personal_account(request, user_id):
         'is_subscribed': is_subscribed,
         'subscribers_count': subscribers_count,
         'subscriptions_count': subscriptions_count,
+        'available_subscriptions': processed_subscriptions,
     }
     
     return render(request, 'user/personalAccount/profile.html', context)
