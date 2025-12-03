@@ -110,6 +110,8 @@
 
 .profile__articles {
   padding-bottom: 40px;
+  margin-top: 0px;
+  padding: 0px;
 }
 
 .articles__topbar {
