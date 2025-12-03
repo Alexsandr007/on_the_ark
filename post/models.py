@@ -121,18 +121,52 @@ class Like(models.Model):
         return f"{self.user.email} лайкнул пост {self.post.id}"
 
 
+# models.py
+# models.py
+# models.py
 class Comment(models.Model):
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments', verbose_name="Пост")
-    author = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='comments', verbose_name="Автор")
-    content = models.TextField(verbose_name="Текст комментария")
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
-    updated_at = models.DateTimeField(auto_now=True, verbose_name="Дата обновления")
-    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='replies', verbose_name="Родительский комментарий")
-
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
+    author = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    parent = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, 
+                              related_name='replies')
+    reply_to = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True,
+                                 related_name='replies_to', 
+                                 help_text="Комментарий, на который отвечаем (только для отображения)")
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
     class Meta:
-        ordering = ['-created_at']
-        verbose_name = "Комментарий"
-        verbose_name_plural = "Комментарии"
-
+        ordering = ['created_at']
+    
     def __str__(self):
-        return f"Комментарий от {self.author.email} к посту {self.post.id}"
+        return f'Comment by {self.author} on {self.post}'
+    
+    @property
+    def is_reply(self):
+        return self.parent is not None
+    
+    @property
+    def nesting_level(self):
+        """Всегда возвращает 0 для корневых, 1 для ответов"""
+        return 1 if self.parent else 0
+    
+    @property
+    def display_parent(self):
+        """Возвращает корневой комментарий для отображения"""
+        return self.parent if self.parent else self
+    
+    def get_root_parent(self):
+        """Получает корневой родительский комментарий"""
+        if self.parent:
+            return self.parent.get_root_parent() if self.parent.parent else self.parent
+        return self
+    
+    def save(self, *args, **kwargs):
+        """При сохранении определяем, какой комментарий показывать как родительский"""
+        if self.parent:
+            # Определяем корневой родитель для отображения
+            root_parent = self.parent.get_root_parent()
+            self.reply_to = self.parent  # Сохраняем, на кого отвечаем
+            self.parent = root_parent  # Привязываем к корневому родителю
+        super().save(*args, **kwargs)

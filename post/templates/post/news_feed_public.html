@@ -30,8 +30,7 @@
     </div>
 </section>
 
-<section class="main-block">
-    {% comment %} <div class="main-block__devider"></div> {% endcomment %}
+{% comment %} <section class="main-block">
     <div class="main-block__fon">
         <picture style="width:100%;">
             <source media="(max-width: 1140px)"
@@ -42,7 +41,62 @@
                 style="position: relative; height: auto;" class="personal_account__ornament">
         </picture>
     </div>
+</section> {% endcomment %}
+<section class="main-block">
+    <div class="svg-pattern-container">
+        <!-- Для десктопной версии -->
+        <div class="svg-pattern svg-pattern--desktop"
+             style="background-image: url('{% static 'images/post/feed/src/images/header-ornament--desctop.svg' %}');"></div>
+        
+        <!-- Для мобильной версии -->
+        <div class="svg-pattern svg-pattern--mobile"
+             style="background-image: url('{% static 'images/post/feed/src/images/mobileFeedOrnament.svg' %}');"></div>
+    </div>
 </section>
+
+<style>
+.svg-pattern-container {
+    position: relative;
+    width: 100%;
+    height: 120px; /* Фиксированная высота */
+    overflow: hidden;
+}
+
+.svg-pattern {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-repeat: repeat-x;
+    background-size: auto 100%;
+    background-position: center;
+}
+
+/* Десктопная версия (ширина больше 1140px) */
+.svg-pattern--desktop {
+    display: none;
+}
+
+/* Мобильная версия (ширина до 1140px) */
+.svg-pattern--mobile {
+    display: none;
+}
+
+@media (min-width: 1141px) {
+    .svg-pattern--desktop {
+        display: block;
+    }
+}
+
+@media (max-width: 1140px) {
+    .svg-pattern--mobile {
+        display: block;
+    }
+}
+
+/* Альтернативный вариант с одним элементом и сменой фона */
+</style>
 <main class="profile__articles">
     <div class="container">
         <div class="articles__topbar">

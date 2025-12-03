@@ -150,3 +150,135 @@ display: flex;
     align-items: center;
     margin-bottom: 5px;
 }
+
+.comment-item {
+    padding: 12px;
+    margin-bottom: 10px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border-left: 3px solid #E5B31A;
+    position: relative;
+}
+
+.comment-reply-item {
+    padding: 10px;
+    margin: 8px 0 8px 0px;
+    background: #f1f3f4;
+    border-radius: 6px;
+    border-left: 2px solid #6c757d;
+    position: relative;
+}
+
+.comment-reply-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 6px;
+}
+
+.comment-reply-author {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+}
+
+.comment-reply-avatar {
+    width: 24px;
+    height: 24px;
+    margin-right: 8px;
+}
+
+.comment-reply-author-info {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+}
+
+.comment-reply-author-info strong {
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.comment-reply-actions {
+    flex-shrink: 0;
+}
+
+.comment-reply-actions .reply-btn {
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.comment-reply-actions .reply-btn:hover {
+    background: rgba(229, 179, 26, 0.1);
+}
+
+.comment-reply-actions .reply-icon {
+    width: 14px;
+    height: 14px;
+    opacity: 0.6;
+}
+
+.comment-reply-actions .reply-btn:hover .reply-icon {
+    opacity: 1;
+}
+
+.comment-reply-content {
+    font-size: 14px;
+    line-height: 1.4;
+    color: #333;
+    margin-bottom: 6px;
+}
+
+.nested-reply-form {
+    margin-top: 10px;
+    margin-left: 0;
+    padding: 8px;
+    background: white;
+    border: 1px solid #e9ecef;
+    border-radius: 6px;
+}
+
+.reply-to {
+    font-size: 12px;
+    color: #666;
+    font-style: italic;
+    background: rgba(108, 117, 125, 0.1);
+    padding: 1px 6px;
+    border-radius: 10px;
+    margin-left: 5px;
+}
+
+.replies-container {
+    animation: fadeIn 0.3s ease;
+}
+
+.comment-actions{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.comment-reply-date{
+    font-size: 12px;
+    color: #666;
+}
+
+@media (max-width: 768px) {
+    .comment-input-wrapper {
+        display: flex;
+        gap: 10px;
+        align-items: normal;
+        flex-direction: column;
+    }
+
+    .comment-form {
+        margin-top: 15px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+}

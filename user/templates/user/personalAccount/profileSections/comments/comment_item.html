@@ -1,0 +1,146 @@
+<!-- user/personalAccount/profileSections/comments/comment_item.html -->
+{% load static %}
+<div class="comment-item {% if comment.is_reply %}comment-reply{% endif %}" 
+     data-comment-id="{{ comment.id }}" 
+     id="comment-{{ comment.id }}"
+     data-nesting-level="{{ comment.nesting_level }}">
+    
+    <div class="comment-header">
+        <div class="comment-author">
+            {% if comment.author.photo %}
+            <img src="{{ comment.author.photo.url }}" alt="{{ comment.author.username }}"
+                class="comment-author-avatar">
+            {% else %}
+            <img src="{% static 'images/profile/profile_default.png' %}"
+                alt="{{ comment.author.username }}" class="comment-author-avatar">
+            {% endif %}
+            <div class="comment-author-info">
+                <strong>{{ comment.author.username }}</strong>
+                {% if comment.reply_to %}
+                <span class="reply-to" data-reply-to-id="{{ comment.reply_to.id }}">
+                    → @{{ comment.reply_to.author.username }}
+                </span>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Кнопки действий -->
+        <div class="comment-actions">
+            <!-- Кнопка "Ответить" для ВСЕХ комментариев -->
+            <button class="reply-btn comment-submit-btn" data-comment-id="{{ comment.id }}">
+                <span>Ответить</span>
+            </button>
+            
+            <!-- Показываем счетчик ответов только у корневых -->
+            {% if not comment.parent and comment.replies.count > 0 %}
+            <button class="toggle-replies-btn comment-submit-btn" data-comment-id="{{ comment.id }}">
+                <span class="replies-count">{{ comment.replies.count }}</span>
+                <span class="replies-text">
+                    {% with count=comment.replies.count %}
+                        {% if count == 1 %}ответ
+                        {% elif count >= 2 and count <= 4 %}ответа
+                        {% else %}ответов
+                        {% endif %}
+                    {% endwith %}
+                </span>
+            </button>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="comment-content">
+        {{ comment.content }}
+    </div>
+    
+    <div class="comment-footer">
+        <div class="comment-date">
+            {{ comment.created_at|date:"d M Y H:i" }}
+        </div>
+    </div>
+    
+    <div class="reply-form-container" id="reply-form-{{ comment.id }}" style="display: none;">
+        <form class="comment-form reply-form" 
+              data-post-id="{{ post.id }}" 
+              data-parent-id="{{ comment.get_root_parent.id|default:comment.id }}"
+              data-reply-to-id="{{ comment.id }}">
+            {% csrf_token %}
+            <div class="comment-input-wrapper">
+                <textarea class="comment-input reply-input" 
+                         placeholder="Напишите ответ на @{{ comment.author.username }}..." 
+                         rows="2" required></textarea>
+                <button type="submit" class="comment-submit-btn">
+                    Отправить
+                </button>
+            </div>
+            <button type="button" class="cancel-reply-btn comment-submit-btn" data-comment-id="{{ comment.id }}">
+                Отмена
+            </button>
+        </form>
+    </div>
+    
+    {% if not comment.parent and comment.replies.count > 0 %}
+    <div class="replies-container" id="replies-{{ comment.id }}" style="display: none;">
+        {% for reply in comment.replies.all %}
+        <div class="comment-reply-item" 
+             data-comment-id="{{ reply.id }}" 
+             id="comment-{{ reply.id }}"
+             data-reply-to-id="{{ reply.reply_to.id|default:reply.parent.id }}">
+            
+            <div class="comment-reply-header">
+                <div class="comment-reply-author">
+                    {% if reply.author.photo %}
+                    <img src="{{ reply.author.photo.url }}" alt="{{ reply.author.username }}"
+                        class="comment-author-avatar comment-reply-avatar">
+                    {% else %}
+                    <img src="{% static 'images/profile/profile_default.png' %}"
+                        alt="{{ reply.author.username }}" class="comment-author-avatar comment-reply-avatar">
+                    {% endif %}
+                    <div class="comment-reply-author-info">
+                        <strong>{{ reply.author.username }}</strong>
+                        {% if reply.reply_to %}
+                        <span class="reply-to">→ @{{ reply.reply_to.author.username }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="comment-reply-actions">
+                    <button class="reply-btn comment-submit-btn" data-comment-id="{{ reply.id }}">
+                        Ответить
+                    </button>
+                </div>
+            </div>
+            
+            <div class="comment-reply-content">
+                {{ reply.content }}
+            </div>
+            
+            <div class="comment-reply-footer">
+                <div class="comment-reply-date">
+                    {{ reply.created_at|date:"d M Y H:i" }}
+                </div>
+            </div>
+            
+            <div class="reply-form-container nested-reply-form" id="reply-form-{{ reply.id }}" style="display: none;">
+                <form class="comment-form reply-form" 
+                      data-post-id="{{ post.id }}" 
+                      data-parent-id="{{ reply.get_root_parent.id }}"
+                      data-reply-to-id="{{ reply.id }}">
+                    {% csrf_token %}
+                    <div class="comment-input-wrapper">
+                        <textarea class="comment-input reply-input" 
+                                 placeholder="Напишите ответ на @{{ reply.author.username }}..." 
+                                 rows="2" required></textarea>
+                        <button type="submit" class="comment-submit-btn">
+                            Отправить
+                        </button>
+                    </div>
+                    <button type="button" class="cancel-reply-btn comment-submit-btn" data-comment-id="{{ reply.id }}">
+                        Отмена
+                    </button>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>

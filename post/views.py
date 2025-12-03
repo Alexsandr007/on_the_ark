@@ -587,34 +587,30 @@ def like_post(request, post_id):
         }, status=500)
     
 
-
 @login_required
 @require_POST
 def add_comment(request, post_id):
     try:
         post = Post.objects.get(id=post_id)
         content = request.POST.get('content', '').strip()
+        parent_id = request.POST.get('parent_id')
+        reply_to_id = request.POST.get('reply_to_id')
         
         if not content:
             return JsonResponse({'success': False, 'error': 'Комментарий не может быть пустым'})
         
-        # Проверка на нецензурную лексику
         if profanity_filter.contains_profanity(content):
             return JsonResponse({
                 'success': False, 
                 'error': 'Комментарий содержит нецензурную лексику. Пожалуйста, отредактируйте текст.'
             })
         
-        # Проверяем, отключены ли комментарии
         if post.comments_disabled:
             return JsonResponse({'success': False, 'error': 'Комментарии отключены для этого поста'})
         
-        # Проверяем доступность поста
-        # Автор поста всегда имеет доступ к комментированию
         is_author = post.author == request.user
-        has_access = is_author  # Автор всегда имеет доступ
+        has_access = is_author
         
-        # Если пользователь не автор, проверяем доступ через подписку
         if not is_author and post.subscription:
             has_access = request.user.user_subscriptions.filter(
                 subscription=post.subscription, 
@@ -622,31 +618,56 @@ def add_comment(request, post_id):
                 expires_at__gt=timezone.now()
             ).exists()
         elif not is_author and not post.subscription:
-            # Если подписки нет, пост доступен всем
             has_access = True
         
         if not has_access:
             return JsonResponse({'success': False, 'error': 'У вас нет доступа к этому посту'})
         
+        parent_comment = None
+        reply_to_comment = None
+        
+        if parent_id:
+            try:
+                parent_comment = Comment.objects.get(id=parent_id, post=post)
+                root_parent = parent_comment.get_root_parent()
+                
+                if reply_to_id and reply_to_id != parent_id:
+                    try:
+                        reply_to_comment = Comment.objects.get(id=reply_to_id, post=post)
+                    except Comment.DoesNotExist:
+                        reply_to_comment = parent_comment
+                else:
+                    reply_to_comment = parent_comment
+                    
+                parent_comment = root_parent
+                
+            except Comment.DoesNotExist:
+                return JsonResponse({'success': False, 'error': 'Комментарий не найден'})
+        
         comment = Comment.objects.create(
             post=post,
             author=request.user,
+            parent=parent_comment,
+            reply_to=reply_to_comment,
             content=content
         )
         
-        # Получаем обновленное количество комментариев
         comments_count = post.comments.count()
         
-        # Безопасно получаем URL фото пользователя
         photo_url = ''
         if request.user.photo:
             try:
                 photo_url = request.user.photo.url
             except (ValueError, AttributeError):
-                # Если фото не загружено или произошла ошибка
                 photo_url = ''
         
-        return JsonResponse({
+        reply_to_username = ''
+        if reply_to_comment:
+            reply_to_username = reply_to_comment.author.username
+        elif parent_comment:
+            reply_to_username = parent_comment.author.username
+        
+        response_data = {
             'success': True,
             'comment': {
                 'id': comment.id,
@@ -654,10 +675,18 @@ def add_comment(request, post_id):
                 'author_photo_url': photo_url,
                 'content': content,
                 'created_at': 'Только что',
-                'created_at_formatted': comment.created_at.strftime('%d %b %Y %H:%M')
+                'created_at_formatted': comment.created_at.strftime('%d %b %Y %H:%M'),
+                'is_reply': comment.is_reply,
+                'parent_id': parent_comment.id if parent_comment else None,
+                'reply_to_id': reply_to_comment.id if reply_to_comment else None,
+                'reply_to_username': reply_to_username,
+                'nesting_level': comment.nesting_level,
+                'replies_count': 0
             },
             'comments_count': comments_count
-        })
+        }
+        
+        return JsonResponse(response_data)
         
     except Post.DoesNotExist:
         return JsonResponse({'success': False, 'error': 'Пост не найден'})
