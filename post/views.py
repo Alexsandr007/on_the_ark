@@ -27,11 +27,10 @@ def create_post(request):
     temp_media_url = None
     temp_media_type = None
 
-    # Исключаем бесплатные подписки (цена = 0) - ИСПРАВЛЕНИЕ
     user_subscriptions = Subscription.objects.filter(
         is_active=True, 
         creator=request.user,
-        price__gt=0  # Только платные подписки
+        price__gt=0
     )
 
     if request.method == 'POST':
@@ -46,6 +45,7 @@ def create_post(request):
         media_type = request.POST.get('media_type', '') or request.session.get('temp_media_type', '')
         question = request.POST.get('question', '').strip()
         options_str = request.POST.get('options', '').strip()
+        file = request.FILES.get('file')
 
         form_data = {
             'title': title,
@@ -72,22 +72,30 @@ def create_post(request):
                 return temp_storage.url(request.session['temp_media_filename']), request.session.get('temp_media_type')
             return None, None
 
-        if not content:
-            messages.error(request, 'Текст поста обязателен.')
+        has_content = bool(content)
+        has_media = bool(file) or ('temp_media_filename' in request.session and media_type)
+        has_poll = bool(question and options_str)
+        
+        if not has_content and not has_media and not has_poll:
+            messages.error(request, 'Пост должен содержать хотя бы что-то: текст, медиафайл или опрос.')
             temp_media_url, temp_media_type = save_temp_file()
             return render(request, 'post/create_post.html', {
                 'form_data': form_data, 
                 'temp_media_url': temp_media_url, 
                 'temp_media_type': temp_media_type,
-                'user_subscriptions': user_subscriptions  # Передаем отфильтрованные подписки
+                'user_subscriptions': user_subscriptions
             })
 
-        fields_to_check = {
-            'заголовок': title,
-            'текст поста': content,
-            'описание рекламодателя': ad_description,
-            'теги': tags_input
-        }
+        fields_to_check = {}
+        
+        if title:
+            fields_to_check['заголовок'] = title
+        if content:
+            fields_to_check['текст поста'] = content
+        if ad_description:
+            fields_to_check['описание рекламодателя'] = ad_description
+        if tags_input:
+            fields_to_check['теги'] = tags_input
         
         for field_name, field_value in fields_to_check.items():
             if field_value and profanity_filter.contains_profanity(str(field_value)):
@@ -100,7 +108,7 @@ def create_post(request):
                     'form_data': form_data, 
                     'temp_media_url': temp_media_url, 
                     'temp_media_type': temp_media_type,
-                    'user_subscriptions': user_subscriptions  # Передаем отфильтрованные подписки
+                    'user_subscriptions': user_subscriptions
                 })
 
         scheduled_at = None
@@ -114,19 +122,17 @@ def create_post(request):
                     'form_data': form_data, 
                     'temp_media_url': temp_media_url, 
                     'temp_media_type': temp_media_type,
-                    'user_subscriptions': user_subscriptions  # Передаем отфильтрованные подписки
+                    'user_subscriptions': user_subscriptions
                 })
-            
 
         subscription = None
         if visibility and visibility != 'all_users':  
             try:
-                # При создании поста также проверяем, что подписка платная
                 subscription = Subscription.objects.get(
                     id=visibility, 
                     is_active=True,
-                    price__gt=0,  # Дополнительная проверка, что подписка платная
-                    creator=request.user  # И что создатель - текущий пользователь
+                    price__gt=0,
+                    creator=request.user
                 )  
             except (Subscription.DoesNotExist, ValueError):
                 messages.error(request, 'Выбранная подписка не найдена или недоступна')
@@ -141,11 +147,11 @@ def create_post(request):
         post = Post(
             author=request.user,
             title=title if title else None,
-            content=content,
+            content=content if content else None,
             visibility='all_users', 
             subscription=subscription, 
             is_ad=is_ad,
-            ad_description=ad_description,
+            ad_description=ad_description if ad_description else None,
             scheduled_at=scheduled_at,
             comments_disabled=comments_disabled,
             published_at=timezone.now() if not scheduled_at else None
@@ -169,7 +175,6 @@ def create_post(request):
                 tag, created = Tag.objects.get_or_create(name=name)
                 post.tags.add(tag)
 
-        file = request.FILES.get('file')
         if not file and media_type and 'temp_media_filename' in request.session:
             temp_filename = request.session['temp_media_filename']
             try:
@@ -192,13 +197,34 @@ def create_post(request):
                 messages.error(request, 'Ошибка восстановления файла.')
                 file = None
 
-        if file and media_type:
-            media = Media(
-                post=post,
-                file=file,
-                media_type=media_type
-            )
-            media.save()
+        if (file and media_type) or ('temp_media_filename' in request.session and media_type):
+            if not file and 'temp_media_filename' in request.session:
+                temp_filename = request.session['temp_media_filename']
+                try:
+                    with open(temp_storage.path(temp_filename), 'rb') as temp_file:
+                        file_content = temp_file.read()
+
+                    content_type, _ = mimetypes.guess_type(temp_filename)
+                    content_type = content_type or 'application/octet-stream'
+                    file = InMemoryUploadedFile(
+                        io.BytesIO(file_content),
+                        field_name='file',
+                        name=temp_filename,
+                        content_type=content_type,
+                        size=len(file_content),
+                        charset=None
+                    )
+                except Exception as e:
+                    print(f"Ошибка восстановления файла: {e}")
+                    file = None
+            
+            if file:
+                media = Media(
+                    post=post,
+                    file=file,
+                    media_type=media_type
+                )
+                media.save()
 
         if question and options_str:
             if (profanity_filter.contains_profanity(question) or 
@@ -228,6 +254,7 @@ def create_post(request):
             if 'temp_media_type' in request.session:
                 del request.session['temp_media_type']
 
+        messages.success(request, 'Пост успешно создан!')
         return redirect('profile')
 
     if 'temp_media_filename' in request.session:

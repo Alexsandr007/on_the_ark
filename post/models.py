@@ -121,9 +121,6 @@ class Like(models.Model):
         return f"{self.user.email} лайкнул пост {self.post.id}"
 
 
-# models.py
-# models.py
-# models.py
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
     author = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
